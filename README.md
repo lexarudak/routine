@@ -6,4 +6,5 @@
 
 ## App
 
+- [desk](https://github.com/users/lexarudak/projects/2/views/1)
 - [design](https://github.com/lexarudak/routine/blob/notes/routine%20design.pdf)
