@@ -9,3 +9,4 @@
 - [desk](https://github.com/users/lexarudak/projects/2/views/1)
 - [design](https://github.com/lexarudak/routine/blob/notes/routine%20design.pdf)
 - [back video](https://www.youtube.com/watch?v=tKM44vPHU0U)
+- [canvas rounds](https://www.youtube.com/watch?v=KEQsm2yL6Lg&t=778s)
