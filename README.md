@@ -6,4 +6,4 @@
 
 ## App
 
-- [design](https://disk.yandex.ru/i/FONT_9BCs4f8jQ)
+- [design](https://github.com/lexarudak/routine/blob/notes/routine%20design.pdf)
