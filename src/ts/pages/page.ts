@@ -1,5 +1,5 @@
 import PagesList from '../base/enums/pageList';
-import { getExistentElement } from '../base/helpers';
+import { getExistentElementByClass } from '../base/helpers';
 import ClassList from '../base/enums/classList';
 
 abstract class Page {
@@ -16,7 +16,7 @@ abstract class Page {
   }
 
   public async draw(): Promise<void> {
-    const container = getExistentElement(ClassList.mainContainer);
+    const container = getExistentElementByClass(ClassList.mainContainer);
     container.innerHTML = '';
     container.append(this.getFilledPage());
   }

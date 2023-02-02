@@ -9,6 +9,14 @@ function getExistentElement<T extends HTMLElement>(selector: string, node: Docum
   if (el === null) throw new Error(ErrorsList.elementNotFound);
   return el;
 }
+
+function getExistentElementByClass<T extends HTMLElement>(
+  selector: string,
+  node: Document | HTMLElement = document
+): T {
+  return getExistentElement(`.${selector}`, node);
+}
+
 function getExistentInputElement<T extends HTMLElement>(selector: string, node: Document | HTMLElement = document): T {
   const el = node.querySelector<T>(selector);
   if (el === null) throw new Error(ErrorsList.elementNotFound);
@@ -16,4 +24,4 @@ function getExistentInputElement<T extends HTMLElement>(selector: string, node: 
   return el;
 }
 
-export { isHTMLElement, getExistentElement, getExistentInputElement };
+export { isHTMLElement, getExistentElement, getExistentInputElement, getExistentElementByClass };
