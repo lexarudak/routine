@@ -1,6 +1,7 @@
 # Notes for Routine
 
 ## Task 
+- [routine score](https://github.com/lexarudak/routine/blob/notes/score.md)
 - [link](https://github.com/rolling-scopes-school/tasks/blob/master/tasks/rsclone/rsclone.md)
 - [video](https://www.youtube.com/watch?v=-EJnrfwdnD8)
 
