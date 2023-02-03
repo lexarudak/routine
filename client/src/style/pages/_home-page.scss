@@ -1,0 +1,119 @@
+section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.thought {
+  position: absolute;
+  text-align: center;
+  top: 40px;
+  left: 45px;
+  font-weight: 400;
+  font-size: 32px;
+
+  &__add {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px auto 0;
+    width: 50px;
+    height: 50px;
+    text-align: center;
+    border-radius: 50%;
+    background-color: $thought-color;
+    box-shadow: 0px 4px 4px $shadow-dark;
+    cursor: pointer;
+
+    &::before {
+      content: url('./assets/svg/plus.svg');
+      display: block;
+      width: 70%;
+      height: auto;
+      padding-top: 7px;
+    }
+  }
+}
+
+.sign-in {
+  position: absolute;
+  top: 40px;
+  right: 45px;
+  width: 30px;
+  height: 30px;
+  background: url('./assets/svg/sign-in.svg');
+  cursor: pointer;
+}
+
+.plan {
+  position: absolute;
+  left: 320px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 270px;
+  height: 270px;
+  border-radius: 50%;
+  border: 5px solid $thought-color;
+  filter: drop-shadow(0px 4px 4px $shadow-dark);
+  color: $font-pale;
+  font-weight: 400;
+  font-size: 60px;
+  cursor: pointer;
+}
+
+.chart {
+  position: absolute;
+  right: 200px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.to-do {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  background-color: $job-color;
+  color: $background-color;
+  position: absolute;
+  z-index: 2;
+  width: 91%;
+  height: 91%;
+  border-radius: 50%;
+  filter: drop-shadow(0px 4px 4px $shadow-dark);
+
+  &__list {
+    text-align: center;
+    font-weight: 400;
+    font-size: 65px;
+    margin: 65px 0;
+    width: 65%;
+  }
+
+  &__list-item {
+    padding: 0 10px 0;
+    list-style-type: circle;
+    text-align: left;
+    font-size: 24px;
+    font-weight: 300;
+    line-height: 1.5;
+    &:first-child {
+      margin-top: 40px;
+    }
+  }
+}
+
+svg {
+  overflow: visible;
+  filter: drop-shadow(0px 4px 4px $shadow-dark);
+
+  circle {
+    transition: 0.2s;
+    cursor: pointer;
+    &:hover {
+      stroke-width: 20;
+    }
+  }
+}

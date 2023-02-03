@@ -17,11 +17,10 @@ function getExistentElementByClass<T extends HTMLElement>(
   return getExistentElement(`.${selector}`, node);
 }
 
-function getExistentInputElement<T extends HTMLElement>(selector: string, node: Document | HTMLElement = document): T {
-  const el = node.querySelector<T>(selector);
-  if (el === null) throw new Error(ErrorsList.elementNotFound);
-  if (!(el instanceof HTMLInputElement)) throw new Error(ErrorsList.elementIsNotInput);
-  return el;
-}
+const createElement = (tag: string, className: string): HTMLElement => {
+  const element: HTMLElement = document.createElement(tag);
+  element.classList.add(className);
+  return element;
+};
 
-export { isHTMLElement, getExistentElement, getExistentInputElement, getExistentElementByClass };
+export { isHTMLElement, getExistentElement, getExistentElementByClass, createElement };

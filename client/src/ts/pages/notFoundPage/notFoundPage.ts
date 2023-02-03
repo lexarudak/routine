@@ -1,6 +1,6 @@
 import ButtonClasses from '../../base/enums/buttonClasses';
 import ButtonNames from '../../base/enums/buttonNames';
-import ClassList from '../../base/enums/classList';
+import { ClassList } from '../../base/enums/classList';
 import InnerText from '../../base/enums/innerText';
 import PagesList from '../../base/enums/pageList';
 import RoutsList from '../../base/enums/routsList';
