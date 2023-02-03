@@ -1,0 +1,32 @@
+@charset "UTF-8";
+
+// 1. Configuration and helpers
+@import
+'style/abstracts/variables',
+'style/abstracts/mixins';
+
+// 2. Vendors
+@import
+'style/vendors/normalize';
+
+// 3. Base stuff
+@import
+'style/base/base',
+'style/base/fonts';
+
+// 4. Layout-related sections
+@import
+'style/layout/main',
+'style/layout/body',
+'style/layout/footer';
+
+// 5. Components
+@import
+'style/components/button',
+'style/components/popup';
+
+// 6. Page-specific styles
+@import 
+'style/pages/home-page',
+'style/pages/not-found-page',
+'style/pages/plan-page';

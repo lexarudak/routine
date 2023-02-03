@@ -1,5 +1,5 @@
 const enum ClassList {
-  mainContainer = 'main-container',
+  mainContainer = 'main__container',
 }
 
 export default ClassList;
