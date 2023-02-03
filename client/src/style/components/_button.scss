@@ -1,0 +1,19 @@
+.button {
+  padding: 10px 20px;
+  border: 1px solid;
+  border-radius: 20px;
+  box-shadow: $shadow;
+  background: $background-color;
+  transition: .3s;
+  cursor: pointer;
+
+  &_main {
+    color: $font-main;
+    border-color: $font-main;
+
+    &:hover {
+      color: $success;
+      border-color: $success;
+    }
+  }
+}

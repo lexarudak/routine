@@ -1,15 +1,19 @@
 import PagesList from '../base/enums/pageList';
 import { getExistentElementByClass } from '../base/helpers';
 import ClassList from '../base/enums/classList';
+import { GoToFn } from '../base/types';
 
 abstract class Page {
   protected name: PagesList;
 
-  constructor(name: PagesList) {
+  protected goTo: GoToFn;
+
+  constructor(name: PagesList, goTo: GoToFn) {
     this.name = name;
+    this.goTo = goTo;
   }
 
-  public getFilledPage() {
+  protected getFilledPage(): HTMLElement {
     const emptyPage = document.createElement('h1');
     emptyPage.innerText = this.name;
     return emptyPage;
