@@ -24,9 +24,9 @@ class Router {
   // static sundayPage: Page;
 
   constructor() {
-    Router.homePage = new HomePage();
-    Router.planPage = new PlanPage();
-    Router.notFoundPage = new NotFoundPage();
+    Router.homePage = new HomePage(this.goTo);
+    Router.planPage = new PlanPage(this.goTo);
+    Router.notFoundPage = new NotFoundPage(this.goTo);
   }
 
   private static render(pathname: string) {
@@ -44,9 +44,9 @@ class Router {
     }
   }
 
-  public static goTo(pageId: RoutsList) {
-    window.history.pushState({ pageId }, pageId, pageId);
-    Router.render(pageId);
+  public goTo(pageName: RoutsList) {
+    window.history.pushState({ pageName }, pageName, pageName);
+    Router.render(pageName);
     window.scrollTo(0, 0);
   }
 

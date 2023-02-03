@@ -1,9 +1,10 @@
 import PageList from '../../base/enums/pageList';
+import { GoToFn } from '../../base/types';
 import Page from '../page';
 
 class HomePage extends Page {
-  constructor() {
-    super(PageList.homePage);
+  constructor(goTo: GoToFn) {
+    super(PageList.homePage, goTo);
   }
 }
 
