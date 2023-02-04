@@ -13,9 +13,13 @@
 
 ## Backend
 
-- [server](https://www.youtube.com/watch?v=tKM44vPHU0U)
+Server
+- [server: development](https://www.youtube.com/watch?v=tKM44vPHU0U)
 - [server: registration](https://www.youtube.com/watch?v=tPpvz-DIG0w)
 - [server: authorization](https://www.youtube.com/watch?v=ITBPoR3p7YA)
+- [server: deploy](https://www.youtube.com/watch?v=lAIOTi6w7Pk)
+
+Client
 - [client: registration](https://www.youtube.com/watch?v=sqou7Zlj264)
 - [client: authorization](https://www.youtube.com/watch?v=o30BcvKwcvg)
 
