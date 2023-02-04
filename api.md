@@ -7,6 +7,16 @@
 
 Returns json data about users. Registration, authorization actions.
 
+```
+{
+  "_id": string,
+  "name": string,
+  "email": string,
+  "password": string,
+  "createdOn": date
+}
+```
+
 <details>
 
 - `GET` /api/users
@@ -21,6 +31,14 @@ Returns json data about users. Registration, authorization actions.
 ### Thought
 
 Returns json data about thought.
+
+```
+{
+  "_id": string,
+  "userId": string,
+  "title": string
+}
+```
 
 <details>
 
@@ -130,7 +148,17 @@ Returns json data about thought.
 
 ### Plans
 
-Returns json data about users. Registration, authorization actions.
+Returns json data about user's plans.
+
+```
+{
+  "_id": string,
+  "userId": string,
+  "title": string,
+  "text": string,
+  "duration": number
+}
+```
 
 <details>
 
