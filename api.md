@@ -24,7 +24,7 @@ Returns json data about thought.
 
 <details>
 
-- `GET` /api/thoughts
+- `GET` /api/thoughts/:userId
   
   Respose
   ```
@@ -56,7 +56,7 @@ Returns json data about thought.
   }
   ```
   
-- `POST` /api/thoughts
+- `POST` /api/thoughts/:userId
     
   Request
   
@@ -110,7 +110,7 @@ Returns json data about thought.
   }
   ```
   
- - `POST` /api/thoughts/transferToPlan/:id
+- `POST` /api/thoughts/transferToPlan/:id
 
   Request
   
@@ -126,4 +126,18 @@ Returns json data about thought.
   }
   ``` 
   
+</details>
+
+### Plans
+
+Returns json data about users. Registration, authorization actions.
+
+<details>
+
+- `GET` /api/plans/:userId
+- `GET` /api/plans/:id
+- `POST` /api/plans/:userId
+- `PATCH` /api/plans/:id
+- `DELETE` /api/plans/:id
+
 </details>
