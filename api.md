@@ -20,11 +20,11 @@ Returns json data about users. Registration, authorization actions.
 <details>
 
 - `GET` /api/users
-- `GET` /api/users/:id
-- `POST` /api/registration
-- `POST` /api/login
-- `PUT` /api/users
-- `DELETE` /api/users/:id
+- `GET` /api/user/:id
+- `POST` /api/user/registration
+- `POST` /api/user/login
+- `PUT` /api/user
+- `DELETE` /api/user/:id
 
 </details>
 
@@ -49,37 +49,40 @@ Returns json data about thought.
   [
     {
       "_id": "63dab20a1bad4d34504b5c18",
+      "userId": 63dd5008939161908112e05f,
       "title": "Do gym every morning",
       "__v": 0
     },
     {
       "_id": "63dab436cc8fdc25bfe20d39",
+      "userId": 63dd5008939161908112e05f,
       "title": "Buy a quadcopter",
       "__v": 0
     }
   ]
   ```
-- `GET` /api/thoughts/:id
+  
+- `GET` /api/thought/:id
   
   Request
-  
   `/api/thoughts/63dab20a1bad4d34504b5c18`
   
   Respose
   ```
   {
     "_id": "63dab20a1bad4d34504b5c18",
+    "userId": 63dd5008939161908112e05f,
     "title": "Do gym every morning",
     "__v": 0
   }
   ```
   
-- `POST` /api/thoughts/:userId
+- `POST` /api/thought
     
   Request
-  
   ```
   {
+    "userId": 63dd5008939161908112e05f,
     "title": "Do gym every morning"
   }
   ```
@@ -88,15 +91,15 @@ Returns json data about thought.
   ```
   {
     "_id": "63dab20a1bad4d34504b5c18",
+    "userId": 63dd5008939161908112e05f,
     "title": "Do gym every morning",
     "__v": 0
   }
   ```
   
-- `PUT` /api/thoughts
+- `PATCH` /api/thought
   
   Request
-  
   ```
   {
     "_id": "63de721eb2cdc7d1460b9b08",
@@ -108,31 +111,31 @@ Returns json data about thought.
   ```
   {
     "_id": "63de721eb2cdc7d1460b9b08",
+    "userId": 63dd5008939161908112e05f,
     "title": "Work out at the gym every weekend",
     "__v": 0
   }
   ```
   
-- `DELETE` /api/thoughts/:id
+- `DELETE` /api/thought/:id
 
   Request
-  
   `/api/thoughts/63dab20a1bad4d34504b5c18`
   
   Respose
   ```
   {
     "_id": "63dab20a1bad4d34504b5c18",
+    "userId": 63dd5008939161908112e05f,
     "title": "Do gym every morning",
     "__v": 0
   }
   ```
   
-- `POST` /api/thoughts/transferToPlan/:id
+- `POST` /api/thought/transferToPlan/:id
 
   Request
-  
-  `/api/thoughts/transferToPlan/63dab20a1bad4d34504b5c18`
+  `/api/thought/transferToPlan/63dab20a1bad4d34504b5c18`
   
   Respose
   ```
@@ -140,6 +143,7 @@ Returns json data about thought.
     "_id": "63dab20a1bad4d34504b5c18",
     "title": "Do gym every morning",
     "text": "",
+    "duration": 0
     "__v": 0
   }
   ``` 
@@ -163,9 +167,9 @@ Returns json data about user's plans.
 <details>
 
 - `GET` /api/plans/:userId
-- `GET` /api/plans/:id
-- `POST` /api/plans/:userId
-- `PATCH` /api/plans/:id
-- `DELETE` /api/plans/:id
+- `GET` /api/plan/:id
+- `POST` /api/plan
+- `PATCH` /api/plan/:id
+- `DELETE` /api/plan/:id
 
 </details>
