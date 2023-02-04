@@ -3,9 +3,9 @@
 - Internal: http://localhost:5000
 - External: https://warm-bayou-30321.herokuapp.com
 
-### Users
+### User
 
-Returns json data about users. Registration, authorization actions.
+Returns json data about users.
 
 ```
 {
@@ -13,18 +13,18 @@ Returns json data about users. Registration, authorization actions.
   "name": string,
   "email": string,
   "password": string,
-  "createdOn": date
+  "createdAt": date
 }
 ```
 
 <details>
 
 - `GET` /api/users
-- `GET` /api/user/:id
-- `POST` /api/user/registration
-- `POST` /api/user/login
-- `PUT` /api/user
-- `DELETE` /api/user/:id
+- `GET` /api/users/:id
+- `DELETE` /api/users/:id  
+- `POST` /api/users/registration
+- `POST` /api/users/login
+- `POST` /api/users/update
 
 </details>
 
@@ -42,7 +42,7 @@ Returns json data about thought.
 
 <details>
 
-- `GET` /api/thoughts/:userId
+- `GET` /api/thoughts/?userId=63dd5008939161908112e05f
   
   Respose
   ```
@@ -62,7 +62,7 @@ Returns json data about thought.
   ]
   ```
   
-- `GET` /api/thought/:id
+- `GET` /api/thoughts/:id
   
   Request
   `/api/thoughts/63dab20a1bad4d34504b5c18`
@@ -77,7 +77,7 @@ Returns json data about thought.
   }
   ```
   
-- `POST` /api/thought
+- `POST` /api/thoughts
     
   Request
   ```
@@ -97,7 +97,7 @@ Returns json data about thought.
   }
   ```
   
-- `PATCH` /api/thought
+- `POST` /api/thoughts/update
   
   Request
   ```
@@ -117,7 +117,7 @@ Returns json data about thought.
   }
   ```
   
-- `DELETE` /api/thought/:id
+- `DELETE` /api/thoughts/:id
 
   Request
   `/api/thoughts/63dab20a1bad4d34504b5c18`
@@ -132,10 +132,10 @@ Returns json data about thought.
   }
   ```
   
-- `POST` /api/thought/transferToPlan/:id
+- `POST` /api/thought/transferToPlan/?id=63dab20a1bad4d34504b5c18
 
   Request
-  `/api/thought/transferToPlan/63dab20a1bad4d34504b5c18`
+  `/api/thought/transferToPlan/?id=63dab20a1bad4d34504b5c18`
   
   Respose
   ```
@@ -150,7 +150,7 @@ Returns json data about thought.
   
 </details>
 
-### Plans
+### Plan
 
 Returns json data about user's plans.
 
@@ -166,10 +166,57 @@ Returns json data about user's plans.
 
 <details>
 
-- `GET` /api/plans/:userId
-- `GET` /api/plan/:id
-- `POST` /api/plan
-- `PATCH` /api/plan/:id
-- `DELETE` /api/plan/:id
+- `GET` /api/plans/?userId=''
+- `GET` /api/plans/:id
+- `POST` /api/plans
+- `DELETE` /api/plans/:id
+- `PATCH` /api/plans/update
+
+</details>
+
+### Week distribution
+
+Returns json data about the distribution of time during the week.
+
+```
+{
+  "_id": string,
+  "userId": string,
+  "dayOfWeek": number,
+  "planId": string,
+  "duration": number
+}
+```
+
+<details>
+
+- `GET` /api/weekDistribution/?userId=''
+- `POST` /api/weekDistribution
+- `DELETE` /api/weekDistribution/:id
+- `POST` /api/weekDistribution/update
+
+</details>
+
+### Day distribution
+
+Returns json data about the distribution of time during the day.
+
+```
+{
+  "_id": string,
+  "userId": string,
+  "dayOfWeek": number,
+  "planId": string,
+  "from": number,
+  "to": number,
+}
+```
+
+<details>
+
+- `GET` /api/dayDistribution/?userId=''&dayOfWeek=''
+- `POST` /api/weekDistribution
+- `DELETE` /api/weekDistribution/:id
+- `POST` /api/weekDistribution/update
 
 </details>
