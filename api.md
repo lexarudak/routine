@@ -170,7 +170,7 @@ Returns json data about user's plans.
 - `GET` /api/plans/:id
 - `POST` /api/plans
 - `DELETE` /api/plans/:id
-- `PATCH` /api/plans/update
+- `POST` /api/plans/update
 
 </details>
 
@@ -218,5 +218,45 @@ Returns json data about the distribution of time during the day.
 - `POST` /api/weekDistribution
 - `DELETE` /api/weekDistribution/:id
 - `POST` /api/weekDistribution/update
+
+</details>
+
+### Statistics
+
+Returns json data about the user statistics.
+
+```
+{
+  "_id": string,
+  "userId": string,
+  "planId": string,
+  "deviation": number
+}
+```
+
+<details>
+
+- `GET` /api/statistics/?userId=''
+- `POST` /api/statistics/confirmDay
+
+</details>
+
+### UserSettings
+
+Returns json data about the user settings.
+
+```
+{
+  "_id": string,
+  "userId": string,
+  "confirmationDay": string,
+  "confirmationTime": number
+}
+```
+
+<details>
+
+- `GET` /api/statistics/?userId=''
+- `POST` /api/statistics/update
 
 </details>
