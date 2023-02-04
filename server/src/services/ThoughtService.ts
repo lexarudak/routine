@@ -1,6 +1,6 @@
-import Thought from "../schemas/Thought";
-import { ClientError } from "../errors";
-import * as Type from "../types";
+import Thought from '../schemas/Thought';
+import { ClientError } from '../errors';
+import * as Type from '../types';
 
 class ThoughtService {
   async get() {

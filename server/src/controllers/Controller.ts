@@ -1,5 +1,5 @@
-import { Response } from "express";
-import { ClientError, ServerError } from "../errors";
+import { Response } from 'express';
+import { ClientError, ServerError } from '../errors';
 
 export default class Controller {
   protected error(res: Response, error: Error | unknown): void {

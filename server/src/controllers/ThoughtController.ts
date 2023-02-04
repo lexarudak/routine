@@ -1,6 +1,6 @@
-import ThoughtService from "../services/ThoughtService";
-import { Request, Response } from "express";
-import Controller from "./Controller";
+import ThoughtService from '../services/ThoughtService';
+import { Request, Response } from 'express';
+import Controller from './Controller';
 
 class ThoughtController extends Controller {
   async get(req: Request, res: Response) {

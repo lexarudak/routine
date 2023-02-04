@@ -1,7 +1,7 @@
-import express from "express";
-import mongoose from "mongoose";
-import router from "./router";
-import config from "./config";
+import express from 'express';
+import mongoose from 'mongoose';
+import router from './router';
+import config from './config';
 
 const srv = express();
 srv.use(express.json());

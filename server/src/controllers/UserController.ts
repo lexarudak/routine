@@ -1,7 +1,7 @@
-import { validationResult } from "express-validator";
-import { Request, Response } from "express";
-import UserService from "../services/UserService";
-import Controller from "./Controller";
+import { validationResult } from 'express-validator';
+import { Request, Response } from 'express';
+import UserService from '../services/UserService';
+import Controller from './Controller';
 
 class UserController extends Controller {
   async get(req: Request, res: Response) {
@@ -26,7 +26,7 @@ class UserController extends Controller {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        res.status(400).json({ message: "Incorrect request", errors });
+        res.status(400).json({ message: 'Incorrect request', errors });
         return;
       }
       const user = await UserService.create(req.body);

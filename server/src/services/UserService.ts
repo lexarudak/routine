@@ -1,9 +1,9 @@
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import config from "../config";
-import { ClientError } from "../errors";
-import User from "../schemas/User";
-import * as Type from "../types";
+import bcrypt from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+import config from '../config';
+import { ClientError } from '../errors';
+import User from '../schemas/User';
+import * as Type from '../types';
 
 class UserService {
   async get() {
@@ -25,7 +25,7 @@ class UserService {
 
     const hashPassword = await bcrypt.hash(user.password, 10);
 
-    let clone = Object.assign({}, user);
+    const clone = Object.assign({}, user);
     clone.password = hashPassword;
 
     return await User.create(clone);
@@ -49,8 +49,8 @@ class UserService {
       user: {
         id: userDB._id.toString(),
         name: userDB.name,
-        email: userDB.email
-      }
+        email: userDB.email,
+      },
     };
 
     return userData;
