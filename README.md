@@ -21,6 +21,9 @@
 
 ## API
 
+- Internal: http://localhost:5000
+- External: https://warm-bayou-30321.herokuapp.com:5000
+
 ### Users
 
 Returns json data about users. Registration, authorization actions.
