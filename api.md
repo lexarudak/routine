@@ -256,7 +256,7 @@ Returns json data about the user settings.
 
 <details>
 
-- `GET` /api/statistics/?userId=''
-- `POST` /api/statistics/update
+- `GET` /api/userSettings/?userId=''
+- `POST` /api/userSettings/update
 
 </details>
