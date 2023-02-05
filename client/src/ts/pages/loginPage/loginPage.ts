@@ -105,6 +105,7 @@ class LoginPage extends Page {
           const res = await this.sendForm();
           console.log(res); // обрабатыаем положительный ответ
           this.cleanForm();
+          this.status = InnerText.signIn;
           buttonOn(this.signButton);
           this.goTo(RoutsList.homePage);
         } catch {
@@ -137,7 +138,7 @@ class LoginPage extends Page {
     this.nameInput.input.value = '';
     this.emailInput.input.value = '';
     this.firstPasswordInput.input.value = '';
-    this.firstPasswordInput.input.value = '';
+    this.secondPasswordInput.input.value = '';
   }
 
   private makeLink(text: string, className: ClassList) {
