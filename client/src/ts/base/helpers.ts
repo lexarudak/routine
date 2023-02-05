@@ -27,4 +27,16 @@ function getExistentInputElement<T extends HTMLElement>(
   return el;
 }
 
-export { isHTMLElement, getExistentElement, getExistentInputElement, getExistentElementByClass };
+function buttonOn(...buttons: HTMLButtonElement[]) {
+  buttons.forEach((button) => {
+    button.disabled = false;
+  });
+}
+
+function buttonOff(...buttons: HTMLButtonElement[]) {
+  buttons.forEach((button) => {
+    button.disabled = true;
+  });
+}
+
+export { isHTMLElement, getExistentElement, getExistentInputElement, getExistentElementByClass, buttonOn, buttonOff };

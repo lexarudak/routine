@@ -1,6 +1,6 @@
 import PageList from '../../base/enums/pageList';
+import RoutsList from '../../base/enums/routsList';
 import { GoToFn } from '../../base/types';
-import SignIn from '../../components/signIn';
 import Page from '../page';
 
 class HomePage extends Page {
@@ -11,7 +11,7 @@ class HomePage extends Page {
   protected getFilledPage(): HTMLElement {
     const emptyPage = document.createElement('h1');
     emptyPage.innerText = this.name;
-    emptyPage.addEventListener('click', () => new SignIn().draw());
+    emptyPage.addEventListener('click', () => this.goTo(RoutsList.loginPage));
     return emptyPage;
   }
 }

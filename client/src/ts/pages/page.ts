@@ -19,7 +19,7 @@ abstract class Page {
     return emptyPage;
   }
 
-  public async draw(): Promise<void> {
+  public draw(): void {
     const container = getExistentElementByClass(ClassList.mainContainer);
     container.innerHTML = '';
     container.append(this.getFilledPage());

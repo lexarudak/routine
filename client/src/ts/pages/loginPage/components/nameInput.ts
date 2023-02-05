@@ -1,4 +1,4 @@
-import InputType from '../base/enums/inputTypes';
+import InputType from '../../../base/enums/inputTypes';
 import TextInput from './textInput';
 
 class NameInput extends TextInput {

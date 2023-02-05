@@ -1,6 +1,6 @@
-import ClassList from '../base/enums/classList';
-import ErrorsList from '../base/enums/errorsList';
-import InputType from '../base/enums/inputTypes';
+import ClassList from '../../../base/enums/classList';
+import ErrorsList from '../../../base/enums/errorsList';
+import InputType from '../../../base/enums/inputTypes';
 
 class TextInput {
   private type: InputType;
