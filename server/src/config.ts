@@ -5,6 +5,7 @@ config.set(
   'dbUrl',
   'mongodb+srv://mikalai-kazlou:Uu8rYNJbgMWpApXp@cluster0.caeg4ek.mongodb.net/?retryWrites=true&w=majority'
 );
+config.set('allowedOrigins', ['http://localhost:8080', 'https://lexarudak-rsclone.netlify.app']);
 config.set('jwtSecretKey', 'jwt-secret-key-rs-school');
 config.set('tokenExpiresIn', '1h');
 

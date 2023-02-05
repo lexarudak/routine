@@ -3,8 +3,10 @@ import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import router from './router';
 import config from './config';
+import cors from './cors';
 
 const srv = express();
+srv.use(cors);
 srv.use(express.json());
 srv.use(cookieParser());
 srv.use('/api', router);
