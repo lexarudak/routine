@@ -3,6 +3,14 @@
 - Internal: http://localhost:5000
 - External: https://warm-bayou-30321.herokuapp.com
 
+### Start local server
+
+```
+> cd server
+> npm run start
+```
+![Screenshot_1](https://user-images.githubusercontent.com/108581309/216828887-f2d547bc-c046-40e6-bc71-dc8b7742cbd5.jpg)
+
 ### User
 
 Returns json data about users.
