@@ -37,7 +37,6 @@ class UserController extends Controller {
       const userData = await UserService.login(login);
       res.cookie('rs-clone-user-token', userData.token, { maxAge: 3600e3, httpOnly: true });
       res.json(userData);
-
     } catch (error) {
       this.error(res, error);
     }

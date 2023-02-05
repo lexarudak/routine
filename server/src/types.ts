@@ -13,6 +13,7 @@ export type TUser = {
 export type TLogin = {
   email: string;
   password: string;
+  remember: boolean;
 };
 
 export type TUserData = {
