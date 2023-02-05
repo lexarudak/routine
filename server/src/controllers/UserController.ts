@@ -2,6 +2,7 @@ import { validationResult } from 'express-validator';
 import { Request, Response } from 'express';
 import UserService from '../services/UserService';
 import Controller from './Controller';
+import * as Type from '../types';
 
 class UserController extends Controller {
   async get(req: Request, res: Response) {
@@ -29,8 +30,14 @@ class UserController extends Controller {
         res.status(400).json({ message: 'Incorrect request', errors });
         return;
       }
-      const user = await UserService.create(req.body);
-      res.json(user);
+
+      await UserService.create(req.body);
+      const login: Type.TLogin = req.body;
+
+      const userData = await UserService.login(login);
+      res.cookie('rs-clone-user-token', userData.token, { maxAge: 3600e3, httpOnly: true });
+      res.json(userData);
+
     } catch (error) {
       this.error(res, error);
     }
@@ -39,6 +46,7 @@ class UserController extends Controller {
   async login(req: Request, res: Response) {
     try {
       const userData = await UserService.login(req.body);
+      res.cookie('rs-clone-user-token', userData.token, { maxAge: 3600e3, httpOnly: true });
       res.json(userData);
     } catch (error) {
       this.error(res, error);

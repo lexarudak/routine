@@ -43,7 +43,6 @@ class UserService {
     }
 
     const token = jwt.sign({ id: userDB._id }, config.get('jwtSecretKey'), { expiresIn: config.get('tokenExpiresIn') });
-
     const userData: Type.TUserData = {
       token,
       user: {

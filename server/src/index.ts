@@ -1,10 +1,12 @@
 import express from 'express';
+import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
 import router from './router';
 import config from './config';
 
 const srv = express();
 srv.use(express.json());
+srv.use(cookieParser());
 srv.use('/api', router);
 
 const port = process.env.PORT || config.get('port');
