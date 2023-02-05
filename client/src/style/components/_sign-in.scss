@@ -1,0 +1,153 @@
+.sign-form {
+  display: flex;
+  flex-direction: column;
+  box-shadow: $shadow;
+  border-radius: 100%;
+  color: $font-light;
+  transition: .3s;
+  padding: 80px 0px 0px 150px;
+  height: 580px;
+  width: 580px;
+  background: $color-background-1;
+
+  &_sign-up {
+    background: $color-background-2;
+    width: 680px;
+    height: 680px;
+    padding: 90px 0px 0px 180px;
+  }
+
+  &__title {
+    margin-top: 30px;
+    margin-bottom: 50px;
+    font-size: 80px;
+    font-weight: normal;
+    height: 92px;
+  }
+
+  &__label {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    cursor: pointer;
+    height: 18px;
+  }
+
+  &__big-o {
+    width: 15px;
+    height: 15px;
+    border-radius: 100%;
+    background-color: $font-light;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &__small-o {
+    width: 0px;
+    height: 0px;
+    border-radius: 100%;
+    background: $sign-in-active;
+  }
+
+  &__input{
+    background: transparent;
+    border: none;
+    display: flex;
+    border-left: 2px solid $font-light;
+    margin-bottom: 30px;
+    color: $font-light;
+    font-size: 24px;
+    padding-left: 20px;
+    width: 80%;
+    height: 27px;
+
+    &::placeholder {
+      color: $font-light-trans;
+    }
+  }
+
+  &__input-box {
+    height: 57px;
+  }
+
+  &__input-error {
+    overflow: hidden;
+    position: absolute;
+    left: 25px;
+    top: 30px;
+    opacity: 0;
+    height: 0;
+    transition: .3s;
+    color: $sign-in-active;
+
+    &_active {
+      opacity: 1;
+      height: 18px;
+    }
+  }
+
+  &__link {
+    margin-top: 10px;
+    text-decoration: underline;
+    cursor: pointer;
+    color: $font-light-trans;
+    height: 18px;
+    width: 250px;
+
+    &:hover {
+      color: $sign-in-active;
+    }
+
+  }
+
+  &__button {
+    margin-top: 30px;
+    width: 150px;
+    padding: 15px 30px;
+    border-radius: 30px;
+  }
+
+  &__button-text {
+    display: block;
+    height: 18px;
+    transition: .3s;
+  }
+}
+
+#rememberMe {
+  
+  &:checked + .sign-form__label .sign-form__big-o .sign-form__small-o {
+    width: 12px;
+    height: 12px;
+  }
+}
+
+#rememberMe {
+  display: none;
+}
+
+.sign-form {
+  & > * {
+    overflow: hidden;
+    transition: .3s;
+  }
+
+  &.sign-form_sign-in > .sign-up-view,
+  &.sign-form_sign-in > * > .sign-up-view,
+  &.sign-form_sign-up > .sign-in-view,
+  &.sign-form_sign-up > * >.sign-in-view {
+    height: 0px;
+    opacity: 0;
+    margin: 0px;
+  }
+
+  &.sign-form_sign-in > .sign-in-view,
+  &.sign-form_sign-in > * > .sign-in-view,
+  &.sign-form_sign-up > .sign-up-view,
+  &.sign-form_sign-up > * >.sign-up-view {
+    opacity: 1;
+  }
+
+}

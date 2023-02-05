@@ -17,7 +17,10 @@ function getExistentElementByClass<T extends HTMLElement>(
   return getExistentElement(`.${selector}`, node);
 }
 
-function getExistentInputElement<T extends HTMLElement>(selector: string, node: Document | HTMLElement = document): T {
+function getExistentInputElement<T extends HTMLElement>(
+  selector: string,
+  node: Document | HTMLElement = document
+): HTMLInputElement {
   const el = node.querySelector<T>(selector);
   if (el === null) throw new Error(ErrorsList.elementNotFound);
   if (!(el instanceof HTMLInputElement)) throw new Error(ErrorsList.elementIsNotInput);

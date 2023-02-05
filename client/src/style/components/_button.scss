@@ -7,6 +7,11 @@
   transition: .3s;
   cursor: pointer;
 
+  &:hover {
+    box-shadow: $none-shadow;
+    transform: scale(.98);
+  }
+
   &_main {
     color: $font-main;
     border-color: $font-main;
@@ -14,6 +19,20 @@
     &:hover {
       color: $success;
       border-color: $success;
+    }
+  }
+
+  &_signIn {
+    border-color: $font-light;
+    color: $font-light;
+    background-color: transparent;
+
+    &:hover {
+      border-color: $sign-in-active;
+
+      & > * {
+        color: $sign-in-active;;
+      }
     }
   }
 }
