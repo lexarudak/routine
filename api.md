@@ -160,6 +160,7 @@ Returns json data about user's plans.
   "userId": string,
   "title": string,
   "text": string,
+  "color": string,
   "duration": number
 }
 ```
