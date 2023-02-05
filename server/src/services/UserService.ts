@@ -42,24 +42,22 @@ class UserService {
       throw new ClientError(`Invalid password`);
     }
 
-    const token = jwt.sign({ id: userDB._id }, config.get('jwtSecretKey'), { expiresIn: config.get('tokenExpiresIn') });
-    const userData: Type.TUserData = {
-      token,
-      user: {
-        id: userDB._id.toString(),
-        name: userDB.name,
-        email: userDB.email,
-      },
-    };
+    const expiresIn = login.remember ? config.get('tokenExpiresInLong') : config.get('tokenExpiresInShort');
+    const token = jwt.sign({ id: userDB._id }, config.get('jwtSecretKey'), { expiresIn: expiresIn });
+    const userData: Type.TUserData = { token, user: userDB };
 
     return userData;
   }
 
-  async update(user: Type.TUser) {
+  async update(user: Type.TDBUser) {
     if (!user._id) {
       throw new ClientError('ID not specified');
     }
-    return await User.findByIdAndUpdate(user._id, user, { new: true });
+    const userForUpdate = {
+      _id: user._id,
+      name: user.name,
+    };
+    return await User.findByIdAndUpdate(user._id, userForUpdate, { new: true });
   }
 
   async delete(id: string) {

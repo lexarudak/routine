@@ -19,9 +19,9 @@ const validationParameters = [
 
 router.get('/users', UserController.get.bind(UserController));
 router.get('/users/:id', UserController.getById.bind(UserController));
-router.post('/registration', validationParameters, UserController.create.bind(UserController));
-router.post('/login', UserController.login.bind(UserController));
-router.put('/users', UserController.update.bind(UserController));
+router.post('/users/registration', validationParameters, UserController.create.bind(UserController));
+router.post('/users/login', UserController.login.bind(UserController));
+router.post('/users/update', UserController.update.bind(UserController));
 router.delete('/users/:id', UserController.delete.bind(UserController));
 
 export default router;

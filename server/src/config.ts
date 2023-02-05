@@ -7,6 +7,7 @@ config.set(
 );
 config.set('allowedOrigins', ['http://localhost:8080', 'https://lexarudak-rsclone.netlify.app']);
 config.set('jwtSecretKey', 'jwt-secret-key-rs-school');
-config.set('tokenExpiresIn', '1h');
+config.set('tokenExpiresInShort', 86400e3);
+config.set('tokenExpiresInLong', 604800e3);
 
 export default config;
