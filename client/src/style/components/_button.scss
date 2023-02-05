@@ -7,6 +7,11 @@
   transition: .3s;
   cursor: pointer;
 
+  &:disabled:hover{
+    box-shadow: $shadow;
+    transform: scale(1);
+  }
+
   &:hover {
     box-shadow: $none-shadow;
     transform: scale(.98);
@@ -26,6 +31,21 @@
     border-color: $font-light;
     color: $font-light;
     background-color: transparent;
+
+    &:disabled {
+      border-color: $font-light-trans;
+      color: $font-light-trans;
+
+      &:hover {
+        border-color: $font-light-trans;
+        color: $font-light-trans;
+
+        & > * {
+            color: $font-light-trans;
+            ;
+          }
+      }
+    }
 
     &:hover {
       border-color: $sign-in-active;

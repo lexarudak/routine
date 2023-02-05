@@ -10,6 +10,7 @@ const enum PageList {
   saturdayPage = 'Saturday page',
   sundayPage = 'Sunday page',
   notFound = '404 page',
+  loginPage = 'Login page',
 }
 
 export default PageList;

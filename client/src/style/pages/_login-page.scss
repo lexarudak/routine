@@ -51,7 +51,7 @@
     background: $sign-in-active;
   }
 
-  &__input{
+  &__input {
     background: transparent;
     border: none;
     display: flex;
@@ -69,6 +69,7 @@
   }
 
   &__input-box {
+    position: relative;
     height: 57px;
   }
 
@@ -117,8 +118,8 @@
 }
 
 #rememberMe {
-  
-  &:checked + .sign-form__label .sign-form__big-o .sign-form__small-o {
+
+  &:checked+.sign-form__label .sign-form__big-o .sign-form__small-o {
     width: 12px;
     height: 12px;
   }
@@ -129,24 +130,24 @@
 }
 
 .sign-form {
-  & > * {
+  &>* {
     overflow: hidden;
     transition: .3s;
   }
 
-  &.sign-form_sign-in > .sign-up-view,
-  &.sign-form_sign-in > * > .sign-up-view,
-  &.sign-form_sign-up > .sign-in-view,
-  &.sign-form_sign-up > * >.sign-in-view {
+  &.sign-form_sign-in>.sign-up-view,
+  &.sign-form_sign-in>*>.sign-up-view,
+  &.sign-form_sign-up>.sign-in-view,
+  &.sign-form_sign-up>*>.sign-in-view {
     height: 0px;
     opacity: 0;
     margin: 0px;
   }
 
-  &.sign-form_sign-in > .sign-in-view,
-  &.sign-form_sign-in > * > .sign-in-view,
-  &.sign-form_sign-up > .sign-up-view,
-  &.sign-form_sign-up > * >.sign-up-view {
+  &.sign-form_sign-in>.sign-in-view,
+  &.sign-form_sign-in>*>.sign-in-view,
+  &.sign-form_sign-up>.sign-up-view,
+  &.sign-form_sign-up>*>.sign-up-view {
     opacity: 1;
   }
 
