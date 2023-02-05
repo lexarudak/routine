@@ -28,12 +28,172 @@ Returns json data about users.
 <details>
 
 - `GET` /api/users
+  
+  Respose `200` `OK`
+  ```
+  [
+    {
+      "_id": "63dbce8efc36f95ae5646e7e",
+      "name": "John Doe",
+      "email": "john.doe@gmail.com",
+      "createdAt": "2023-02-05T18:15:14.997Z",
+      "__v": 0
+    },
+    {
+      "_id": "63dbd176bb3349816256d074",
+      "name": "Steven Gundry",
+      "email": "steven.gundry@gmail.com",
+      "createdAt": "2023-02-04T12:45:53.196Z",
+      "__v": 0
+    }
+  ]
+  ```  
+  
 - `GET` /api/users/:id
-- `DELETE` /api/users/:id  
+  
+  Request
+  `/api/users/63dbd176bb3349816256d074`
+  
+  Respose `200` `OK`
+  ```
+  {
+    "_id": "63dbd176bb3349816256d074",
+    "name": "Steven Gundry",
+    "email": "steven.gundry@gmail.com",
+    "createdAt": "2023-02-04T12:45:53.196Z",
+    "__v": 0
+  }
+  ```
+  
+- `DELETE` /api/users/:id 
+  
+  Request
+  `/api/users/63dbd176bb3349816256d074`
+  
+  Respose `200` `OK`
+  ```
+  {
+    "_id": "63dbd176bb3349816256d074",
+    "name": "Steven Gundry",
+    "email": "steven.gundry@gmail.com",
+    "createdAt": "2023-02-04T12:45:53.196Z",
+    "__v": 0
+  }
+  ```
+  
 - `POST` /api/users/registration
+  
+  Request
+  ```
+  {
+    "name": "John Doe",
+    "email": "john.doe@gmail.com",
+    "password": "12345"
+  }
+  ```
+  
+  Respose `200` `OK`
+  ```
+  {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZTAwMWRhODhkMjUxZGM1M2UzNmQxZiIsIml
+              hdCI6MTY3NTYyNDkyMiwiZXhwIjoxNzYyMDI0OTIyfQ.KtnvX9m92FTlIVU_6HZneTVmYOX-8U5oO8dYPvcJba8",
+    "user": 
+    {
+      "_id": "63e001da88d251dc53e36d1f",
+      "name": "John Doe",
+      "email": "john.doe@gmail.com",
+      "createdAt": "2023-02-05T19:22:02.378Z",
+      "__v": 0
+    }
+  }
+  ```
+  
+  Respose `400` `Bad Request`
+  ```
+  "User with email john.doe@gmail.com already exist"
+  ```
+  
+  Respose `400` `Bad Request`
+  ```
+  {
+    "message": "Incorrect request",
+    "errors": {
+      "errors": [
+        {
+          "value": "user-gmail.com",
+          "msg": "Incorrect email",
+          "param": "email",
+          "location": "body"
+        },
+        {
+          "value": "1",
+          "msg": "Password must be longer than 3 and shorter than 12 symbols",
+          "param": "password",
+          "location": "body"
+        }
+      ]
+    }
+  }
+  ```
+  
 - `POST` /api/users/login
+  
+  Request
+  ```
+  {
+    "email": "john.doe@gmail.com",
+    "password": "12345",
+    "remember": false
+  }
+  ```
+  
+  Respose `200` `OK`
+  ```
+  {
+    "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzZTAwMWRhODhkMjUxZGM1M2UzNmQxZiIsIml
+              hdCI6MTY3NTYyNDkyMiwiZXhwIjoxNzYyMDI0OTIyfQ.KtnvX9m92FTlIVU_6HZneTVmYOX-8U5oO8dYPvcJba8",
+    "user": 
+    {
+      "_id": "63e001da88d251dc53e36d1f",
+      "name": "John Doe",
+      "email": "john.doe@gmail.com",
+      "createdAt": "2023-02-05T19:22:02.378Z",
+      "__v": 0
+    }
+  }
+  ```
+  
+  Respose `404` `Not Found`
+  ```
+  "User with email john.doe@gmail.com not found"
+  ```
+  
+  Respose `400` `Bad Request`
+  ```
+  "Invalid password"
+  ```
+  
 - `POST` /api/users/update
 
+  Request
+  ```
+  {
+    "_id": "63dbce8efc36f95ae5646e7e",
+    "name": "Mr. John Doe"
+  }
+  ```
+  
+  Respose `200` `OK`
+  ```
+  {
+    "_id": "63dbce8efc36f95ae5646e7e",
+    "name": "Mr. John Doe",
+    "email": "john.doe@gmail.com",
+    "createdAt": "2023-02-05T19:22:02.378Z",
+    "__v": 0
+  }
+  ```
+  
 </details>
 
 ### Thought
