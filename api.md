@@ -1,6 +1,6 @@
 ## API
 
-- Internal: http://localhost:5000
+- Internal: http://localhost:5100
 - External: https://warm-bayou-30321.herokuapp.com
 
 ### Start local server
@@ -210,9 +210,9 @@ Returns json data about thought.
 
 <details>
 
-- `GET` /api/thoughts/?userId=63dd5008939161908112e05f
+- `GET` /api/thoughts
   
-  Respose
+  Respose `200` `OK`
   ```
   [
     {
@@ -235,7 +235,7 @@ Returns json data about thought.
   Request
   `/api/thoughts/63dab20a1bad4d34504b5c18`
   
-  Respose
+  Respose `200` `OK`
   ```
   {
     "_id": "63dab20a1bad4d34504b5c18",
@@ -250,12 +250,11 @@ Returns json data about thought.
   Request
   ```
   {
-    "userId": 63dd5008939161908112e05f,
     "title": "Do gym every morning"
   }
   ```
   
-  Respose
+  Respose `200` `OK`
   ```
   {
     "_id": "63dab20a1bad4d34504b5c18",
@@ -275,7 +274,7 @@ Returns json data about thought.
   }
   ```
   
-  Respose
+  Respose `200` `OK`
   ```
   {
     "_id": "63de721eb2cdc7d1460b9b08",
@@ -290,7 +289,7 @@ Returns json data about thought.
   Request
   `/api/thoughts/63dab20a1bad4d34504b5c18`
   
-  Respose
+  Respose `200` `OK`
   ```
   {
     "_id": "63dab20a1bad4d34504b5c18",
@@ -305,12 +304,14 @@ Returns json data about thought.
   Request
   `/api/thought/transferToPlan/?id=63dab20a1bad4d34504b5c18`
   
-  Respose
+  Respose `200` `OK`
   ```
   {
     "_id": "63dab20a1bad4d34504b5c18",
     "title": "Do gym every morning",
+    "userId": 63dd5008939161908112e05f,
     "text": "",
+    "color": "",
     "duration": 0
     "__v": 0
   }
@@ -334,11 +335,117 @@ Returns json data about user's plans.
 
 <details>
 
-- `GET` /api/plans/?userId=''
+- `GET` /api/plans
+  
+  Respose `200` `OK`
+  ```
+  [
+    {
+      "_id": "63e158255010e434534cfae5",
+      "userId": "63df879ff7a5081606fb4fb8",
+      "title": "Plan 1",
+      "text": "Lorem ipsum",
+      "color": "#FF00FF",
+      "duration": 15.25,
+      "__v": 0
+    },
+    {
+      "_id": "63e15e1027cf884cc5d1ef99",
+      "userId": "63df879ff7a5081606fb4fb8",
+      "title": "Plan 2",
+      "text": "Lorem ipsum",
+      "color": "#FF00FF",
+      "duration": 5.25,
+      "__v": 0
+    }
+  ]
+  ```
+  
 - `GET` /api/plans/:id
+  
+  Request
+  `/api/plans/63e15e1027cf884cc5d1ef99`
+  
+  Respose `200` `OK`
+  ```
+  {
+    "_id": "63e15e1027cf884cc5d1ef99",
+    "userId": "63df879ff7a5081606fb4fb8",
+    "title": "Plan 2",
+    "text": "Lorem ipsum",
+    "color": "#FF00FF",
+    "duration": 5.25,
+    "__v": 0
+  }
+  ```
+  
 - `POST` /api/plans
+  
+  Request
+  ```
+  {
+    "title": "Plan 3",
+    "text": "Lorem ipsum",
+    "color": "#FF00FF",
+    "duration": 5.25
+  }
+  ```
+  
+  Respose `200` `OK`
+  ```
+  {
+    "_id": "63e16f5dfdeef06fd34174ce",
+    "userId": "63df879ff7a5081606fb4fb8",
+    "title": "Plan 3",
+    "text": "Lorem ipsum",
+    "color": "#FF00FF",
+    "duration": 5.25,
+    "__v": 0
+  }
+  ```
+  
 - `DELETE` /api/plans/:id
+  
+  Request
+  `/api/plans/63e16f5dfdeef06fd34174ce`
+  
+  Respose `200` `OK`
+  ```
+  {
+    "_id": "63e16f5dfdeef06fd34174ce",
+    "userId": "63df879ff7a5081606fb4fb8",
+    "title": "Plan test 3",
+    "text": "Lorem ipsum",
+    "color": "#FF00FF",
+    "duration": 5.25,
+    "__v": 0
+  }
+  ```
+  
 - `POST` /api/plans/update
+  
+  Request
+  ```
+  {
+    "_id": "63e158255010e434534cfae5",
+    "title": "Plan 3",
+    "color": "#FF00FF",
+    "duration": 15.25
+  }
+  ```
+  
+  Respose `200` `OK`
+  ```
+  {
+    "_id": "63e158255010e434534cfae5",
+    "userId": "63df879ff7a5081606fb4fb8",
+    "title": "Plan 3",
+    "text": "Lorem ipsum",
+    "color": "#FF00FF",
+    "duration": 15.25,
+    "__v": 0
+  }
+  ```
 
 </details>
 
