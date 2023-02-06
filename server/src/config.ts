@@ -1,6 +1,6 @@
 const config = new Map();
 
-config.set('port', 5000);
+config.set('port', 5100);
 config.set(
   'dbUrl',
   'mongodb+srv://mikalai-kazlou:Uu8rYNJbgMWpApXp@cluster0.caeg4ek.mongodb.net/?retryWrites=true&w=majority'

@@ -45,7 +45,7 @@ class TextInput {
     this.errorBlock.classList.add(ClassList.inputErrorActive);
   }
 
-  private hideError() {
+  public hideError() {
     this.errorBlock.classList.remove(ClassList.inputErrorActive);
   }
 

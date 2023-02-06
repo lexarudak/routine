@@ -1,9 +1,12 @@
 const enum ClassList {
   mainContainer = 'main__container',
+  // 404
   page404text = 'page-404__text',
   page404title = 'page-404__title',
+  // Popup
   popup = 'popup',
   popupShow = 'popup_show',
+  // Sign in
   signForm = 'sign-form',
   signIn = 'sign-form_sign-in',
   signUp = 'sign-form_sign-up',
@@ -22,6 +25,11 @@ const enum ClassList {
   signUpView = 'sign-up-view',
   inputError = 'sign-form__input-error',
   inputErrorActive = 'sign-form__input-error_active',
+  // Plans
+  planContainer = 'plan',
+  weekLine = 'plan__week-line',
+  weekTextContainer = 'plan__text-container',
+  weekTextValue = 'plan__text-value',
 }
 
 export default ClassList;
