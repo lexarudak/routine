@@ -4,6 +4,7 @@ import UserService from '../services/UserService';
 import Controller from './Controller';
 import config from '../config';
 import * as Type from '../types';
+import * as Enum from '../enums';
 
 class UserController extends Controller {
   async get(req: Request, res: Response) {
@@ -76,7 +77,7 @@ class UserController extends Controller {
 
   private setJwtToken(res: Response, token: string, remember = false) {
     const maxAge = remember ? config.get('tokenExpiresInLong') : config.get('tokenExpiresInShort');
-    res.cookie('rs-clone-user-token', token, { maxAge: maxAge, httpOnly: true });
+    res.cookie(Enum.Constants.tokenDescription, token, { maxAge: maxAge, httpOnly: true });
   }
 }
 

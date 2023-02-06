@@ -25,3 +25,14 @@ export type TThought = {
   _id: Types.ObjectId;
   title: string;
 };
+
+export type TDBPlan = {
+  _id: Types.ObjectId;
+  userId: Types.ObjectId;
+  title: string;
+  text: string;
+  color: string;
+  duration: number;
+};
+
+export type TPlan = Omit<TDBPlan, '_id'>;

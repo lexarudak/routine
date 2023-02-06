@@ -1,16 +1,11 @@
 import Router from 'express';
 import { check } from 'express-validator';
 
-import ThoughtController from './controllers/ThoughtController';
 import UserController from './controllers/UserController';
+import ThoughtController from './controllers/ThoughtController';
+import PlanController from './controllers/PlanController';
 
 const router = Router();
-
-router.get('/thoughts', ThoughtController.get.bind(ThoughtController));
-router.get('/thoughts/:id', ThoughtController.getById.bind(ThoughtController));
-router.post('/thoughts', ThoughtController.create.bind(ThoughtController));
-router.put('/thoughts', ThoughtController.update.bind(ThoughtController));
-router.delete('/thoughts/:id', ThoughtController.delete.bind(ThoughtController));
 
 const validationParameters = [
   check('email', 'Incorrect email').isEmail(),
@@ -23,5 +18,17 @@ router.post('/users/registration', validationParameters, UserController.create.b
 router.post('/users/login', UserController.login.bind(UserController));
 router.post('/users/update', UserController.update.bind(UserController));
 router.delete('/users/:id', UserController.delete.bind(UserController));
+
+router.get('/thoughts', ThoughtController.get.bind(ThoughtController));
+router.get('/thoughts/:id', ThoughtController.getById.bind(ThoughtController));
+router.post('/thoughts', ThoughtController.create.bind(ThoughtController));
+router.put('/thoughts', ThoughtController.update.bind(ThoughtController));
+router.delete('/thoughts/:id', ThoughtController.delete.bind(ThoughtController));
+
+router.get('/plans', PlanController.get.bind(PlanController));
+router.get('/plans/:id', PlanController.getById.bind(PlanController));
+router.post('/plans', PlanController.create.bind(PlanController));
+router.post('/plans/update', PlanController.update.bind(PlanController));
+router.delete('/plans/:id', PlanController.delete.bind(PlanController));
 
 export default router;

@@ -54,7 +54,6 @@ class UserService {
       throw new ClientError('ID not specified');
     }
     const userForUpdate = {
-      _id: user._id,
       name: user.name,
     };
     return await User.findByIdAndUpdate(user._id, userForUpdate, { new: true });
