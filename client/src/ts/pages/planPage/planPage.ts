@@ -8,7 +8,6 @@ import Page from '../page';
 import PlanLayout from './components/planLayout';
 import testPlans from './components/testPlans';
 import testWeekDistribution from './components/testWeekDistribution';
-// import testPlans from './components/testPlans';
 
 class PlanPage extends Page {
   layout: PlanLayout;
@@ -21,34 +20,45 @@ class PlanPage extends Page {
     super(PagesList.planPage, goTo);
     this.allPlans = [];
     this.weekDistribution = [[]];
-    this.layout = new PlanLayout();
-  }
-
-  private getFilledHours() {
-    return this.allPlans
-      .reduce((acc, val) => {
-        return acc + val.duration;
-      }, 0)
-      .toString();
+    this.layout = new PlanLayout(goTo);
   }
 
   private sortAllPlans() {
     return this.allPlans.sort((a, b) => (a.duration > b.duration ? +1 : 1));
   }
 
+  private fillDays() {
+    const daysArr = document.querySelectorAll(`.${ClassList.planDay}`);
+    daysArr.forEach((day, ind) => {
+      if (day.firstChild instanceof HTMLElement) {
+        const fillHours = this.fillLine(day.firstChild, this.weekDistribution[ind], Values.allDayHours, true);
+        if (day.lastChild instanceof HTMLElement) {
+          day.lastChild.innerHTML = `${Values.allDayHours - fillHours} h`;
+        }
+      }
+    });
+  }
+
+  private fillLine(line: HTMLElement, data: Plan[], maxHours: number, isVertical: boolean) {
+    line.innerHTML = '';
+    const containerSize = isVertical ? line.clientHeight : line.clientWidth;
+    const k = containerSize / maxHours;
+    const fullHours = data.reduce((acc, val) => {
+      const section = document.createElement('div');
+      section.style.height = isVertical ? `${val.duration * k}px` : `100%`;
+      section.style.width = isVertical ? `100%` : `${val.duration * k}px`;
+      section.style.backgroundColor = val.color;
+      line.append(section);
+      return acc + val.duration;
+    }, 0);
+    return fullHours;
+  }
+
   private fillWeekLine() {
     const weekLine = getExistentElementByClass(ClassList.weekLine);
-    weekLine.innerHTML = '';
-    const containerWidth = weekLine.clientWidth;
     const sortWeek = this.sortAllPlans();
-    const k = containerWidth / Values.allWeekHours;
-    sortWeek.forEach((val) => {
-      const section = document.createElement('div');
-      section.style.width = `${val.duration * k}px`;
-      section.style.height = `100%`;
-      section.style.backgroundColor = val.color;
-      weekLine.append(section);
-    });
+    const fillWeekTime = this.fillLine(weekLine, sortWeek, Values.allWeekHours, false);
+    getExistentElementByClass(ClassList.weekTextValue).innerText = fillWeekTime.toString();
   }
 
   private async setWeekInfo() {
@@ -82,8 +92,9 @@ class PlanPage extends Page {
 
     container.append(
       this.layout.makeHomeButton(this.goTo),
-      this.layout.makeWeekText(this.getFilledHours()),
-      this.layout.makeWeekLine()
+      this.layout.makeWeekText(),
+      this.layout.makeWeekLine(),
+      this.layout.makePlanBody()
     );
     return container;
   }
@@ -94,6 +105,7 @@ class PlanPage extends Page {
     const page = await this.getFilledPage();
     container.append(page);
     this.fillWeekLine();
+    this.fillDays();
   }
 }
 

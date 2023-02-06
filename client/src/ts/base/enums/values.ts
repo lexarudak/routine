@@ -5,6 +5,7 @@ const enum Values {
   secondPasswordPlaceholder = 'Repeat password',
   rememberMeId = 'rememberMe',
   allWeekHours = 168,
+  allDayHours = 24,
 }
 
 export default Values;

@@ -17,10 +17,67 @@
     margin-top: 10px;
     width: 100%;
     overflow: hidden;
-    height: 10px;
+    height: 7px;
     border-radius: 5px;
     border: 1px solid $font-medium;
     position: relative;
     display: flex;
+    box-shadow: $shadow;
+  }
+
+  &__body {
+    position: relative;
+    display: flex;
+    flex-grow: 1;
+    align-items: flex-end;
+  }
+
+  &__tools {
+    width: 350px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+  }
+
+  &__days {
+    height: 80%;
+    width: 350px;
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    
+  }
+
+  &__day {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 40px;
+    gap: 15px;
+    cursor: pointer;
+    transition: .3s;
+
+    &:hover {
+      transform: scale(.98);
+      & > .plan__day-body {
+        box-shadow: $none-shadow;
+      }
+    }
+  }
+
+  &__day-line {
+    width: 7px;
+    flex-grow: 1;
+    border-radius: 7px;
+    border: 1px solid $font-medium;
+    box-shadow: $shadow;
+    transition: .3s;
+    display: flex;
+    flex-direction: column-reverse;
+  }
+
+  &__field {
+    display: flex;
+    flex-grow: 1;
   }
 }

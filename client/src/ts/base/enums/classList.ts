@@ -30,6 +30,17 @@ const enum ClassList {
   weekLine = 'plan__week-line',
   weekTextContainer = 'plan__text-container',
   weekTextValue = 'plan__text-value',
+  planBody = 'plan__body',
+  planTools = 'plan__tools',
+  planButtons = 'plan__buttons',
+  planAddButton = 'plan__button-add',
+  planRemoveButton = 'plan__button-remove',
+  planDaysContainer = 'plan__days',
+  planDay = 'plan__day',
+  planDayLine = 'plan__day-line',
+  planDayName = 'plan__day-name',
+  planDayHours = 'plan__day-hours',
+  planField = 'plan__field',
 }
 
 export default ClassList;

@@ -51,7 +51,7 @@ class Router {
     }
   }
 
-  public goTo(pageName: RoutsList) {
+  public goTo(pageName: RoutsList | string) {
     window.history.pushState({ pageName }, pageName, pageName);
     Router.render(pageName);
     window.scrollTo(0, 0);
