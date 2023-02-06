@@ -5,3 +5,15 @@ export interface Plan {
   text: string;
   duration: number;
 }
+
+export interface RegistrationData {
+  name: string;
+  email: string;
+  password: string;
+}
+
+export interface LoginData {
+  email: string;
+  password: string;
+  remember: boolean;
+}
