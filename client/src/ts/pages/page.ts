@@ -21,7 +21,6 @@ abstract class Page {
 
   public async draw() {
     const container = getExistentElementByClass(ClassList.mainContainer);
-    console.log('draw', container);
     container.innerHTML = '';
     const page = await this.getFilledPage();
     container.append(page);

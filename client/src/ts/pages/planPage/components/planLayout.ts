@@ -1,6 +1,7 @@
 import ButtonClasses from '../../../base/enums/buttonClasses';
 import ButtonNames from '../../../base/enums/buttonNames';
 import ClassList from '../../../base/enums/classList';
+import InnerText from '../../../base/enums/innerText';
 import RoutsList from '../../../base/enums/routsList';
 import { GoToFn } from '../../../base/types';
 
@@ -17,6 +18,17 @@ class PlanLayout {
     const weekLine = document.createElement('div');
     weekLine.classList.add(ClassList.weekLine);
     return weekLine;
+  }
+
+  public makeWeekText(hours: string) {
+    const weekTextContainer = document.createElement('div');
+    weekTextContainer.classList.add(ClassList.weekTextContainer);
+    const weekTextValue = document.createElement('div');
+    weekTextValue.innerText = hours;
+    const weekText = document.createElement('div');
+    weekText.innerText = InnerText.allWeekHours;
+    weekTextContainer.append(weekTextValue, weekText);
+    return weekTextContainer;
   }
 }
 

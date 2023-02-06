@@ -28,6 +28,8 @@ const enum ClassList {
   // Plans
   planContainer = 'plan',
   weekLine = 'plan__week-line',
+  weekTextContainer = 'plan__text-container',
+  weekTextValue = 'plan__text-value',
 }
 
 export default ClassList;

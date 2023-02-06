@@ -37,13 +37,13 @@ class Router {
     // console.log('render:', pathname);
     switch (pathname) {
       case RoutsList.planPage:
-        Router.planPage.draw();
+        await Router.planPage.draw();
         break;
       case RoutsList.loginPage:
-        Router.loginPage.draw();
+        await Router.loginPage.draw();
         break;
       case RoutsList.homePage:
-        Router.homePage.draw();
+        await Router.homePage.draw();
         break;
       default:
         Router.notFoundPage.draw();
@@ -63,7 +63,6 @@ class Router {
     });
     const page = new URL(window.location.href).pathname;
     await Router.render(page);
-    this.goTo(RoutsList.planPage);
   }
 }
 
