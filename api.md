@@ -325,7 +325,6 @@ Returns json data about user's plans.
 ```
 {
   "_id": string,
-  "userId": string,
   "title": string,
   "text": string,
   "color": string,
@@ -348,18 +347,20 @@ Returns json data about user's plans.
 Returns json data about the distribution of time during the week.
 
 ```
-{
-  "_id": string,
-  "userId": string,
-  "dayOfWeek": number,
-  "planId": string,
-  "duration": number
-}
+[
+  {
+    "_id": string,
+    "title": string,
+    "text": string,
+    "color": string,
+    "duration": number
+  }
+]
 ```
 
 <details>
 
-- `GET` /api/weekDistribution/?userId=''
+- `GET` /api/weekDistribution/?userId='' // userId? should get Plan[]
 - `POST` /api/weekDistribution
 - `DELETE` /api/weekDistribution/:id
 - `POST` /api/weekDistribution/update
@@ -371,22 +372,24 @@ Returns json data about the distribution of time during the week.
 Returns json data about the distribution of time during the day.
 
 ```
-{
-  "_id": string,
-  "userId": string,
-  "dayOfWeek": number,
-  "planId": string,
-  "from": number,
-  "to": number,
-}
+[
+  {
+    "_id": string,
+    "title": string,
+    "text": string,
+    "color": string,
+    "duration": number
+  }
+]
 ```
 
 <details>
 
 - `GET` /api/dayDistribution/?userId=''&dayOfWeek=''
-- `POST` /api/weekDistribution
-- `DELETE` /api/weekDistribution/:id
-- `POST` /api/weekDistribution/update
+- `GET` /api/dayDistribution // get all days dist Plan[][]
+- `POST` /api/dayDistribution
+- `DELETE` /api/dayDistribution/:id
+- `POST` /api/dayDistribution/update
 
 </details>
 
