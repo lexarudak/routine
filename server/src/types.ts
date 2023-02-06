@@ -21,10 +21,13 @@ export type TLogin = {
   remember: boolean;
 };
 
-export type TThought = {
+export type TDBThought = {
   _id: Types.ObjectId;
+  userId: Types.ObjectId;
   title: string;
 };
+
+export type TThought = Omit<TDBThought, '_id'>;
 
 export type TDBPlan = {
   _id: Types.ObjectId;

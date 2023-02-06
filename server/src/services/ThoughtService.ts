@@ -1,35 +1,41 @@
 import Thought from '../schemas/Thought';
 import { ClientError } from '../errors';
 import * as Type from '../types';
+import { Types } from 'mongoose';
 
 class ThoughtService {
-  async get() {
-    return await Thought.find();
+  async get(userId: Types.ObjectId) {
+    return await Thought.find({ userId: userId });
   }
 
-  async getById(id: string) {
+  async getById(userId: Types.ObjectId, id: string) {
     if (!id) {
       throw new ClientError('ID not specified');
     }
-    return await Thought.findById(id);
+    return await Thought.findById(id).where({ userId: userId });
   }
 
-  async create(thought: Type.TThought) {
-    return await Thought.create(thought);
+  async create(userId: Types.ObjectId, item: Type.TThought) {
+    const clone = Object.assign({}, item);
+    clone.userId = userId;
+    return await Thought.create(clone);
   }
 
-  async update(thought: Type.TThought) {
-    if (!thought._id) {
+  async update(userId: Types.ObjectId, item: Type.TDBThought) {
+    if (!item._id) {
       throw new ClientError('ID not specified');
     }
-    return await Thought.findByIdAndUpdate(thought._id, thought, { new: true });
+    const itemForUpdate = {
+      title: item.title,
+    };
+    return await Thought.findByIdAndUpdate(item._id, itemForUpdate, { new: true }).where({ userId: userId });
   }
 
-  async delete(id: string) {
+  async delete(userId: Types.ObjectId, id: string) {
     if (!id) {
       throw new ClientError('ID not specified');
     }
-    return await Thought.findByIdAndDelete(id);
+    return await Thought.findByIdAndDelete(id).where({ userId: userId });
   }
 }
 
