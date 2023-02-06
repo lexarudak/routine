@@ -33,7 +33,7 @@ class Router {
     Router.notFoundPage = new NotFoundPage(this.goTo);
   }
 
-  private static render(pathname: string) {
+  private static async render(pathname: string) {
     // console.log('render:', pathname);
     switch (pathname) {
       case RoutsList.planPage:
@@ -57,12 +57,13 @@ class Router {
     window.scrollTo(0, 0);
   }
 
-  public startRouter() {
+  public async startRouter() {
     window.addEventListener('popstate', () => {
       Router.render(new URL(window.location.href).pathname);
     });
     const page = new URL(window.location.href).pathname;
-    Router.render(page);
+    await Router.render(page);
+    this.goTo(RoutsList.planPage);
   }
 }
 

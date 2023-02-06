@@ -56,3 +56,18 @@
     }
   }
 }
+
+.nav-button {
+  cursor: pointer;
+  color: $font-medium;
+  border: none;
+  background: none;
+  font-size: 20px;
+  transition: .3s;
+  width: auto;
+
+  &:hover {
+    color: $success;
+    transform: scale(.95);
+  }
+}

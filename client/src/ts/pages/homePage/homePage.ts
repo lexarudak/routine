@@ -8,7 +8,7 @@ class HomePage extends Page {
     super(PageList.homePage, goTo);
   }
 
-  protected getFilledPage(): HTMLElement {
+  protected async getFilledPage(): Promise<HTMLElement> {
     const emptyPage = document.createElement('h1');
     emptyPage.innerText = this.name;
     emptyPage.addEventListener('click', () => this.goTo(RoutsList.loginPage));

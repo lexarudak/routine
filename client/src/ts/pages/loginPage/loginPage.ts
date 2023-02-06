@@ -116,7 +116,7 @@ class LoginPage extends Page {
     return signInBtn;
   }
 
-  protected getFilledPage(): HTMLElement {
+  protected async getFilledPage(): Promise<HTMLElement> {
     const form = this.layout.makeEmptyForm();
     form.append(
       this.layout.makeTitle(InnerText.signIn, ClassList.signInView),

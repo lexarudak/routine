@@ -13,16 +13,18 @@ abstract class Page {
     this.goTo = goTo;
   }
 
-  protected getFilledPage(): HTMLElement {
+  protected async getFilledPage(): Promise<HTMLElement> {
     const emptyPage = document.createElement('h1');
     emptyPage.innerText = this.name;
     return emptyPage;
   }
 
-  public draw(): void {
+  public async draw() {
     const container = getExistentElementByClass(ClassList.mainContainer);
+    console.log('draw', container);
     container.innerHTML = '';
-    container.append(this.getFilledPage());
+    const page = await this.getFilledPage();
+    container.append(page);
   }
 }
 
