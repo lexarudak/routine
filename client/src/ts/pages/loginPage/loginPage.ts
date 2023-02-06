@@ -59,11 +59,35 @@ class LoginPage extends Page {
     console.log('Pass:', this.firstPasswordInput.input.value);
     console.log('Remember:', this.checkbox.checked); // данные для отправки
 
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve('server Sign in resolve');
-      }, 2000); // отправляем запрос на сервер и возвращаем ответ
-    });
+    const userData = {
+      email: this.emailInput.input.value,
+      password: this.firstPasswordInput.input.value,
+      remember: this.checkbox.checked,
+    };
+
+    const options: RequestInit = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(userData),
+    };
+
+    const response = await fetch('http://localhost:5000/api/login', options);
+
+    if (!response.ok) {
+      const message = await response.json();
+      throw new Error(message);
+    }
+
+    return response.json();
+
+    // return new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     resolve('server Sign in resolve');
+    //   }, 2000); // отправляем запрос на сервер и возвращаем ответ
+    // });
   }
 
   private async sendSignUpForm() {
@@ -71,11 +95,35 @@ class LoginPage extends Page {
     console.log('Email:', this.emailInput.input.value);
     console.log('Pass:', this.firstPasswordInput.input.value); // данные для отправки
 
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve('server Sign Up resolve');
-      }, 2000); // отправляем запрос на сервер и возвращаем ответ
-    });
+    const userData = {
+      name: this.nameInput.input.value,
+      email: this.emailInput.input.value,
+      password: this.firstPasswordInput.input.value,
+    };
+
+    const options: RequestInit = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      credentials: 'include',
+      body: JSON.stringify(userData),
+    };
+
+    const response = await fetch('http://localhost:5000/api/registration', options);
+
+    if (!response.ok) {
+      const message = await response.json();
+      throw new Error(message);
+    }
+
+    return response.json();
+
+    // return new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     resolve('server Sign Up resolve');
+    //   }, 2000); // отправляем запрос на сервер и возвращаем ответ
+    // });
   }
 
   private toggleFormClass() {
@@ -108,8 +156,14 @@ class LoginPage extends Page {
           this.status = InnerText.signIn;
           buttonOn(this.signButton);
           this.goTo(RoutsList.homePage);
-        } catch {
+        } catch (error) {
           // обрабатываем ошибку
+          buttonOn(this.signButton);
+          if (error instanceof Error) {
+            console.log(error.message);
+          } else {
+            throw error;
+          }
         }
       }
     });
