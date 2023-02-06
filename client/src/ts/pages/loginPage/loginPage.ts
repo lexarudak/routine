@@ -11,6 +11,8 @@ import FirstPasswordInput from './components/firstPasswordInput';
 import SecondPasswordInput from './components/secondPasswordInput';
 import RoutsList from '../../base/enums/routsList';
 import LoginLayout from './components/loginLayout';
+import Api from '../../api';
+import ErrorsList from '../../base/enums/errorsList';
 
 class LoginPage extends Page {
   status: InnerText.signIn | InnerText.signUp;
@@ -51,79 +53,13 @@ class LoginPage extends Page {
   }
 
   private async sendForm() {
-    return this.status === InnerText.signIn ? this.sendSignInForm() : this.sendSignUpForm();
-  }
-
-  private async sendSignInForm() {
-    console.log('Email:', this.emailInput.input.value);
-    console.log('Pass:', this.firstPasswordInput.input.value);
-    console.log('Remember:', this.checkbox.checked); // данные для отправки
-
-    const userData = {
-      email: this.emailInput.input.value,
-      password: this.firstPasswordInput.input.value,
-      remember: this.checkbox.checked,
-    };
-
-    const options: RequestInit = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify(userData),
-    };
-
-    const response = await fetch('http://localhost:5000/api/login', options);
-
-    if (!response.ok) {
-      const message = await response.json();
-      throw new Error(message);
-    }
-
-    return response.json();
-
-    // return new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     resolve('server Sign in resolve');
-    //   }, 2000); // отправляем запрос на сервер и возвращаем ответ
-    // });
-  }
-
-  private async sendSignUpForm() {
-    console.log('Name:', this.nameInput.input.value);
-    console.log('Email:', this.emailInput.input.value);
-    console.log('Pass:', this.firstPasswordInput.input.value); // данные для отправки
-
-    const userData = {
-      name: this.nameInput.input.value,
-      email: this.emailInput.input.value,
-      password: this.firstPasswordInput.input.value,
-    };
-
-    const options: RequestInit = {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      credentials: 'include',
-      body: JSON.stringify(userData),
-    };
-
-    const response = await fetch('http://localhost:5000/api/registration', options);
-
-    if (!response.ok) {
-      const message = await response.json();
-      throw new Error(message);
-    }
-
-    return response.json();
-
-    // return new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     resolve('server Sign Up resolve');
-    //   }, 2000); // отправляем запрос на сервер и возвращаем ответ
-    // });
+    const name = this.nameInput.input.value;
+    const email = this.emailInput.input.value;
+    const password = this.firstPasswordInput.input.value;
+    const remember = this.checkbox.checked;
+    return this.status === InnerText.signIn
+      ? Api.login({ email, password, remember })
+      : Api.registration({ name, email, password });
   }
 
   private toggleFormClass() {
@@ -145,22 +81,46 @@ class LoginPage extends Page {
     }
   }
 
+  private errorHandle(error: Error) {
+    if (this.status === InnerText.signIn) {
+      switch (error.message) {
+        case ErrorsList.notFound:
+          this.emailInput.showError(ErrorsList.noUser);
+          break;
+        case ErrorsList.badRequest:
+          this.firstPasswordInput.showError(ErrorsList.wrongPass);
+          break;
+        default:
+          console.log(error.message);
+          break;
+      }
+    } else {
+      switch (error.message) {
+        case ErrorsList.badRequest:
+          this.emailInput.showError(ErrorsList.existUser);
+          break;
+        default:
+          console.log(error.message);
+          break;
+      }
+    }
+  }
+
   private setLoginButton(signInBtn: HTMLButtonElement) {
     signInBtn.addEventListener('click', async () => {
       if (this.isFormValid()) {
         try {
           buttonOff(this.signButton);
-          const res = await this.sendForm();
-          console.log(res); // обрабатыаем положительный ответ
+          const resp = await this.sendForm();
+          console.log(resp);
           this.cleanForm();
           this.status = InnerText.signIn;
           buttonOn(this.signButton);
           this.goTo(RoutsList.homePage);
         } catch (error) {
-          // обрабатываем ошибку
           buttonOn(this.signButton);
           if (error instanceof Error) {
-            console.log(error.message);
+            this.errorHandle(error);
           } else {
             throw error;
           }
@@ -170,7 +130,7 @@ class LoginPage extends Page {
     return signInBtn;
   }
 
-  protected getFilledPage(): HTMLElement {
+  protected async getFilledPage(): Promise<HTMLElement> {
     const form = this.layout.makeEmptyForm();
     form.append(
       this.layout.makeTitle(InnerText.signIn, ClassList.signInView),
@@ -195,12 +155,20 @@ class LoginPage extends Page {
     this.secondPasswordInput.input.value = '';
   }
 
+  private cleanErrors() {
+    this.nameInput.hideError();
+    this.emailInput.hideError();
+    this.firstPasswordInput.hideError();
+    this.secondPasswordInput.hideError();
+  }
+
   private makeLink(text: string, className: ClassList) {
     const span = document.createElement('span');
     span.innerText = text;
     span.addEventListener('click', () => {
       this.toggleStatus();
       this.toggleFormClass();
+      this.cleanErrors();
     });
     span.classList.add(ClassList.signLink, className);
     return span;

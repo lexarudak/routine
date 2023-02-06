@@ -5,6 +5,7 @@ const enum InnerText {
   rememberMe = 'Remember me',
   newAccount = 'I need a new account',
   iHaveAccount = 'I already have an account',
+  allWeekHours = ' / 168 h',
 }
 
 export default InnerText;
