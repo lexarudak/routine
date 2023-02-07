@@ -517,7 +517,28 @@ Returns json data about the distribution of time during the week.
   ]
   ```
   
-- `POST` /api/weekDistribution/updateDay
+- `POST` /api/weekDistribution/addPlan
+  
+  Request
+  ```
+  {
+    "dayOfWeek": 0,
+    "planId": 63e158255010e434534cfae5,
+    "duration": 1.25
+  }
+  ```
+  
+  Respose `200` `OK`
+  ```
+  {
+    "_id": 63e158255010e434534cfae5,
+    "userId": 63df879ff7a5081606fb4fb8,
+    "dayOfWeek": 0,
+    "planId": 63e158255010e434534cfae5,
+    "duration": 1.25,
+    "__v": 0
+  }
+  ```
 
 </details>
 
