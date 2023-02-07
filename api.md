@@ -454,23 +454,52 @@ Returns json data about user's plans.
 Returns json data about the distribution of time during the week.
 
 ```
-[
-  {
-    "_id": string,
-    "title": string,
-    "text": string,
-    "color": string,
-    "duration": number
-  }
-]
+{
+  "_id": string,
+  "userId": string,
+  "dayOfWeek": number,
+  "planId": string,
+  "duration": number
+}
 ```
 
 <details>
 
-- `GET` /api/weekDistribution/?userId='' // userId? should get Plan[]
-- `POST` /api/weekDistribution
-- `DELETE` /api/weekDistribution/:id
-- `POST` /api/weekDistribution/update
+- `GET` /api/weekDistribution/get
+  
+  Respose `200` `OK`
+  ```
+  [
+    [
+      {
+        "_id": "63e158255010e434534cfae5",
+        "userId": "63df879ff7a5081606fb4fb8",
+        "title": "Plan 1",
+        "text": "Lorem ipsum",
+        "color": "#FF00FF",
+        "duration": 15.25,
+        "__v": 0
+      },
+      {
+        "_id": "63e15e1027cf884cc5d1ef99",
+        "userId": "63df879ff7a5081606fb4fb8",
+        "title": "Plan 2",
+        "text": "Lorem ipsum",
+        "color": "#FF00FF",
+        "duration": 5.25,
+        "__v": 0
+      }
+    ],
+    [],
+    [],
+    [],
+    [],
+    [],
+    []
+  ]
+  ```
+  
+- `POST` /api/weekDistribution/updateDay
 
 </details>
 
@@ -479,21 +508,19 @@ Returns json data about the distribution of time during the week.
 Returns json data about the distribution of time during the day.
 
 ```
-[
-  {
-    "_id": string,
-    "title": string,
-    "text": string,
-    "color": string,
-    "duration": number
-  }
-]
+{
+  "_id": string,
+  "userId": string,
+  "dayOfWeek": number,
+  "planId": string,
+  "from": number,
+  "to": number,
+}
 ```
 
 <details>
 
-- `GET` /api/dayDistribution/?userId=''&dayOfWeek=''
-- `GET` /api/dayDistribution // get all days dist Plan[][]
+- `GET` /api/dayDistribution/?dayOfWeek=''
 - `POST` /api/dayDistribution
 - `DELETE` /api/dayDistribution/:id
 - `POST` /api/dayDistribution/update
@@ -515,7 +542,7 @@ Returns json data about the user statistics.
 
 <details>
 
-- `GET` /api/statistics/?userId=''
+- `GET` /api/statistics
 - `POST` /api/statistics/confirmDay
 
 </details>
@@ -535,7 +562,7 @@ Returns json data about the user settings.
 
 <details>
 
-- `GET` /api/userSettings/?userId=''
+- `GET` /api/userSettings
 - `POST` /api/userSettings/update
 
 </details>
