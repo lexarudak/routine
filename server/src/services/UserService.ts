@@ -4,6 +4,7 @@ import config from '../config';
 import { ClientError } from '../errors';
 import User from '../schemas/User';
 import * as Type from '../types';
+import * as Enum from '../enums';
 
 class UserService {
   async get() {
@@ -27,6 +28,9 @@ class UserService {
 
     const clone = Object.assign({}, user);
     clone.password = hashPassword;
+    clone.confirmationDay = Enum.Constants.defaultConfirmationDay;
+    clone.confirmationTime = Enum.Constants.defaultConfirmationTime;
+    clone.createdAt = new Date();
 
     return await User.create(clone);
   }
@@ -55,6 +59,8 @@ class UserService {
     }
     const userForUpdate = {
       name: user.name,
+      confirmationDay: user.confirmationDay,
+      confirmationTime: user.confirmationTime,
     };
     return await User.findByIdAndUpdate(user._id, userForUpdate, { new: true });
   }

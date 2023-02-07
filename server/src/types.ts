@@ -5,14 +5,16 @@ export type TDBUser = {
   name: string;
   email: string;
   password: string;
+  confirmationDay: 'today' | 'yesterday';
+  confirmationTime: string;
   createdAt: Date;
 };
 
-export type TUser = Omit<TDBUser, '_id'>;
+export type TUserSafeData = Omit<TDBUser, 'password'>;
 
 export type TUserData = {
   token: string;
-  user: Omit<TDBUser, 'password'>;
+  user: TUserSafeData;
 };
 
 export type TLogin = {
@@ -27,8 +29,6 @@ export type TDBThought = {
   title: string;
 };
 
-export type TThought = Omit<TDBThought, '_id'>;
-
 export type TDBPlan = {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
@@ -38,4 +38,33 @@ export type TDBPlan = {
   duration: number;
 };
 
+export type TDBWeekDistribution = {
+  _id: Types.ObjectId;
+  userId: Types.ObjectId;
+  dayOfWeek: number;
+  planId: Types.ObjectId;
+  duration: number;
+};
+
+export type TDBDayDistribution = {
+  _id: Types.ObjectId;
+  userId: Types.ObjectId;
+  dayOfWeek: number;
+  planId: Types.ObjectId;
+  from: number;
+  to: number;
+};
+
+export type TDBStatistics = {
+  _id: Types.ObjectId;
+  userId: Types.ObjectId;
+  planId: Types.ObjectId;
+  deviation: number;
+};
+
+export type TUser = Omit<TDBUser, '_id'>;
+export type TThought = Omit<TDBThought, '_id'>;
 export type TPlan = Omit<TDBPlan, '_id'>;
+export type TWeekDistribution = Omit<TDBWeekDistribution, '_id'>;
+export type TDayDistribution = Omit<TDBDayDistribution, '_id'>;
+export type TStatistics = Omit<TDBStatistics, '_id'>;

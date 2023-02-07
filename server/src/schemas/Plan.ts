@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { TPlan } from '../types';
 
-const Plan = new Schema<TPlan>({
+const schema = new Schema<TPlan>({
   userId: { type: Schema.Types.ObjectId },
   title: { type: String, required: true },
   text: { type: String },
@@ -9,4 +9,4 @@ const Plan = new Schema<TPlan>({
   duration: { type: Number },
 });
 
-export default model('Plan', Plan);
+export default model('Plan', schema);
