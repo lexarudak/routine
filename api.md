@@ -21,6 +21,8 @@ Returns json data about users.
   "name": string,
   "email": string,
   "password": string,
+  "confirmationDay": string,
+  "confirmationTime": string,
   "createdAt": date
 }
 ```
@@ -36,6 +38,8 @@ Returns json data about users.
       "_id": "63dbce8efc36f95ae5646e7e",
       "name": "John Doe",
       "email": "john.doe@gmail.com",
+      "confirmationDay": "today",
+      "confirmationTime": "16:00",
       "createdAt": "2023-02-05T18:15:14.997Z",
       "__v": 0
     },
@@ -43,6 +47,8 @@ Returns json data about users.
       "_id": "63dbd176bb3349816256d074",
       "name": "Steven Gundry",
       "email": "steven.gundry@gmail.com",
+      "confirmationDay": "yesterday",
+      "confirmationTime": "11:00",
       "createdAt": "2023-02-04T12:45:53.196Z",
       "__v": 0
     }
@@ -60,6 +66,8 @@ Returns json data about users.
     "_id": "63dbd176bb3349816256d074",
     "name": "Steven Gundry",
     "email": "steven.gundry@gmail.com",
+    "confirmationDay": "yesterday",
+    "confirmationTime": "11:00",
     "createdAt": "2023-02-04T12:45:53.196Z",
     "__v": 0
   }
@@ -76,6 +84,8 @@ Returns json data about users.
     "_id": "63dbd176bb3349816256d074",
     "name": "Steven Gundry",
     "email": "steven.gundry@gmail.com",
+    "confirmationDay": "yesterday",
+    "confirmationTime": "11:00",
     "createdAt": "2023-02-04T12:45:53.196Z",
     "__v": 0
   }
@@ -102,6 +112,8 @@ Returns json data about users.
       "_id": "63e001da88d251dc53e36d1f",
       "name": "John Doe",
       "email": "john.doe@gmail.com",
+      "confirmationDay": "yesterday",
+      "confirmationTime": "11:00",
       "createdAt": "2023-02-05T19:22:02.378Z",
       "__v": 0
     }
@@ -157,6 +169,8 @@ Returns json data about users.
       "_id": "63e001da88d251dc53e36d1f",
       "name": "John Doe",
       "email": "john.doe@gmail.com",
+      "confirmationDay": "yesterday",
+      "confirmationTime": "11:00",
       "createdAt": "2023-02-05T19:22:02.378Z",
       "__v": 0
     }
@@ -179,7 +193,9 @@ Returns json data about users.
   ```
   {
     "_id": "63dbce8efc36f95ae5646e7e",
-    "name": "Mr. John Doe"
+    "name": "Mr. John Doe",
+    "confirmationDay": "yesterday",
+    "confirmationTime": "17:00"
   }
   ```
   
@@ -189,6 +205,8 @@ Returns json data about users.
     "_id": "63dbce8efc36f95ae5646e7e",
     "name": "Mr. John Doe",
     "email": "john.doe@gmail.com",
+    "confirmationDay": "yesterday",
+    "confirmationTime": "17:00",
     "createdAt": "2023-02-05T19:22:02.378Z",
     "__v": 0
   }
@@ -544,25 +562,5 @@ Returns json data about the user statistics.
 
 - `GET` /api/statistics
 - `POST` /api/statistics/confirmDay
-
-</details>
-
-### UserSettings
-
-Returns json data about the user settings.
-
-```
-{
-  "_id": string,
-  "userId": string,
-  "confirmationDay": string,
-  "confirmationTime": number
-}
-```
-
-<details>
-
-- `GET` /api/userSettings
-- `POST` /api/userSettings/update
 
 </details>
