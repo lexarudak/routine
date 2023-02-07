@@ -317,10 +317,10 @@ Returns json data about thought.
   }
   ```
   
-- `POST` /api/thought/transferToPlan/?id=63dab20a1bad4d34504b5c18
+- `POST` /api/thought/transferToPlan/63dab20a1bad4d34504b5c18
 
   Request
-  `/api/thought/transferToPlan/?id=63dab20a1bad4d34504b5c18`
+  `/api/thought/transferToPlan/63dab20a1bad4d34504b5c18`
   
   Respose `200` `OK`
   ```
@@ -329,7 +329,7 @@ Returns json data about thought.
     "title": "Do gym every morning",
     "userId": 63dd5008939161908112e05f,
     "text": "",
-    "color": "",
+    "color": "#549F7B",
     "duration": 0
     "__v": 0
   }
