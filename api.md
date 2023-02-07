@@ -320,7 +320,7 @@ Returns json data about thought.
 - `POST` /api/thought/transferToPlan/63dab20a1bad4d34504b5c18
 
   Request
-  `/api/thought/transferToPlan/63dab20a1bad4d34504b5c18`
+  `/api/thoughts/transferToPlan/63dab20a1bad4d34504b5c18`
   
   Respose `200` `OK`
   ```
