@@ -43,6 +43,16 @@ class ThoughtController extends Controller {
     }
   }
 
+  async transferToPlan(req: Request, res: Response) {
+    try {
+      const userId = await this.getUserId(req);
+      const item = await ThoughtService.transferToPlan(userId, req.params.id);
+      res.json(item);
+    } catch (error) {
+      this.error(res, error);
+    }
+  }
+
   async delete(req: Request, res: Response) {
     try {
       const userId = await this.getUserId(req);

@@ -33,9 +33,9 @@ export type TDBPlan = {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
   title: string;
-  text: string;
-  color: string;
-  duration: number;
+  text?: string;
+  color?: string;
+  duration?: number;
 };
 
 export type TDBWeekDistribution = {
