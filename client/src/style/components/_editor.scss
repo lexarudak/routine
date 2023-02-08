@@ -1,0 +1,144 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 20px;
+  width: 90%;
+  height: 90%;
+  padding: 30px;
+  border: 1px solid $font-medium;
+
+  &__tools {
+    width: 100%;
+    height: 30px;
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 15px;
+  }
+
+  &__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: .3s;
+
+    &:hover {
+      transform: scale(.95);
+    }
+  }
+
+  &__button-span {
+    display: block;
+    position: absolute;
+    height: 2px;
+    border-radius: 3px;
+    background-color: $font-medium
+  }
+
+  &__button-left-span {
+    width: 15px;
+    top: 19px;
+    left: 5px;
+    transform: rotate(235deg);
+  }
+
+  &__button-right-span {
+    top: 12px;
+    left: 9px;
+    width: 30px;
+    transform: rotate(300deg);
+  }
+
+  &__title {
+    text-align: center;
+    background: transparent;
+    border: none;
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: 500;
+    width: 50%;
+    color: inherit;
+
+
+    &::placeholder {
+      color: $font-medium;
+    }
+  }
+
+  &__error {
+    font-weight: 500;
+    margin-top: 10px;
+    transition: .3s;
+    opacity: 0;
+    color: inherit;
+
+    &_active {
+      opacity: 1;
+    }
+  }
+
+  &__text {
+    background: transparent;
+    border-radius: 15px;
+    margin-top: 20px;
+    width: 100%;
+    flex-grow: 1;
+    outline: none;
+    padding: 20px;
+    border: 1px solid $font-medium;
+    resize: none;
+    color: inherit;
+
+    &::placeholder {
+      color: $font-medium;
+    }
+  }
+
+  &__color-picker {
+    position: relative;
+    display: flex;
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    border: 1px solid $font-medium;
+    cursor: pointer;
+
+    &:hover {
+      transform: scale(.95);
+    }
+  }
+
+  &__color-box {
+    position: absolute;
+    top: 50px;
+    right: 35px;
+    transition: .3s;
+    width: 204px;
+    height: 0px;
+    border-radius: 10px;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    display: flex;
+    flex-wrap: wrap;
+
+    &_active {
+      opacity: 1;
+      visibility: visible;
+      height: 200px;
+    }
+  }
+
+  &__color-round {
+    width: 30px;
+    height: 30px;
+    margin: 5px;
+    border-radius: 100%;
+    border: 1px solid $font-medium;
+    cursor: pointer;
+  }
+}

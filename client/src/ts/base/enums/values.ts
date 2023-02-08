@@ -1,6 +1,7 @@
 const enum Values {
   emailPlaceholder = 'Email',
   namePlaceholder = 'Name',
+  textPlaceholder = '| enter your text here',
   passwordPlaceholder = 'Password',
   secondPasswordPlaceholder = 'Repeat password',
   rememberMeId = 'rememberMe',

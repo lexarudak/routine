@@ -1,4 +1,5 @@
 import RoutsList from './base/enums/routsList';
+import Popup from './components/popup';
 import HomePage from './pages/homePage/homePage';
 import LoginPage from './pages/loginPage/loginPage';
 import NotFoundPage from './pages/notFoundPage/notFoundPage';
@@ -26,9 +27,9 @@ class Router {
 
   // static sundayPage: Page;
 
-  constructor() {
+  constructor(popup: Popup) {
     Router.homePage = new HomePage(this.goTo);
-    Router.planPage = new PlanPage(this.goTo);
+    Router.planPage = new PlanPage(this.goTo, popup);
     Router.loginPage = new LoginPage(this.goTo);
     Router.notFoundPage = new NotFoundPage(this.goTo);
   }

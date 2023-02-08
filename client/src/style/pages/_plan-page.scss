@@ -78,6 +78,7 @@
     transition: .3s;
     display: flex;
     flex-direction: column-reverse;
+    overflow: hidden;
 
     & > * {
       transition: .3s;

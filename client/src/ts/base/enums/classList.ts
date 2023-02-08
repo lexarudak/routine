@@ -48,6 +48,21 @@ const enum ClassList {
   weekendFieldsSmall = 'weekend-fields__small',
   planRound = 'plan-round',
   planRoundVal = 'plan-round__value',
+  // Editor
+  editor = 'editor',
+  editorTools = 'editor__tools',
+  editorTitle = 'editor__title',
+  editorText = 'editor__text',
+  editorError = 'editor__error',
+  editorErrorActive = 'editor__error_active',
+  editorButton = 'editor__button',
+  editorButtonSpan = 'editor__button-span',
+  editorButtonSpanLeft = 'editor__button-left-span',
+  editorButtonSpanRight = 'editor__button-right-span',
+  editorColorPicker = 'editor__color-picker',
+  editorColorBox = 'editor__color-box',
+  editorColorBoxActive = 'editor__color-box_active',
+  editorColorRound = 'editor__color-round',
 }
 
 export default ClassList;

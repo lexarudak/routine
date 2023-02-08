@@ -10,6 +10,8 @@ import Page from '../page';
 import PlanLayout from './components/planLayout';
 import testPlans from './components/testPlans';
 import testWeekDistribution from './components/testWeekDistribution';
+import Popup from '../../components/popup';
+import PlanEditor from './components/planEditor';
 
 class PlanPage extends Page {
   layout: PlanLayout;
@@ -20,12 +22,18 @@ class PlanPage extends Page {
 
   weekDistribution: Plan[][];
 
-  constructor(goTo: GoToFn) {
+  popup: Popup;
+
+  editor: PlanEditor;
+
+  constructor(goTo: GoToFn, popup: Popup) {
     super(PagesList.planPage, goTo);
+    this.popup = popup;
     this.allPlans = [];
     this.planRounds = [];
     this.weekDistribution = [[]];
     this.layout = new PlanLayout(goTo);
+    this.editor = new PlanEditor(this.popup);
   }
 
   private sortAllPlans() {
@@ -148,7 +156,7 @@ class PlanPage extends Page {
       this.layout.makeHomeButton(this.goTo),
       this.layout.makeWeekText(),
       this.layout.makeWeekLine(),
-      this.layout.makePlanBody()
+      this.layout.makePlanBody(this.editor.open)
     );
     return container;
   }

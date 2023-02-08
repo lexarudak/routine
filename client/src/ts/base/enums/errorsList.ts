@@ -12,6 +12,8 @@ const enum ErrorsList {
   notFound = '404',
   badRequest = '400',
   minToHourError = 'Wrong value in minToHour fn',
+  notStandardColor = 'This color is not standard',
+  cantBeEmpty = "Can't be empty!",
 }
 
 export default ErrorsList;

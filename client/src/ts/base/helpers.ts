@@ -48,6 +48,11 @@ function minToHour(min: number) {
   throw new Error(ErrorsList.minToHourError);
 }
 
+function makeColorTransparent(color: string, transPercent: number) {
+  const percent = 256 * (transPercent / 100);
+  return color + percent.toString(16);
+}
+
 export {
   isHTMLElement,
   getExistentElement,
@@ -56,4 +61,5 @@ export {
   buttonOn,
   buttonOff,
   minToHour,
+  makeColorTransparent,
 };
