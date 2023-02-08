@@ -6,7 +6,7 @@ const schema = new Schema<TUser>({
   email: { type: String, required: true },
   password: { type: String, required: true },
   confirmationDay: { type: String, required: true },
-  confirmationTime: { type: String, required: true },
+  confirmationTime: { type: Number, required: true },
   createdAt: { type: Date, required: true },
 });
 

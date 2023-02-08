@@ -6,7 +6,7 @@ export type TDBUser = {
   email: string;
   password: string;
   confirmationDay: 'today' | 'yesterday';
-  confirmationTime: string;
+  confirmationTime: number;
   createdAt: Date;
 };
 
@@ -35,7 +35,7 @@ export type TDBPlan = {
   title: string;
   text?: string;
   color?: string;
-  duration?: number;
+  duration: number;
 };
 
 export type TDBWeekDistribution = {

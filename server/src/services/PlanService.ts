@@ -1,4 +1,5 @@
 import Plan from '../schemas/Plan';
+import WeekDistributionService from './WeekDistributionService';
 import { ClientError } from '../errors';
 import * as Type from '../types';
 import { Types } from 'mongoose';
@@ -38,6 +39,9 @@ class PlanService {
     if (!id) {
       throw new ClientError('ID not specified');
     }
+
+    await WeekDistributionService.deleteByPlan(userId, new Types.ObjectId(id));
+
     return await Plan.findByIdAndDelete(id).where({ userId: userId });
   }
 }

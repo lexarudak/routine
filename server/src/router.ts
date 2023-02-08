@@ -4,6 +4,7 @@ import { check } from 'express-validator';
 import UserController from './controllers/UserController';
 import ThoughtController from './controllers/ThoughtController';
 import PlanController from './controllers/PlanController';
+import WeekDistributionController from './controllers/WeekDistributionController';
 
 const router = Router();
 
@@ -31,5 +32,8 @@ router.get('/plans/:id', PlanController.getById.bind(PlanController));
 router.post('/plans', PlanController.create.bind(PlanController));
 router.post('/plans/update', PlanController.update.bind(PlanController));
 router.delete('/plans/:id', PlanController.delete.bind(PlanController));
+
+router.get('/weekDistribution/get', WeekDistributionController.get.bind(WeekDistributionController));
+router.post('/weekDistribution/adjustPlan', WeekDistributionController.adjustPlan.bind(WeekDistributionController));
 
 export default router;

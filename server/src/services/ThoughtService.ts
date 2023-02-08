@@ -41,6 +41,7 @@ class ThoughtService {
       const plan: Type.TPlan = {
         userId: thought.userId as Types.ObjectId,
         title: thought.title,
+        duration: 15,
       };
       return await PlanService.create(userId, plan);
     }
