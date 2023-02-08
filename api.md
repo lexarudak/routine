@@ -517,14 +517,23 @@ Returns json data about the distribution of time during the week.
   ]
   ```
   
-- `POST` /api/weekDistribution/addPlan
+- `POST` /api/weekDistribution/adjustPlan
   
-  Request
+  Request (from page of the week)
   ```
   {
     "dayOfWeek": 0,
     "planId": 63e158255010e434534cfae5,
     "duration": 1.25
+  }
+  ```
+  
+  Request (from page of the day)
+  ```
+  {
+    "dayOfWeek": 0,
+    "planId": 63e158255010e434534cfae5,
+    "duration": -1.25
   }
   ```
   
@@ -574,7 +583,6 @@ Returns json data about the distribution of time during the day.
         "color": "#FF00FF",
         "from": 11,
         "to": 12,
-        "duration": 1,
         "__v": 0
       },
       {
@@ -586,7 +594,6 @@ Returns json data about the distribution of time during the day.
         "color": "#FF00FF",
         "from": 15,
         "to": 16.50,
-        "duration": 1.50,
         "__v": 0
       }
     ],
@@ -615,7 +622,7 @@ Returns json data about the distribution of time during the day.
   }
   ```
   
-- `POST` /api/dayDistribution
+- `POST` /api/dayDistribution/adjustPlan
   
   Request
   ```
