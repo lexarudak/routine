@@ -4,8 +4,9 @@ const enum Values {
   passwordPlaceholder = 'Password',
   secondPasswordPlaceholder = 'Repeat password',
   rememberMeId = 'rememberMe',
-  allWeekHours = 168,
-  allDayHours = 24,
+  allWeekMinutes = 10080,
+  allDayMinutes = 1440,
+  binImg = `url('./assets/svg/bin.svg')`,
 }
 
 export default Values;

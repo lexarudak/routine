@@ -39,4 +39,21 @@ function buttonOff(...buttons: HTMLButtonElement[]) {
   });
 }
 
-export { isHTMLElement, getExistentElement, getExistentInputElement, getExistentElementByClass, buttonOn, buttonOff };
+function minToHour(min: number) {
+  if (min < 60 && min >= 0) return `${min} min`;
+  if (min >= 60) {
+    if (min % 60 === 0) return `${Math.floor(min / 60)} h`;
+    return `${Math.floor(min / 60)}:${min % 60} h`;
+  }
+  throw new Error(ErrorsList.minToHourError);
+}
+
+export {
+  isHTMLElement,
+  getExistentElement,
+  getExistentInputElement,
+  getExistentElementByClass,
+  buttonOn,
+  buttonOff,
+  minToHour,
+};

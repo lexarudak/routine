@@ -11,6 +11,7 @@ const enum ErrorsList {
   existUser = 'this user already exist',
   notFound = '404',
   badRequest = '400',
+  minToHourError = 'Wrong value in minToHour fn',
 }
 
 export default ErrorsList;

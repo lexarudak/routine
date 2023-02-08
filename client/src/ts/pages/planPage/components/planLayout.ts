@@ -6,6 +6,7 @@ import Days from '../../../base/enums/days';
 import InnerText from '../../../base/enums/innerText';
 import RoutsList from '../../../base/enums/routsList';
 import { GoToFn } from '../../../base/types';
+import Values from '../../../base/enums/values';
 
 class PlanLayout {
   goTo: GoToFn;
@@ -49,7 +50,7 @@ class PlanLayout {
 
     const planDayName = document.createElement('div');
     planDayName.classList.add(ClassList.planDayName);
-    planDayName.innerHTML = Days[dayNum].slice(0, 2);
+    planDayName.innerHTML = Days[dayNum].slice(0, 3);
 
     const planDayHours = document.createElement('div');
     planDayHours.classList.add(ClassList.planDayHours);
@@ -67,6 +68,30 @@ class PlanLayout {
     return planDaysContainer;
   }
 
+  private makeAddButton() {
+    const btn = document.createElement('button');
+    btn.classList.add(ButtonClasses.button, ClassList.planAddButton);
+
+    const name = document.createElement('span');
+    name.innerText = ButtonNames.planAddButton;
+    name.classList.add(ClassList.planAddButtonName);
+
+    const value = document.createElement('span');
+    value.classList.add(ClassList.planAddButtonValue);
+
+    btn.append(name, value);
+    return btn;
+  }
+
+  private makeRemoveZone() {
+    const remove = document.createElement('div');
+    remove.classList.add(ClassList.planRemoveZone);
+    const bin = document.createElement('div');
+    bin.style.backgroundImage = Values.binImg;
+    remove.append(bin);
+    return remove;
+  }
+
   public makePlanBody() {
     const planBody = document.createElement('div');
     planBody.classList.add(ClassList.planBody);
@@ -77,10 +102,25 @@ class PlanLayout {
     const planField = document.createElement('div');
     planField.classList.add(ClassList.planField);
 
+    const buttons = document.createElement('div');
+    buttons.classList.add(ClassList.planButtons);
+
+    const weekendFields = document.createElement('div');
+    weekendFields.classList.add(ClassList.weekendFields);
+
+    const weekendFieldsBig = document.createElement('div');
+    weekendFieldsBig.classList.add(ClassList.weekendFieldsBig);
+
+    const weekendFieldsSmall = document.createElement('div');
+    weekendFieldsSmall.classList.add(ClassList.weekendFieldsSmall);
+
     const emptyDayContainer = document.createElement('div');
     const planDaysContainer = this.fillPlanDaysContainer(emptyDayContainer);
     planDaysContainer.classList.add(ClassList.planDaysContainer);
 
+    buttons.append(this.makeAddButton(), this.makeRemoveZone());
+    weekendFields.append(weekendFieldsBig, weekendFieldsSmall);
+    planField.append(buttons, weekendFields);
     planBody.append(planDaysContainer, planField);
     return planBody;
   }

@@ -1,0 +1,25 @@
+.plan-round {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  border-color: transparent;
+  padding: 10px;
+  transition: .2s;
+  transform: scale(0);
+
+  & > * {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  &__value {
+    position: absolute;
+    top: 75%;
+    transform: translateY(-50%);
+  }
+}

@@ -1,6 +1,6 @@
 .button {
   padding: 10px 20px;
-  border: 1px solid;
+  border: 1px solid $font-medium;
   border-radius: 20px;
   box-shadow: $shadow;
   background: $background-color;
@@ -18,8 +18,8 @@
   }
 
   &_main {
-    color: $font-main;
-    border-color: $font-main;
+    color: $font-medium;
+    border-color: $font-medium;
 
     &:hover {
       color: $success;
@@ -62,7 +62,7 @@
   color: $font-medium;
   border: none;
   background: none;
-  font-size: 20px;
+  font-size: 16px;
   transition: .3s;
   width: auto;
 

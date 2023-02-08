@@ -34,13 +34,20 @@ const enum ClassList {
   planTools = 'plan__tools',
   planButtons = 'plan__buttons',
   planAddButton = 'plan__button-add',
-  planRemoveButton = 'plan__button-remove',
+  planAddButtonValue = 'plan__button-add-value',
+  planRemoveZone = 'plan__remove',
   planDaysContainer = 'plan__days',
   planDay = 'plan__day',
   planDayLine = 'plan__day-line',
   planDayName = 'plan__day-name',
   planDayHours = 'plan__day-hours',
   planField = 'plan__field',
+  planAddButtonName = 'plan__button-add-name',
+  weekendFields = 'weekend-fields',
+  weekendFieldsBig = 'weekend-fields__big',
+  weekendFieldsSmall = 'weekend-fields__small',
+  planRound = 'plan-round',
+  planRoundVal = 'plan-round__value',
 }
 
 export default ClassList;
