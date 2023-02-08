@@ -22,7 +22,7 @@ Returns json data about users.
   "email": string,
   "password": string,
   "confirmationDay": string,
-  "confirmationTime": string,
+  "confirmationTime": number,
   "createdAt": date
 }
 ```
@@ -39,7 +39,7 @@ Returns json data about users.
       "name": "John Doe",
       "email": "john.doe@gmail.com",
       "confirmationDay": "today",
-      "confirmationTime": "16:00",
+      "confirmationTime": 960,
       "createdAt": "2023-02-05T18:15:14.997Z",
       "__v": 0
     },
@@ -48,7 +48,7 @@ Returns json data about users.
       "name": "Steven Gundry",
       "email": "steven.gundry@gmail.com",
       "confirmationDay": "yesterday",
-      "confirmationTime": "11:00",
+      "confirmationTime": 660,
       "createdAt": "2023-02-04T12:45:53.196Z",
       "__v": 0
     }
@@ -67,7 +67,7 @@ Returns json data about users.
     "name": "Steven Gundry",
     "email": "steven.gundry@gmail.com",
     "confirmationDay": "yesterday",
-    "confirmationTime": "11:00",
+    "confirmationTime": 660,
     "createdAt": "2023-02-04T12:45:53.196Z",
     "__v": 0
   }
@@ -85,7 +85,7 @@ Returns json data about users.
     "name": "Steven Gundry",
     "email": "steven.gundry@gmail.com",
     "confirmationDay": "yesterday",
-    "confirmationTime": "11:00",
+    "confirmationTime": 660,
     "createdAt": "2023-02-04T12:45:53.196Z",
     "__v": 0
   }
@@ -113,7 +113,7 @@ Returns json data about users.
       "name": "John Doe",
       "email": "john.doe@gmail.com",
       "confirmationDay": "yesterday",
-      "confirmationTime": "11:00",
+      "confirmationTime": 660,
       "createdAt": "2023-02-05T19:22:02.378Z",
       "__v": 0
     }
@@ -170,7 +170,7 @@ Returns json data about users.
       "name": "John Doe",
       "email": "john.doe@gmail.com",
       "confirmationDay": "yesterday",
-      "confirmationTime": "11:00",
+      "confirmationTime": 660,
       "createdAt": "2023-02-05T19:22:02.378Z",
       "__v": 0
     }
@@ -195,7 +195,7 @@ Returns json data about users.
     "_id": "63dbce8efc36f95ae5646e7e",
     "name": "Mr. John Doe",
     "confirmationDay": "yesterday",
-    "confirmationTime": "17:00"
+    "confirmationTime": 1020
   }
   ```
   
@@ -206,7 +206,7 @@ Returns json data about users.
     "name": "Mr. John Doe",
     "email": "john.doe@gmail.com",
     "confirmationDay": "yesterday",
-    "confirmationTime": "17:00",
+    "confirmationTime": 1020,
     "createdAt": "2023-02-05T19:22:02.378Z",
     "__v": 0
   }
@@ -364,7 +364,7 @@ Returns json data about user's plans.
       "title": "Plan 1",
       "text": "Lorem ipsum",
       "color": "#FF00FF",
-      "duration": 15.25,
+      "duration": 75,
       "__v": 0
     },
     {
@@ -373,7 +373,7 @@ Returns json data about user's plans.
       "title": "Plan 2",
       "text": "Lorem ipsum",
       "color": "#FF00FF",
-      "duration": 5.25,
+      "duration": 60,
       "__v": 0
     }
   ]
@@ -392,7 +392,7 @@ Returns json data about user's plans.
     "title": "Plan 2",
     "text": "Lorem ipsum",
     "color": "#FF00FF",
-    "duration": 5.25,
+    "duration": 60,
     "__v": 0
   }
   ```
@@ -405,7 +405,7 @@ Returns json data about user's plans.
     "title": "Plan 3",
     "text": "Lorem ipsum",
     "color": "#FF00FF",
-    "duration": 5.25
+    "duration": 60
   }
   ```
   
@@ -417,7 +417,7 @@ Returns json data about user's plans.
     "title": "Plan 3",
     "text": "Lorem ipsum",
     "color": "#FF00FF",
-    "duration": 5.25,
+    "duration": 60,
     "__v": 0
   }
   ```
@@ -435,7 +435,7 @@ Returns json data about user's plans.
     "title": "Plan test 3",
     "text": "Lorem ipsum",
     "color": "#FF00FF",
-    "duration": 5.25,
+    "duration": 60,
     "__v": 0
   }
   ```
@@ -448,7 +448,7 @@ Returns json data about user's plans.
     "_id": "63e158255010e434534cfae5",
     "title": "Plan 3",
     "color": "#FF00FF",
-    "duration": 15.25
+    "duration": 75
   }
   ```
   
@@ -460,7 +460,7 @@ Returns json data about user's plans.
     "title": "Plan 3",
     "text": "Lorem ipsum",
     "color": "#FF00FF",
-    "duration": 15.25,
+    "duration": 75,
     "__v": 0
   }
   ```
@@ -495,7 +495,7 @@ Returns json data about the distribution of time during the week.
         "title": "Plan 1",
         "text": "Lorem ipsum",
         "color": "#FF00FF",
-        "duration": 15.25,
+        "duration": 75,
         "__v": 0
       },
       {
@@ -504,7 +504,7 @@ Returns json data about the distribution of time during the week.
         "title": "Plan 2",
         "text": "Lorem ipsum",
         "color": "#FF00FF",
-        "duration": 5.25,
+        "duration": 60,
         "__v": 0
       }
     ],
@@ -524,7 +524,7 @@ Returns json data about the distribution of time during the week.
   {
     "dayOfWeek": 0,
     "planId": 63e158255010e434534cfae5,
-    "duration": 1.25
+    "duration": 120
   }
   ```
   
@@ -533,7 +533,7 @@ Returns json data about the distribution of time during the week.
   {
     "dayOfWeek": 0,
     "planId": 63e158255010e434534cfae5,
-    "duration": -1.25
+    "duration": -120
   }
   ```
   
@@ -544,7 +544,7 @@ Returns json data about the distribution of time during the week.
     "userId": 63df879ff7a5081606fb4fb8,
     "dayOfWeek": 0,
     "planId": 63e158255010e434534cfae5,
-    "duration": 1.25,
+    "duration": 120,
     "__v": 0
   }
   ```
@@ -581,8 +581,8 @@ Returns json data about the distribution of time during the day.
         "title": "Plan 1",
         "text": "Lorem ipsum",
         "color": "#FF00FF",
-        "from": 11,
-        "to": 12,
+        "from": 660,
+        "to": 720,
         "__v": 0
       },
       {
@@ -592,8 +592,8 @@ Returns json data about the distribution of time during the day.
         "title": "Plan 2",
         "text": "Lorem ipsum",
         "color": "#FF00FF",
-        "from": 15,
-        "to": 16.50,
+        "from": 900,
+        "to": 990,
         "__v": 0
       }
     ],
@@ -605,7 +605,7 @@ Returns json data about the distribution of time during the day.
         "title": "Plan 3",
         "text": "Lorem ipsum",
         "color": "#FF00FF",
-        "duration": 2.25,
+        "duration": 135,
         "__v": 0
       },
       {
@@ -615,7 +615,7 @@ Returns json data about the distribution of time during the day.
         "title": "Plan 4",
         "text": "Lorem ipsum",
         "color": "#FF00FF",
-        "duration": 1.75,
+        "duration": 105,
         "__v": 0
       }
     ]
@@ -626,26 +626,59 @@ Returns json data about the distribution of time during the day.
   
   Request
   ```
-  {
-    "_id": "63e158255010e434534cfae5",
-    "dayOfWeek": 0,
-    "planId": "63e158255010e434534cfae5",
-    "from": 11,
-    "to": 12
-  }
+  [
+    {
+      "dayOfWeek": 0,
+      "planId": "63e158255010e434534cfae5",
+      "from": 600,
+      "to": 660
+    },
+    {
+      "dayOfWeek": 0,
+      "planId": "63e158255010e434534cfae5",
+      "from": 660,
+      "to": 720
+    },
+    {
+      "dayOfWeek": 0,
+      "planId": "63e158255010e434534cfae5",
+      "from": 900,
+      "to": 960
+    }
+  ]
   ```
   
   Respose `200` `OK`
   ```
-  {
-    "_id": 63e158255010e434534cfae5,
-    "userId": 63df879ff7a5081606fb4fb8,
-    "dayOfWeek": 0,
-    "planId": 63e158255010e434534cfae5,
-    "from": 11,
-    "to": 12
-    "__v": 0
-  }
+  [
+    {
+      "_id": 63e158255010e434534cfae5,
+      "userId": 63df879ff7a5081606fb4fb8,
+      "dayOfWeek": 0,
+      "planId": 63e158255010e434534cfae5,
+      "from": 600,
+      "to": 660
+      "__v": 0
+    },
+    {
+      "_id": 63e158255010e434534cfae5,
+      "userId": 63df879ff7a5081606fb4fb8,
+      "dayOfWeek": 0,
+      "planId": 63e158255010e434534cfae5,
+      "from": 660,
+      "to": 720
+      "__v": 0
+    },
+    {
+      "_id": 63e158255010e434534cfae5,
+      "userId": 63df879ff7a5081606fb4fb8,
+      "dayOfWeek": 0,
+      "planId": 63e158255010e434534cfae5,
+      "from": 900,
+      "to": 960
+      "__v": 0
+    },
+  ]
   ```
 
 </details>
