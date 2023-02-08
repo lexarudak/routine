@@ -4,64 +4,94 @@ import Attributes from '../../base/enums/attributes';
 import { GoToFn } from '../../base/types';
 import Page from '../page';
 import { createElement, getExistentElement } from '../../base/helpers';
-import createChart from './chart';
-import ToDo from './toDo';
+import Chart from './components/chart';
+import ToDo from './components/toDo';
 import chartData from './data/chartData';
+import Clock from './components/clock';
 
 class HomePage extends Page {
-  toDoList: ToDo;
+  toDoInst: ToDo;
+
+  clockInst: Clock;
+
+  chartInst: Chart;
 
   constructor(goTo: GoToFn) {
     super(PageList.homePage, goTo);
-    this.toDoList = new ToDo();
+    this.toDoInst = new ToDo();
+    this.clockInst = new Clock();
+    this.chartInst = new Chart();
   }
 
-  showToDo(e: Event) {
+  private showToDo(e: Event) {
     if (!(e.target instanceof SVGCircleElement) || !e.target.id) return;
     const toDo = getExistentElement('.to-do');
     const color = e.target.getAttribute(Attributes.stroke);
     if (color) toDo.style.backgroundColor = color;
     toDo.innerHTML = '';
-    const toDoList = this.toDoList.draw(+e.target.id - 1);
+    const toDoList = this.toDoInst.draw(+e.target.id - 1);
     toDo.append(toDoList);
   }
 
-  showCurrToDo(e: Event) {
+  private showCurrToDo(e: Event) {
     if (!(e.target instanceof SVGCircleElement) || !e.target.id) return;
 
     const toDo = getExistentElement('.to-do');
     toDo.style.backgroundColor = '';
     toDo.innerHTML = '';
-    const toDoList = this.toDoList.draw(0);
+    const toDoList = this.toDoInst.draw(0);
     toDo.append(toDoList);
+  }
+
+  private createThought() {
+    const thought = createElement('div', HomePageClassList.thought);
+    const thoughtTitle = createElement('h3', HomePageClassList.thoughtTitle);
+    thought.textContent = 'Thought';
+    const thoughtAdd = createElement('div', HomePageClassList.thoughtAdd);
+    thought.append(thoughtTitle, thoughtAdd);
+    return thought;
+  }
+
+  private createClockChart() {
+    const clock = createElement('div', HomePageClassList.clock);
+    const hour = createElement('div', HomePageClassList.hour);
+    const hr = createElement('div', HomePageClassList.hourCircle);
+    const minutes = createElement('div', HomePageClassList.minutes);
+    const min = createElement('div', HomePageClassList.minutesCircle);
+    hour.append(hr);
+    minutes.append(min);
+
+    const chart = createElement('div', HomePageClassList.chart);
+    this.chartInst.createChart(chart, chartData, { strokeWidth: 14, radius: 320 });
+    chart.append(hour, minutes);
+
+    const toDo = createElement('div', HomePageClassList.toDo);
+    const toDoList = this.toDoInst.draw(0);
+    toDo.append(toDoList);
+    chart.append(toDo);
+    clock.append(chart);
+
+    chart.addEventListener('mouseover', (e) => this.showToDo(e));
+    chart.addEventListener('mouseout', (e) => this.showCurrToDo(e));
+
+    return clock;
   }
 
   protected getFilledPage(): HTMLElement {
     const page = document.createElement(HomePageClassList.section);
-
-    const thought = createElement('h3', HomePageClassList.thought);
-    const thoughtTitle = createElement('h3', HomePageClassList.thoughtTitle);
-    thought.textContent = 'Thought';
-    const thoughtAdd = createElement('h3', HomePageClassList.thoughtAdd);
-    thought.append(thoughtTitle, thoughtAdd);
+    const thought = this.createThought();
 
     const plan = createElement('div', HomePageClassList.plan);
     plan.textContent = 'Plan';
 
     const signIn = createElement('div', HomePageClassList.signIn);
+    signIn.textContent = 'User';
 
-    const chart = createElement('div', HomePageClassList.chart);
-    createChart(chart, chartData, { strokeWidth: 14, radius: 350 });
+    const clock = this.createClockChart();
 
-    const toDo = createElement('div', HomePageClassList.toDo);
-    const toDoList = this.toDoList.draw(0);
-    toDo.append(toDoList);
-    chart.append(toDo);
+    page.append(thought, signIn, plan, clock);
 
-    page.append(thought, signIn, plan, chart);
-
-    chart.addEventListener('mouseover', (e) => this.showToDo(e));
-    chart.addEventListener('mouseout', (e) => this.showCurrToDo(e));
+    setTimeout(() => this.clockInst.getTime());
     return page;
   }
 }

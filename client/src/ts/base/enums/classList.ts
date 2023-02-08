@@ -13,8 +13,15 @@ const enum HomePageClassList {
   signIn = 'sign-in',
   chart = 'chart',
   toDo = 'to-do',
-  toDoList = 'to-do__list',
-  toDoListItem = 'to-do__list-item',
+  toDoTitle = 'to-do__title',
+  toDoTextarea = 'to-do__textarea',
+  clock = 'clock',
+  hour = 'hour',
+  hourCircle = 'hour__circle',
+  minutes = 'minutes',
+  minutesCircle = 'minutes__circle',
+  dayInfo = 'day-info',
+  dayIcon = 'day-info__icon',
 }
 
 export { ClassList, HomePageClassList };

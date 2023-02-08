@@ -9,16 +9,16 @@ section {
   text-align: center;
   top: 40px;
   left: 45px;
-  font-weight: 400;
-  font-size: 32px;
+  font-weight: 500;
+  font-size: 30px;
 
   &__add {
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 20px auto 0;
-    width: 50px;
-    height: 50px;
+    margin: 15px auto 0;
+    width: 40px;
+    height: 40px;
     text-align: center;
     border-radius: 50%;
     background-color: $thought-color;
@@ -30,7 +30,7 @@ section {
       display: block;
       width: 70%;
       height: auto;
-      padding-top: 7px;
+      padding-top: 8px;
     }
   }
 }
@@ -39,9 +39,10 @@ section {
   position: absolute;
   top: 40px;
   right: 45px;
-  width: 30px;
-  height: 30px;
-  background: url('./assets/svg/sign-in.svg');
+  // width: 35px;
+  // height: 35px;
+  font-size: 24px;
+  // background: url('./assets/svg/sign-in.svg') center/cover no-repeat;
   cursor: pointer;
 }
 
@@ -51,23 +52,46 @@ section {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 270px;
-  height: 270px;
+  width: 250px;
+  height: 250px;
   border-radius: 50%;
   border: 5px solid $thought-color;
   filter: drop-shadow(0px 4px 4px $shadow-dark);
   color: $font-pale;
-  font-weight: 400;
-  font-size: 60px;
+  font-weight: 500;
+  font-size: 55px;
   cursor: pointer;
 }
 
-.chart {
+.clock {
+  width: 730px;
+  height: 730px;
   position: absolute;
   right: 200px;
   display: flex;
   justify-content: center;
   align-items: center;
+  background-image: url('./assets/svg/clock.svg');
+}
+
+.chart {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  svg {
+    overflow: visible;
+    filter: drop-shadow(0px 4px 4px $shadow-dark);
+
+    circle {
+      transition: 0.2s;
+      cursor: pointer;
+      &:hover {
+        stroke-width: 20;
+      }
+    }
+  }
 }
 
 .to-do {
@@ -78,42 +102,125 @@ section {
   background-color: $job-color;
   color: $background-color;
   position: absolute;
-  z-index: 2;
-  width: 91%;
-  height: 91%;
+  width: 88%;
+  height: 88%;
   border-radius: 50%;
   filter: drop-shadow(0px 4px 4px $shadow-dark);
 
-  &__list {
+  &__title {
     text-align: center;
     font-weight: 400;
-    font-size: 65px;
-    margin: 65px 0;
-    width: 65%;
+    font-size: 60px;
+    margin: 60px 0;
+    width: 75%;
   }
 
-  &__list-item {
+  &__textarea {
+    color: $background-color;
     padding: 0 10px 0;
-    list-style-type: circle;
+    margin-top: 30px;
     text-align: left;
-    font-size: 24px;
+    font-size: 22px;
     font-weight: 300;
     line-height: 1.5;
-    &:first-child {
-      margin-top: 40px;
+    outline: none;
+    background-color: transparent;
+    border: none;
+    width: 100%;
+    height: 90%;
+    resize: none;
+    &::-webkit-scrollbar {
+      width: 8px;
+    }
+    &::-webkit-scrollbar-track {
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
+    }
+    &::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 2px;
     }
   }
 }
 
-svg {
-  overflow: visible;
-  filter: drop-shadow(0px 4px 4px $shadow-dark);
+.hour,
+.minutes {
+  position: absolute;
+  z-index: -1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
 
-  circle {
-    transition: 0.2s;
-    cursor: pointer;
-    &:hover {
-      stroke-width: 20;
-    }
+.hour__circle,
+.minutes__circle {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  border-radius: 50%;
+  width: 100%;
+  height: 100%;
+}
+
+.hour__circle {
+  padding: 2.4%;
+  &:before {
+    content: '';
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    background-color: $font-main;
+    z-index: -1;
+    border-radius: 50%;
+  }
+}
+
+.minutes__circle {
+  padding: 2.8%;
+  &:before {
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 16px;
+    background-color: $font-main-light;
+    z-index: 12;
+    border-radius: 50%;
+  }
+}
+
+.day-info {
+  position: absolute;
+  display: flex;
+  flex-wrap: wrap;
+  bottom: 80px;
+  color: $background-color;
+  font-weight: 500;
+  z-index: 5;
+
+  &__icon {
+    display: block;
+    margin-bottom: 12px;
+    width: 100%;
+    height: 52px;
+    background: url('./assets/svg/sun.svg');
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+  }
+
+  &__date {
+    font-size: 55px;
+    line-height: 1;
+    margin-right: 12px;
+  }
+
+  &__day {
+    font-size: 24px;
+  }
+
+  &__month {
+    font-size: 22px;
   }
 }
