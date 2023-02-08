@@ -1,4 +1,5 @@
 import Thought from '../schemas/Thought';
+import PlanService from './PlanService';
 import { ClientError } from '../errors';
 import * as Type from '../types';
 import { Types } from 'mongoose';
@@ -29,6 +30,22 @@ class ThoughtService {
       title: item.title,
     };
     return await Thought.findByIdAndUpdate(item._id, itemForUpdate, { new: true }).where({ userId: userId });
+  }
+
+  async transferToPlan(userId: Types.ObjectId, id: string) {
+    if (!id) {
+      throw new ClientError('ID not specified');
+    }
+    const thought = await this.delete(userId, id);
+    if (thought) {
+      const plan: Type.TPlan = {
+        userId: thought.userId as Types.ObjectId,
+        title: thought.title,
+        duration: 15,
+      };
+      return await PlanService.create(userId, plan);
+    }
+    return null;
   }
 
   async delete(userId: Types.ObjectId, id: string) {
