@@ -559,10 +559,87 @@ Returns json data about the distribution of time during the day.
 
 <details>
 
-- `GET` /api/dayDistribution/?dayOfWeek=''
+- `GET` /api/dayDistribution/get/?dayOfWeek=''
+  
+  Respose `200` `OK`
+  ```
+  {
+    "distributedTime": [
+      {
+        "_id": "63e158255010e434534cfae5",
+        "userId": "63df879ff7a5081606fb4fb8",
+        "planId": "63e158255010e434534cfae5",
+        "title": "Plan 1",
+        "text": "Lorem ipsum",
+        "color": "#FF00FF",
+        "from": 11,
+        "to": 12,
+        "duration": 1,
+        "__v": 0
+      },
+      {
+        "_id": "63e15e1027cf884cc5d1ef99",
+        "userId": "63df879ff7a5081606fb4fb8",
+        "planId": "63e158255010e434534cfae5",
+        "title": "Plan 2",
+        "text": "Lorem ipsum",
+        "color": "#FF00FF",
+        "from": 15,
+        "to": 16.50,
+        "duration": 1.50,
+        "__v": 0
+      }
+    ],
+    "nonDistributedTime": [
+      {
+        "_id": "63e158255010e434534cfae5",
+        "userId": "63df879ff7a5081606fb4fb8",
+        "planId": "63e158255010e434534cfae5",
+        "title": "Plan 3",
+        "text": "Lorem ipsum",
+        "color": "#FF00FF",
+        "duration": 2.25,
+        "__v": 0
+      },
+      {
+        "_id": "63e15e1027cf884cc5d1ef99",
+        "userId": "63df879ff7a5081606fb4fb8",
+        "planId": "63e158255010e434534cfae5",
+        "title": "Plan 4",
+        "text": "Lorem ipsum",
+        "color": "#FF00FF",
+        "duration": 1.75,
+        "__v": 0
+      }
+    ]
+  }
+  ```
+  
 - `POST` /api/dayDistribution
-- `DELETE` /api/dayDistribution/:id
-- `POST` /api/dayDistribution/update
+  
+  Request
+  ```
+  {
+    "_id": "63e158255010e434534cfae5",
+    "dayOfWeek": 0,
+    "planId": "63e158255010e434534cfae5",
+    "from": 11,
+    "to": 12
+  }
+  ```
+  
+  Respose `200` `OK`
+  ```
+  {
+    "_id": 63e158255010e434534cfae5,
+    "userId": 63df879ff7a5081606fb4fb8,
+    "dayOfWeek": 0,
+    "planId": 63e158255010e434534cfae5,
+    "from": 11,
+    "to": 12
+    "__v": 0
+  }
+  ```
 
 </details>
 
