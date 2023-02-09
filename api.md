@@ -573,11 +573,10 @@ Returns json data about the distribution of time during the day.
   Respose `200` `OK`
   ```
   {
-    "distributedTime": [
+    "distributedPlans": [
       {
         "_id": "63e158255010e434534cfae5",
         "userId": "63df879ff7a5081606fb4fb8",
-        "planId": "63e158255010e434534cfae5",
         "title": "Plan 1",
         "text": "Lorem ipsum",
         "color": "#FF00FF",
@@ -588,7 +587,6 @@ Returns json data about the distribution of time during the day.
       {
         "_id": "63e15e1027cf884cc5d1ef99",
         "userId": "63df879ff7a5081606fb4fb8",
-        "planId": "63e158255010e434534cfae5",
         "title": "Plan 2",
         "text": "Lorem ipsum",
         "color": "#FF00FF",
@@ -597,11 +595,10 @@ Returns json data about the distribution of time during the day.
         "__v": 0
       }
     ],
-    "nonDistributedTime": [
+    "nonDistributedPlans": [
       {
         "_id": "63e158255010e434534cfae5",
         "userId": "63df879ff7a5081606fb4fb8",
-        "planId": "63e158255010e434534cfae5",
         "title": "Plan 3",
         "text": "Lorem ipsum",
         "color": "#FF00FF",
@@ -611,7 +608,6 @@ Returns json data about the distribution of time during the day.
       {
         "_id": "63e15e1027cf884cc5d1ef99",
         "userId": "63df879ff7a5081606fb4fb8",
-        "planId": "63e158255010e434534cfae5",
         "title": "Plan 4",
         "text": "Lorem ipsum",
         "color": "#FF00FF",
