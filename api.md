@@ -630,19 +630,16 @@ Returns json data about the distribution of time during the day.
     "dayOfWeek": 0,
     "dayDistribution": [
       {
-        "dayOfWeek": 0,
         "planId": "63e158255010e434534cfae5",
         "from": 600,
         "to": 660
       },
       {
-        "dayOfWeek": 0,
         "planId": "63e158255010e434534cfae5",
         "from": 660,
         "to": 720
       },
       {
-        "dayOfWeek": 0,
         "planId": "63e158255010e434534cfae5",
         "from": 900,
         "to": 960
