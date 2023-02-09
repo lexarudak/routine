@@ -5,6 +5,7 @@ import UserController from './controllers/UserController';
 import ThoughtController from './controllers/ThoughtController';
 import PlanController from './controllers/PlanController';
 import WeekDistributionController from './controllers/WeekDistributionController';
+import DayDistributionController from './controllers/DayDistributionController';
 
 const router = Router();
 
@@ -35,5 +36,8 @@ router.delete('/plans/:id', PlanController.delete.bind(PlanController));
 
 router.get('/weekDistribution/get', WeekDistributionController.get.bind(WeekDistributionController));
 router.post('/weekDistribution/adjustPlan', WeekDistributionController.adjustPlan.bind(WeekDistributionController));
+
+router.get('/dayDistribution/get/:dayOfWeek', DayDistributionController.get.bind(DayDistributionController));
+router.post('/dayDistribution/adjustPlan', DayDistributionController.adjustPlan.bind(DayDistributionController));
 
 export default router;

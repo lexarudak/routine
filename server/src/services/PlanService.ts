@@ -1,4 +1,5 @@
 import Plan from '../schemas/Plan';
+import DayDistributionService from './DayDistributionService';
 import WeekDistributionService from './WeekDistributionService';
 import { ClientError } from '../errors';
 import * as Type from '../types';
@@ -39,7 +40,7 @@ class PlanService {
     if (!id) {
       throw new ClientError('ID not specified');
     }
-
+    await DayDistributionService.deleteByPlan(userId, new Types.ObjectId(id));
     await WeekDistributionService.deleteByPlan(userId, new Types.ObjectId(id));
 
     return await Plan.findByIdAndDelete(id).where({ userId: userId });

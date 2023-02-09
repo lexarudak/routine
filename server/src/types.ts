@@ -55,6 +55,35 @@ export type TDBDayDistribution = {
   to: number;
 };
 
+export type TDayDistributionAdjastPlan = {
+  dayOfWeek: number;
+  dayDistribution: TDayDistribution[];
+};
+
+export type TDistributedPlan = {
+  _id: Types.ObjectId;
+  userId: Types.ObjectId;
+  title: string;
+  text: string;
+  color: string;
+  from: number;
+  to: number;
+};
+
+export type TNotDistributedPlan = {
+  _id: Types.ObjectId;
+  userId: Types.ObjectId;
+  title: string;
+  text: string;
+  color: string;
+  duration: number;
+};
+
+export type TDayDistributionData = {
+  distributedPlans: TDistributedPlan[];
+  notDistributedPlans: TNotDistributedPlan[];
+};
+
 export type TDBStatistics = {
   _id: Types.ObjectId;
   userId: Types.ObjectId;
