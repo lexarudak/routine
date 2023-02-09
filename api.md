@@ -595,7 +595,7 @@ Returns json data about the distribution of time during the day.
         "__v": 0
       }
     ],
-    "nonDistributedPlans": [
+    "notDistributedPlans": [
       {
         "_id": "63e158255010e434534cfae5",
         "userId": "63df879ff7a5081606fb4fb8",
