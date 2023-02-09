@@ -13,7 +13,7 @@ const testPlans: Plan[] = [
     color: '#9F5454',
     title: 'Work',
     text: 'just work',
-    duration: 2640,
+    duration: 2700,
   },
   {
     _id: '3',

@@ -1,5 +1,6 @@
 const enum ClassList {
   mainContainer = 'main__container',
+  banner = 'banner',
   // 404
   page404text = 'page-404__text',
   page404title = 'page-404__title',
@@ -53,16 +54,17 @@ const enum ClassList {
   editorTools = 'editor__tools',
   editorTitle = 'editor__title',
   editorText = 'editor__text',
-  editorError = 'editor__error',
-  editorErrorActive = 'editor__error_active',
   editorButton = 'editor__button',
-  editorButtonSpan = 'editor__button-span',
-  editorButtonSpanLeft = 'editor__button-left-span',
-  editorButtonSpanRight = 'editor__button-right-span',
   editorColorPicker = 'editor__color-picker',
   editorColorBox = 'editor__color-box',
   editorColorBoxActive = 'editor__color-box_active',
   editorColorRound = 'editor__color-round',
+  editorSaveIcon = 'editor__save-icon',
+  // time container
+  timeContainer = 'time-container',
+  timeContainerSlider = 'time-container__slider',
+  timeContainerTimeInput = 'time-container__time-input',
+  timeContainerTimeLabel = 'time-container__time-label',
 }
 
 export default ClassList;

@@ -1,30 +1,39 @@
 import { GetAttribute, SetAttribute } from '../../../base/enums/attributes';
 import ClassList from '../../../base/enums/classList';
 import ErrorsList from '../../../base/enums/errorsList';
-import Values from '../../../base/enums/values';
-import { getExistentElementByClass } from '../../../base/helpers';
+import InnerText from '../../../base/enums/innerText';
+import { getExistentElementByClass, makeElement } from '../../../base/helpers';
 import { Plan } from '../../../base/interface';
 import colorsAndFonts from '../../../components/colorsAndFonts';
 import Popup from '../../../components/popup';
+import TimeSlider from '../../../components/timeSlider';
 import defaultPlan from './defaultPlan';
+import savePlanIcon from './savePlanIcon';
 
 class PlanEditor {
   popup: Popup;
 
   plan: Plan;
 
-  error: HTMLElement;
+  slider: TimeSlider;
+
+  maxHours;
 
   constructor(popup: Popup) {
     this.popup = popup;
     this.plan = defaultPlan;
     this.open = this.open.bind(this);
-    this.error = this.makeErrorMessage();
+    this.maxHours = 0;
+    this.slider = new TimeSlider();
   }
 
-  public open(plan?: Plan) {
-    console.log('open', this);
-    if (plan) this.plan = plan;
+  public open(minTime: number, maxTime: number, plan?: Plan) {
+    console.log(minTime, maxTime);
+    if (plan) {
+      this.plan = plan;
+    } else {
+      this.slider.setTimer(minTime, maxTime);
+    }
     this.drawEditor();
   }
 
@@ -32,80 +41,73 @@ class PlanEditor {
     const secColor = colorsAndFonts.get(this.plan.color);
     if (!secColor) throw new Error(ErrorsList.notStandardColor);
     const container = this.makeContainer(secColor);
-    const tools = document.createElement('div');
-    tools.classList.add(ClassList.editorTools);
+    const tools = makeElement(ClassList.editorTools);
 
-    tools.append(this.makeAcceptButton(), this.colorPicker(), this.makeColorBox());
-    container.append(tools, this.makeTitle(), this.error, this.makeText());
+    tools.append(this.makeAcceptButton(secColor), this.colorPicker(), this.makeColorBox(), this.slider.draw());
+    container.append(tools, this.makeTitle(), this.makeText());
     this.popup.open(container);
   }
 
   private makeContainer(secColor: string) {
-    const editor = document.createElement('div');
-    editor.classList.add(ClassList.editor);
+    const editor = makeElement(ClassList.editor);
     editor.style.backgroundColor = this.plan.color;
     editor.style.color = secColor;
     return editor;
   }
 
-  private makeErrorMessage() {
-    const error = document.createElement('div');
-    error.innerHTML = ErrorsList.cantBeEmpty;
-    error.classList.add(ClassList.editorError);
-    return error;
-  }
-
   private makeTitle() {
     const title = document.createElement('input');
-    title.setAttribute('placeholder', Values.namePlaceholder);
     title.classList.add(ClassList.editorTitle);
-    title.value = this.plan.title;
+    title.value = InnerText.defaultPlanName;
     title.addEventListener('blur', function trim() {
       this.value = this.value.trim();
     });
     title.addEventListener('blur', (e) => {
       const { target } = e;
       if (target instanceof HTMLInputElement) {
-        if (target.value === '') this.error.classList.add(ClassList.editorErrorActive);
+        if (target.value === '') {
+          target.value = InnerText.defaultPlanName;
+        }
       }
     });
-    title.addEventListener('focus', () => this.error.classList.remove(ClassList.editorErrorActive));
+    title.addEventListener('focus', (e) => {
+      const { target } = e;
+      if (target instanceof HTMLInputElement) {
+        if (target.value === InnerText.defaultPlanName) {
+          target.value = '';
+        }
+      }
+    });
     return title;
   }
 
   private makeText() {
     const text = document.createElement('textarea');
-    text.setAttribute('placeholder', Values.textPlaceholder);
     text.classList.add(ClassList.editorText);
     text.value = this.plan.text;
     return text;
   }
 
-  private makeAcceptButton() {
-    const container = document.createElement('div');
-    container.classList.add(ClassList.editorButton);
-    const left = document.createElement('span');
-    left.classList.add(ClassList.editorButtonSpan, ClassList.editorButtonSpanLeft);
-    const right = document.createElement('span');
-    right.classList.add(ClassList.editorButtonSpan, ClassList.editorButtonSpanRight);
+  private makeAcceptButton(secColor: string) {
+    const container = makeElement(ClassList.editorButton);
 
-    container.append(left, right);
+    container.innerHTML = savePlanIcon(secColor, ClassList.editorSaveIcon);
     return container;
   }
 
   private colorPicker() {
-    const container = document.createElement('div');
-    container.classList.add(ClassList.editorColorPicker);
+    const container = makeElement(ClassList.editorColorPicker);
 
     container.addEventListener('click', () => this.toggleColorBox());
+    container.addEventListener('click', function changeBackground(e) {
+      console.log(e.target, this);
+    });
 
     return container;
   }
 
   private makeColorBox() {
-    const box = document.createElement('div');
-    box.classList.add(ClassList.editorColorBox);
-    box.style.backgroundColor = this.plan.color;
+    const box = makeElement(ClassList.editorColorBox);
 
     colorsAndFonts.forEach((_value, color) => {
       box.append(this.makeColorRound(color));
@@ -115,8 +117,7 @@ class PlanEditor {
   }
 
   private makeColorRound(color: string) {
-    const round = document.createElement('div');
-    round.classList.add(ClassList.editorColorRound);
+    const round = makeElement(ClassList.editorColorRound);
     round.style.backgroundColor = color;
     round.setAttribute(SetAttribute.pickerColor, color);
 
@@ -140,7 +141,10 @@ class PlanEditor {
     const editor = getExistentElementByClass(ClassList.editor);
     editor.style.backgroundColor = this.plan.color;
     const secondColor = colorsAndFonts.get(this.plan.color);
-    if (secondColor) editor.style.color = secondColor;
+    if (secondColor) {
+      editor.style.color = secondColor;
+      getExistentElementByClass(ClassList.editorSaveIcon).style.stroke = secondColor;
+    }
   }
 
   private toggleColorBox() {

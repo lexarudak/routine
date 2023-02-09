@@ -12,6 +12,7 @@ import testPlans from './components/testPlans';
 import testWeekDistribution from './components/testWeekDistribution';
 import Popup from '../../components/popup';
 import PlanEditor from './components/planEditor';
+import ErrorsList from '../../base/enums/errorsList';
 
 class PlanPage extends Page {
   layout: PlanLayout;
@@ -26,6 +27,8 @@ class PlanPage extends Page {
 
   editor: PlanEditor;
 
+  fillWeekTime;
+
   constructor(goTo: GoToFn, popup: Popup) {
     super(PagesList.planPage, goTo);
     this.popup = popup;
@@ -34,6 +37,21 @@ class PlanPage extends Page {
     this.weekDistribution = [[]];
     this.layout = new PlanLayout(goTo);
     this.editor = new PlanEditor(this.popup);
+    this.fillWeekTime = 0;
+  }
+
+  private isFreeTime() {
+    return Values.allWeekMinutes - this.fillWeekTime >= Values.minPlanDuration;
+  }
+
+  private setAddButton() {
+    getExistentElementByClass(ClassList.planAddButton).addEventListener('click', () => {
+      if (this.isFreeTime()) {
+        this.editor.open(Values.minPlanDuration, Values.allWeekMinutes - this.fillWeekTime);
+      } else {
+        this.popup.open(this.layout.makeBanner(ErrorsList.freeYourTime));
+      }
+    });
   }
 
   private sortAllPlans() {
@@ -116,6 +134,7 @@ class PlanPage extends Page {
     const weekLine = getExistentElementByClass(ClassList.weekLine);
     const sortWeek = this.sortAllPlans();
     const fillWeekTime = this.fillLine(weekLine, sortWeek, Values.allWeekMinutes, false);
+    this.fillWeekTime = fillWeekTime;
 
     getExistentElementByClass(ClassList.weekTextValue).innerText = minToHour(fillWeekTime);
     getExistentElementByClass(ClassList.planAddButtonValue).innerText = minToHour(Values.allWeekMinutes - fillWeekTime);
@@ -156,7 +175,7 @@ class PlanPage extends Page {
       this.layout.makeHomeButton(this.goTo),
       this.layout.makeWeekText(),
       this.layout.makeWeekLine(),
-      this.layout.makePlanBody(this.editor.open)
+      this.layout.makePlanBody()
     );
     return container;
   }
@@ -170,6 +189,7 @@ class PlanPage extends Page {
     this.fillPlansFields();
     this.fillDays();
     this.showElements();
+    this.setAddButton();
   }
 }
 

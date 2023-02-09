@@ -1,0 +1,50 @@
+.time-container {
+  display: flex;
+  height: 30px;
+  flex-grow: 1;
+  align-items: center;
+  background-color: inherit;
+
+  &__slider {
+    color: inherit;
+    cursor: pointer;
+    flex-grow: 1;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 1px;
+    border-radius: 3px;
+    outline: none;
+    background-color: inherit;
+    border: .5px solid;
+
+    &::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        border-radius: 100%;
+        width: 15px;
+        height: 15px;
+        border: 10px solid;
+        transform: scale(1);
+        transition: .3s;
+
+        &:hover {
+          transform: scale(.95);
+        }
+      }
+  }
+
+  &__time-input {
+    color: inherit;
+    background: transparent;
+    border: none;
+    border-bottom: .5px solid;
+    text-align: center;
+    width: 35px;
+    height: 30px;
+    margin-right: 5px;
+  }
+
+  &__time-label {
+    margin-right: 15px;
+  }
+}

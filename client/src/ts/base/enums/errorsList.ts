@@ -14,6 +14,8 @@ const enum ErrorsList {
   minToHourError = 'Wrong value in minToHour fn',
   notStandardColor = 'This color is not standard',
   cantBeEmpty = "Can't be empty!",
+  wrongElementName = 'Wrong element name',
+  freeYourTime = 'Free up your time before adding a plan',
 }
 
 export default ErrorsList;

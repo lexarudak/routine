@@ -1,3 +1,4 @@
+import ClassList from './enums/classList';
 import ErrorsList from './enums/errorsList';
 
 function isHTMLElement<T>(el: T | HTMLElement): el is HTMLElement {
@@ -43,14 +44,29 @@ function minToHour(min: number) {
   if (min < 60 && min >= 0) return `${min} min`;
   if (min >= 60) {
     if (min % 60 === 0) return `${Math.floor(min / 60)} h`;
-    return `${Math.floor(min / 60)}:${min % 60} h`;
+    return `${Math.floor(min / 60)}:${(min % 60).toString().padStart(2, '0')} h`;
   }
   throw new Error(ErrorsList.minToHourError);
+}
+
+function getHours(min: number) {
+  return Math.floor(min / 60);
+}
+
+function getMinutes(min: number) {
+  return (min % 60).toString().padStart(2, '0');
 }
 
 function makeColorTransparent(color: string, transPercent: number) {
   const percent = 256 * (transPercent / 100);
   return color + percent.toString(16);
+}
+
+function makeElement(classList: ClassList, element?: string) {
+  const el = document.createElement(element || 'div');
+  if (!el) throw new Error(ErrorsList.wrongElementName);
+  el.classList.add(classList);
+  return el;
 }
 
 export {
@@ -62,4 +78,7 @@ export {
   buttonOff,
   minToHour,
   makeColorTransparent,
+  makeElement,
+  getHours,
+  getMinutes,
 };

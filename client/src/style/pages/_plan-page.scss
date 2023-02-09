@@ -173,3 +173,16 @@
     width: 40%;
   }
 }
+
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $font-light;
+  background-color: $color-background-2;
+  padding: 50px;
+  width: 500px;
+  height: 500px;
+  border-radius: 100%;
+  box-shadow: $shadow;
+}

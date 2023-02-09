@@ -68,7 +68,7 @@ class PlanLayout {
     return planDaysContainer;
   }
 
-  private makeAddButton(openEditorFn: () => void) {
+  private makeAddButton() {
     const btn = document.createElement('button');
     btn.classList.add(ButtonClasses.button, ClassList.planAddButton);
 
@@ -78,8 +78,6 @@ class PlanLayout {
 
     const value = document.createElement('span');
     value.classList.add(ClassList.planAddButtonValue);
-
-    btn.addEventListener('click', () => openEditorFn());
 
     btn.append(name, value);
     return btn;
@@ -94,7 +92,14 @@ class PlanLayout {
     return remove;
   }
 
-  public makePlanBody(openEditorFn: () => void) {
+  public makeBanner(bannerText: string) {
+    const banner = document.createElement('h2');
+    banner.classList.add(ClassList.banner);
+    banner.innerText = bannerText;
+    return banner;
+  }
+
+  public makePlanBody() {
     const planBody = document.createElement('div');
     planBody.classList.add(ClassList.planBody);
 
@@ -120,7 +125,7 @@ class PlanLayout {
     const planDaysContainer = this.fillPlanDaysContainer(emptyDayContainer);
     planDaysContainer.classList.add(ClassList.planDaysContainer);
 
-    buttons.append(this.makeAddButton(openEditorFn), this.makeRemoveZone());
+    buttons.append(this.makeAddButton(), this.makeRemoveZone());
     weekendFields.append(weekendFieldsBig, weekendFieldsSmall);
     planField.append(buttons, weekendFields);
     planBody.append(planDaysContainer, planField);
