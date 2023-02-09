@@ -23,4 +23,10 @@ const createElement = (tag: string, className: string): HTMLElement => {
   return element;
 };
 
-export { isHTMLElement, getExistentElement, getExistentElementByClass, createElement };
+function createNewElement<T extends HTMLElement>(tag: string, className: string): T {
+  const element = document.createElement(tag);
+  element.classList.add(className);
+  return <T>element;
+}
+
+export { isHTMLElement, getExistentElement, getExistentElementByClass, createElement, createNewElement };

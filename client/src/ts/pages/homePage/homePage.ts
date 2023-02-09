@@ -2,12 +2,16 @@ import PageList from '../../base/enums/pageList';
 import { HomePageClassList } from '../../base/enums/classList';
 import Attributes from '../../base/enums/attributes';
 import { GoToFn } from '../../base/types';
+// import { ThoughtData } from '../../base/interfaces';
 import Page from '../page';
 import { createElement, getExistentElement } from '../../base/helpers';
 import Chart from './components/chart';
 import ToDo from './components/toDo';
 import chartData from './data/chartData';
+import thoughtData from './data/thoughtData';
 import Clock from './components/clock';
+import Thought from './components/thought';
+import RoutsList from '../../base/enums/routsList';
 
 class HomePage extends Page {
   toDoInst: ToDo;
@@ -16,11 +20,14 @@ class HomePage extends Page {
 
   chartInst: Chart;
 
+  thoughtInst: Thought;
+
   constructor(goTo: GoToFn) {
     super(PageList.homePage, goTo);
     this.toDoInst = new ToDo();
     this.clockInst = new Clock();
     this.chartInst = new Chart();
+    this.thoughtInst = new Thought();
   }
 
   private showToDo(e: Event) {
@@ -46,9 +53,26 @@ class HomePage extends Page {
   private createThought() {
     const thought = createElement('div', HomePageClassList.thought);
     const thoughtTitle = createElement('h3', HomePageClassList.thoughtTitle);
-    thought.textContent = 'Thought';
-    const thoughtAdd = createElement('div', HomePageClassList.thoughtAdd);
+    thoughtTitle.textContent = 'Thought';
+    const thoughtAdd = this.thoughtInst.draw();
+    thoughtAdd.classList.add('thought__main');
     thought.append(thoughtTitle, thoughtAdd);
+
+    // const thoughts: ThoughtData[] = [];
+    thoughtData.forEach((el) => {
+      thought.append(this.thoughtInst.draw(el.title));
+    });
+
+    thoughtTitle.addEventListener('click', () => {
+      document.querySelectorAll('.thought__add').forEach((el) => {
+        if (el.closest('.open')) {
+          el.classList.remove('open');
+        } else {
+          el.classList.add('open');
+        }
+        thoughtAdd.classList.toggle('none');
+      });
+    });
     return thought;
   }
 
@@ -83,6 +107,7 @@ class HomePage extends Page {
 
     const plan = createElement('div', HomePageClassList.plan);
     plan.textContent = 'Plan';
+    plan.addEventListener('click', () => this.goTo(RoutsList.planPage));
 
     const signIn = createElement('div', HomePageClassList.signIn);
     signIn.textContent = 'User';

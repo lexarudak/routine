@@ -4,6 +4,10 @@ interface ChartData {
   color: string;
 }
 
+interface ThoughtData {
+  title: string;
+}
+
 interface ChartConfig {
   strokeWidth: number;
   radius: number;
@@ -36,4 +40,4 @@ interface ObjNum {
   [id: string]: number;
 }
 
-export { ChartData, ChartConfig, SvgAttrs, ChartSector, ObjNum };
+export { ChartData, ThoughtData, ChartConfig, SvgAttrs, ChartSector, ObjNum };

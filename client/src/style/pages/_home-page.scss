@@ -2,37 +2,7 @@ section {
   display: flex;
   justify-content: center;
   align-items: center;
-}
-
-.thought {
-  position: absolute;
-  text-align: center;
-  top: 40px;
-  left: 45px;
   font-weight: 500;
-  font-size: 30px;
-
-  &__add {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 15px auto 0;
-    width: 40px;
-    height: 40px;
-    text-align: center;
-    border-radius: 50%;
-    background-color: $thought-color;
-    box-shadow: 0px 4px 4px $shadow-dark;
-    cursor: pointer;
-
-    &::before {
-      content: url('./assets/svg/plus.svg');
-      display: block;
-      width: 70%;
-      height: auto;
-      padding-top: 8px;
-    }
-  }
 }
 
 .sign-in {
@@ -58,7 +28,6 @@ section {
   border: 5px solid $thought-color;
   filter: drop-shadow(0px 4px 4px $shadow-dark);
   color: $font-pale;
-  font-weight: 500;
   font-size: 55px;
   cursor: pointer;
 }
@@ -196,7 +165,6 @@ section {
   flex-wrap: wrap;
   bottom: 80px;
   color: $background-color;
-  font-weight: 500;
   z-index: 5;
 
   &__icon {
