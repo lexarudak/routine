@@ -568,7 +568,7 @@ Returns json data about the distribution of time during the day.
 
 <details>
 
-- `GET` /api/dayDistribution/get/?dayOfWeek=''
+- `GET` /api/dayDistribution/get/:dayOfWeek
   
   Respose `200` `OK`
   ```
