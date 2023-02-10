@@ -694,7 +694,7 @@ Returns json data about the user statistics.
 
 <details>
 
-- `GET` /api/statistics
+- `GET` /api/statistics/get
   
   Respose `200` `OK`
   ```
