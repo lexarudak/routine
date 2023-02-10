@@ -1,7 +1,8 @@
-import mongoose from 'mongoose';
+import { Schema, model } from 'mongoose';
 
-const Thought = new mongoose.Schema({
+const schema = new Schema({
+  userId: { type: Schema.Types.ObjectId },
   title: { type: String, required: true },
 });
 
-export default mongoose.model('Thought', Thought);
+export default model('Thought', schema);

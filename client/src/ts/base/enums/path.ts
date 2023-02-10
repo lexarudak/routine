@@ -1,7 +1,7 @@
 const enum Path {
   origin = 'http://localhost:5100/api',
-  registration = '/registration',
-  login = '/login',
+  registration = '/users/registration',
+  login = '/users/login',
   allPlans = '/plans',
 }
 
