@@ -11,7 +11,7 @@ class PlanService {
     return await Plan.find({ userId: userId });
   }
 
-  async getById(userId: Types.ObjectId, id: string) {
+  async getById(userId: Types.ObjectId, id: Types.ObjectId) {
     if (!id) {
       throw new ClientError('ID not specified');
     }
@@ -37,7 +37,7 @@ class PlanService {
     return await Plan.findByIdAndUpdate(item._id, itemForUpdate, { new: true }).where({ userId: userId });
   }
 
-  async delete(userId: Types.ObjectId, id: string) {
+  async delete(userId: Types.ObjectId, id: Types.ObjectId) {
     if (!id) {
       throw new ClientError('ID not specified');
     }

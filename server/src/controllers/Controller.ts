@@ -1,9 +1,11 @@
 import { Request, Response } from 'express';
-import { ClientError, ServerError } from '../common/errors';
-import jwt from 'jsonwebtoken';
-import config from '../common/config';
-import * as Enum from '../common/enums';
 import { Types } from 'mongoose';
+import jwt from 'jsonwebtoken';
+
+import config from '../common/config';
+import { ClientError, ServerError } from '../common/errors';
+import * as Enum from '../common/enums';
+
 import User from '../schemas/User';
 
 export default class Controller {

@@ -12,7 +12,7 @@ class WeekDistributionService {
     for (let i = 0; i < distributions.length; i++) {
       const distribution = distributions[i];
 
-      const plan = (await PlanService.getById(userId, distribution.planId.toString())) as Type.TDBPlan;
+      const plan = (await PlanService.getById(userId, distribution.planId)) as Type.TDBPlan;
       if (plan) {
         plan.duration = distribution.duration;
         result[distribution.dayOfWeek].push(plan);
@@ -42,7 +42,7 @@ class WeekDistributionService {
   }
 
   async adjustPlan(userId: Types.ObjectId, item: Type.TDBWeekDistribution) {
-    const plan = (await PlanService.getById(userId, item.planId.toString())) as Type.TDBPlan;
+    const plan = (await PlanService.getById(userId, item.planId)) as Type.TDBPlan;
     if (!plan) {
       throw new ClientError(`The user has no plan with ID ${item.planId}`, 400);
     }

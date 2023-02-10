@@ -33,7 +33,7 @@ class DayDistributionService {
   }
 
   private async addDistributedPlan(dayDistribution: Type.TDBDayDistribution, result: Type.TDayDistributionData) {
-    const plan = await PlanService.getById(dayDistribution.userId, dayDistribution.planId.toString());
+    const plan = await PlanService.getById(dayDistribution.userId, dayDistribution.planId);
     if (plan) {
       const distributedPlan: Type.TDistributedPlan = {
         _id: plan._id,
@@ -50,7 +50,7 @@ class DayDistributionService {
 
   private async addNotDistributedPlan(weekDistribution: Type.TDBWeekDistribution, result: Type.TDayDistributionData) {
     if (weekDistribution.duration) {
-      const plan = await PlanService.getById(weekDistribution.userId, weekDistribution.planId.toString());
+      const plan = await PlanService.getById(weekDistribution.userId, weekDistribution.planId);
       if (plan) {
         const notDistributedPlan: Type.TNotDistributedPlan = {
           _id: plan._id,

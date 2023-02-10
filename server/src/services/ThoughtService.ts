@@ -9,7 +9,7 @@ class ThoughtService {
     return await Thought.find({ userId: userId });
   }
 
-  async getById(userId: Types.ObjectId, id: string) {
+  async getById(userId: Types.ObjectId, id: Types.ObjectId) {
     if (!id) {
       throw new ClientError('ID not specified');
     }
@@ -32,14 +32,14 @@ class ThoughtService {
     return await Thought.findByIdAndUpdate(item._id, itemForUpdate, { new: true }).where({ userId: userId });
   }
 
-  async transferToPlan(userId: Types.ObjectId, id: string) {
+  async transferToPlan(userId: Types.ObjectId, id: Types.ObjectId) {
     if (!id) {
       throw new ClientError('ID not specified');
     }
     const thought = await this.delete(userId, id);
     if (thought) {
       const plan: Type.TPlan = {
-        userId: thought.userId as Types.ObjectId,
+        userId: thought.userId,
         title: thought.title,
         text: '',
         color: '#000000',
@@ -50,7 +50,7 @@ class ThoughtService {
     return null;
   }
 
-  async delete(userId: Types.ObjectId, id: string) {
+  async delete(userId: Types.ObjectId, id: Types.ObjectId) {
     if (!id) {
       throw new ClientError('ID not specified');
     }
