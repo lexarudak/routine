@@ -40,7 +40,7 @@ class UserService extends Service {
   async login(login: Type.TLogin) {
     const userDB = await User.findOne({ email: login.email });
     if (!userDB) {
-      throw new ClientError(`User with email ${login.email} not found`, 404);
+      throw new ClientError(`User with email ${login.email} not found`, Enum.StatusCodes.NotFound);
     }
 
     const isPasswordValid = bcrypt.compareSync(login.password, userDB.password);
