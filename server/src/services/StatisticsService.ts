@@ -1,7 +1,8 @@
+import { Types } from 'mongoose';
+
 import Statistics from '../schemas/Statistics';
 import WeekDistributionService from './WeekDistributionService';
 import * as Type from '../common/types';
-import { Types } from 'mongoose';
 
 class StatisticsService {
   async get(userId: Types.ObjectId) {

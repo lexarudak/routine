@@ -1,8 +1,10 @@
+import { Types } from 'mongoose';
+
 import Thought from '../schemas/Thought';
 import PlanService from './PlanService';
+
 import { ClientError } from '../common/errors';
 import * as Type from '../common/types';
-import { Types } from 'mongoose';
 
 class ThoughtService {
   async get(userId: Types.ObjectId) {
@@ -32,7 +34,7 @@ class ThoughtService {
     return await Thought.findByIdAndUpdate(item._id, itemForUpdate, { new: true }).where({ userId: userId });
   }
 
-  async transferToPlan(userId: Types.ObjectId, id: Types.ObjectId) {
+  async convertToPlan(userId: Types.ObjectId, id: Types.ObjectId, item: Type.TPlan) {
     if (!id) {
       throw new ClientError('ID not specified');
     }
@@ -41,9 +43,9 @@ class ThoughtService {
       const plan: Type.TPlan = {
         userId: thought.userId,
         title: thought.title,
-        text: '',
-        color: '#000000',
-        duration: 15,
+        text: item.text,
+        color: item.color,
+        duration: item.duration,
       };
       return await PlanService.create(userId, plan);
     }

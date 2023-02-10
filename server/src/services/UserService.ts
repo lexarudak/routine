@@ -1,8 +1,10 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+
+import User from '../schemas/User';
+
 import config from '../common/config';
 import { ClientError } from '../common/errors';
-import User from '../schemas/User';
 import * as Type from '../common/types';
 import * as Enum from '../common/enums';
 

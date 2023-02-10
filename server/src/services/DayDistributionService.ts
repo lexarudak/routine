@@ -1,9 +1,11 @@
+import { Types } from 'mongoose';
+
 import DayDistribution from '../schemas/DayDistribution';
 import PlanService from './PlanService';
 import WeekDistributionService from './WeekDistributionService';
+
 import { ClientError } from '../common/errors';
 import * as Type from '../common/types';
-import { Types } from 'mongoose';
 
 class DayDistributionService {
   async get(userId: Types.ObjectId, dayOfWeek: number) {
@@ -39,8 +41,8 @@ class DayDistributionService {
         _id: plan._id,
         userId: plan.userId,
         title: plan.title,
-        text: plan.text || '',
-        color: plan.color || '',
+        text: plan.text,
+        color: plan.color,
         from: dayDistribution.from,
         to: dayDistribution.to,
       };
@@ -56,8 +58,8 @@ class DayDistributionService {
           _id: plan._id,
           userId: plan.userId,
           title: plan.title,
-          text: plan.text || '',
-          color: plan.color || '',
+          text: plan.text,
+          color: plan.color,
           duration: weekDistribution.duration,
         };
         result.notDistributedPlans.push(notDistributedPlan);

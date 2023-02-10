@@ -1,10 +1,12 @@
+import { Types } from 'mongoose';
+
 import Plan from '../schemas/Plan';
 import DayDistributionService from './DayDistributionService';
 import WeekDistributionService from './WeekDistributionService';
 import StatisticsService from './StatisticsService';
+
 import { ClientError } from '../common/errors';
 import * as Type from '../common/types';
-import { Types } from 'mongoose';
 
 class PlanService {
   async get(userId: Types.ObjectId) {

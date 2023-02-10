@@ -26,7 +26,7 @@ router.get('/thoughts', ThoughtController.get.bind(ThoughtController));
 router.get('/thoughts/:id', ThoughtController.getById.bind(ThoughtController));
 router.post('/thoughts', ThoughtController.create.bind(ThoughtController));
 router.post('/thoughts/update', ThoughtController.update.bind(ThoughtController));
-router.post('/thoughts/transferToPlan/:id', ThoughtController.transferToPlan.bind(ThoughtController));
+router.post('/thoughts/convertToPlan/:id', ThoughtController.convertToPlan.bind(ThoughtController));
 router.delete('/thoughts/:id', ThoughtController.delete.bind(ThoughtController));
 
 router.get('/plans', PlanController.get.bind(PlanController));
