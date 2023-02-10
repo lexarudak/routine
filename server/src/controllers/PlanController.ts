@@ -1,6 +1,6 @@
-import PlanService from '../services/PlanService';
 import { Request, Response } from 'express';
 import Controller from './Controller';
+import PlanService from '../services/PlanService';
 
 class PlanController extends Controller {
   async get(req: Request, res: Response) {

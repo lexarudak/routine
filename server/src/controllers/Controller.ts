@@ -7,7 +7,7 @@ import { Types } from 'mongoose';
 import User from '../schemas/User';
 
 export default class Controller {
-  protected async getUserId(req: Request) {
+  protected async getUserId(req: Request): Promise<Types.ObjectId> {
     try {
       const token = req.cookies[Enum.Constants.tokenDescription];
       if (!token) {

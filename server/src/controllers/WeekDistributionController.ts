@@ -1,6 +1,6 @@
-import WeekDistributionService from '../services/WeekDistributionService';
 import { Request, Response } from 'express';
 import Controller from './Controller';
+import WeekDistributionService from '../services/WeekDistributionService';
 
 class WeekDistributionController extends Controller {
   async get(req: Request, res: Response) {

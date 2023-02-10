@@ -1,6 +1,6 @@
-import DayDistributionService from '../services/DayDistributionService';
 import { Request, Response } from 'express';
 import Controller from './Controller';
+import DayDistributionService from '../services/DayDistributionService';
 
 class DayDistributionController extends Controller {
   async get(req: Request, res: Response) {

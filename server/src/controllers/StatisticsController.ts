@@ -1,6 +1,6 @@
-import StatisticsService from '../services/StatisticsService';
 import { Request, Response } from 'express';
 import Controller from './Controller';
+import StatisticsService from '../services/StatisticsService';
 
 class StatisticsController extends Controller {
   async get(req: Request, res: Response) {
