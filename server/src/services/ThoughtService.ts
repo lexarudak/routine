@@ -1,20 +1,18 @@
 import { Types } from 'mongoose';
 
+import Service from './Service';
 import Thought from '../schemas/Thought';
 import PlanService from './PlanService';
 
-import { ClientError } from '../common/errors';
 import * as Type from '../common/types';
 
-class ThoughtService {
+class ThoughtService extends Service {
   async get(userId: Types.ObjectId) {
     return await Thought.find({ userId: userId });
   }
 
   async getById(userId: Types.ObjectId, id: Types.ObjectId) {
-    if (!id) {
-      throw new ClientError('ID not specified');
-    }
+    this.checkId(id);
     return await Thought.findById(id).where({ userId: userId });
   }
 
@@ -25,20 +23,15 @@ class ThoughtService {
   }
 
   async update(userId: Types.ObjectId, item: Type.TDBThought) {
-    if (!item._id) {
-      throw new ClientError('ID not specified');
-    }
-    const itemForUpdate = {
-      title: item.title,
-    };
+    this.checkId(item._id);
+    const itemForUpdate = { title: item.title };
     return await Thought.findByIdAndUpdate(item._id, itemForUpdate, { new: true }).where({ userId: userId });
   }
 
   async convertToPlan(userId: Types.ObjectId, id: Types.ObjectId, item: Type.TPlan) {
-    if (!id) {
-      throw new ClientError('ID not specified');
-    }
+    this.checkId(id);
     const thought = await this.delete(userId, id);
+
     if (thought) {
       const plan: Type.TPlan = {
         userId: thought.userId,
@@ -47,15 +40,14 @@ class ThoughtService {
         color: item.color,
         duration: item.duration,
       };
+
       return await PlanService.create(userId, plan);
     }
     return null;
   }
 
   async delete(userId: Types.ObjectId, id: Types.ObjectId) {
-    if (!id) {
-      throw new ClientError('ID not specified');
-    }
+    this.checkId(id);
     return await Thought.findByIdAndDelete(id).where({ userId: userId });
   }
 }

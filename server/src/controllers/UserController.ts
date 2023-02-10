@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
+import { Types } from 'mongoose';
 
 import Controller from './Controller';
 import UserService from '../services/UserService';
@@ -20,7 +21,7 @@ class UserController extends Controller {
 
   async getById(req: Request, res: Response) {
     try {
-      const user = await UserService.getById(req.params.id);
+      const user = await UserService.getById(new Types.ObjectId(req.params.id));
       res.json(user);
     } catch (error) {
       this.error(res, error);
@@ -70,7 +71,7 @@ class UserController extends Controller {
 
   async delete(req: Request, res: Response) {
     try {
-      const user = await UserService.delete(req.params.id);
+      const user = await UserService.delete(new Types.ObjectId(req.params.id));
       res.json(user);
     } catch (error) {
       this.error(res, error);

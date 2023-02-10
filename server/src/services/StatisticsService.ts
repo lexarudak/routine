@@ -1,10 +1,12 @@
 import { Types } from 'mongoose';
 
+import Service from './Service';
 import Statistics from '../schemas/Statistics';
 import WeekDistributionService from './WeekDistributionService';
+
 import * as Type from '../common/types';
 
-class StatisticsService {
+class StatisticsService extends Service {
   async get(userId: Types.ObjectId) {
     const result: Type.TStatistics[] = [];
     const processedPlanIDs: string[] = [];

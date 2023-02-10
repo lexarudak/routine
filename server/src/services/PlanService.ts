@@ -1,22 +1,20 @@
 import { Types } from 'mongoose';
 
+import Service from './Service';
 import Plan from '../schemas/Plan';
 import DayDistributionService from './DayDistributionService';
 import WeekDistributionService from './WeekDistributionService';
 import StatisticsService from './StatisticsService';
 
-import { ClientError } from '../common/errors';
 import * as Type from '../common/types';
 
-class PlanService {
+class PlanService extends Service {
   async get(userId: Types.ObjectId) {
     return await Plan.find({ userId: userId });
   }
 
   async getById(userId: Types.ObjectId, id: Types.ObjectId) {
-    if (!id) {
-      throw new ClientError('ID not specified');
-    }
+    this.checkId(id);
     return await Plan.findById(id).where({ userId: userId });
   }
 
@@ -27,27 +25,24 @@ class PlanService {
   }
 
   async update(userId: Types.ObjectId, item: Type.TDBPlan) {
-    if (!item._id) {
-      throw new ClientError('ID not specified');
-    }
+    this.checkId(item._id);
+
     const itemForUpdate = {
       title: item.title,
       text: item.text,
       color: item.color,
       duration: item.duration,
     };
+
     return await Plan.findByIdAndUpdate(item._id, itemForUpdate, { new: true }).where({ userId: userId });
   }
 
   async delete(userId: Types.ObjectId, id: Types.ObjectId) {
-    if (!id) {
-      throw new ClientError('ID not specified');
-    }
-    await Promise.all([
-      StatisticsService.deleteByPlan(userId, new Types.ObjectId(id)),
-      DayDistributionService.deleteByPlan(userId, new Types.ObjectId(id)),
-      WeekDistributionService.deleteByPlan(userId, new Types.ObjectId(id)),
-    ]);
+    this.checkId(id);
+
+    const services = [StatisticsService, DayDistributionService, WeekDistributionService];
+    await Promise.all(services.map((service) => service.deleteByPlan(userId, new Types.ObjectId(id))));
+
     return await Plan.findByIdAndDelete(id).where({ userId: userId });
   }
 }

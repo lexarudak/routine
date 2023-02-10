@@ -1,13 +1,13 @@
 import { Types } from 'mongoose';
 
+import Service from './Service';
 import DayDistribution from '../schemas/DayDistribution';
 import PlanService from './PlanService';
 import WeekDistributionService from './WeekDistributionService';
 
-import { ClientError } from '../common/errors';
 import * as Type from '../common/types';
 
-class DayDistributionService {
+class DayDistributionService extends Service {
   async get(userId: Types.ObjectId, dayOfWeek: number) {
     const result: Type.TDayDistributionData = { distributedPlans: [], notDistributedPlans: [] };
 
@@ -72,17 +72,12 @@ class DayDistributionService {
   }
 
   async create(userId: Types.ObjectId, item: Type.TDayDistribution) {
-    if (item.dayOfWeek < 0 || item.dayOfWeek > 6) {
-      throw new ClientError(`Incorrect value of parameter "day of week"`, 400);
-    }
-    if (item.from < 0 || item.from > 1440) {
-      throw new ClientError(`Incorrect value of parameter "from"`, 400);
-    }
-    if (item.to < 0 || item.to > 1440) {
-      throw new ClientError(`Incorrect value of parameter "to"`, 400);
-    }
+    this.checkDayOfWeek(item.dayOfWeek);
+    this.checkPeriod(item.from, item.to);
+
     const clone = Object.assign({}, item);
     clone.userId = userId;
+
     return await DayDistribution.create(clone);
   }
 

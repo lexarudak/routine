@@ -1,22 +1,22 @@
+import { Types } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 
 import User from '../schemas/User';
+import Service from './Service';
 
 import config from '../common/config';
 import { ClientError } from '../common/errors';
 import * as Type from '../common/types';
 import * as Enum from '../common/enums';
 
-class UserService {
+class UserService extends Service {
   async get() {
     return await User.find();
   }
 
-  async getById(id: string) {
-    if (!id) {
-      throw new ClientError('ID not specified');
-    }
+  async getById(id: Types.ObjectId) {
+    this.checkId(id);
     return await User.findById(id);
   }
 
@@ -56,21 +56,19 @@ class UserService {
   }
 
   async update(user: Type.TDBUser) {
-    if (!user._id) {
-      throw new ClientError('ID not specified');
-    }
+    this.checkId(user._id);
+
     const userForUpdate = {
       name: user.name,
       confirmationDay: user.confirmationDay,
       confirmationTime: user.confirmationTime,
     };
+
     return await User.findByIdAndUpdate(user._id, userForUpdate, { new: true });
   }
 
-  async delete(id: string) {
-    if (!id) {
-      throw new ClientError('ID not specified');
-    }
+  async delete(id: Types.ObjectId) {
+    this.checkId(id);
     return await User.findByIdAndDelete(id);
   }
 }
