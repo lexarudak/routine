@@ -695,6 +695,76 @@ Returns json data about the user statistics.
 <details>
 
 - `GET` /api/statistics
+  
+  [
+    {
+      "userId": 63df879ff7a5081606fb4fb8,
+      "planId": 63e158255010e434534cfae5,
+      "deviation": 15
+      "__v": 0
+    },
+    {
+      "userId": 63df879ff7a5081606fb4fb8,
+      "planId": 63e158255010e434534cfae5,
+      "deviation": -20
+      "__v": 0
+    },
+    {
+      "userId": 63df879ff7a5081606fb4fb8,
+      "planId": 63e158255010e434534cfae5,
+      "deviation": 10
+      "__v": 0
+    }
+  ]
+  
 - `POST` /api/statistics/confirmDay
+  
+  Request
+  ```
+  {
+    "dayOfWeek": 0,
+    "dayDistribution": [
+      {
+        "planId": "63e158255010e434534cfae5",
+        "duration": 60
+      },
+      {
+        "planId": "63e158255010e434534cfae5",
+        "duration": 120
+      },
+      {
+        "planId": "63e158255010e434534cfae5",
+        "duration": 75
+      }
+    ]
+  }
+  ```
+  
+  Respose `200` `OK`
+  ```
+  [
+    {
+      "_id": 63e158255010e434534cfae5,
+      "userId": 63df879ff7a5081606fb4fb8,
+      "planId": 63e158255010e434534cfae5,
+      "deviation": 15
+      "__v": 0
+    },
+    {
+      "_id": 63e158255010e434534cfae5,
+      "userId": 63df879ff7a5081606fb4fb8,
+      "planId": 63e158255010e434534cfae5,
+      "deviation": -20
+      "__v": 0
+    },
+    {
+      "_id": 63e158255010e434534cfae5,
+      "userId": 63df879ff7a5081606fb4fb8,
+      "planId": 63e158255010e434534cfae5,
+      "deviation": 10
+      "__v": 0
+    }
+  ]
+  ```
 
 </details>
