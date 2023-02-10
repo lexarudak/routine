@@ -139,7 +139,7 @@ Returns json data about users.
         },
         {
           "value": "1",
-          "msg": "Password must be longer than 3 and shorter than 12 symbols",
+          "msg": "Password must be longer than 3 symbols",
           "param": "password",
           "location": "body"
         }
