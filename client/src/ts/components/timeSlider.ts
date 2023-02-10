@@ -1,5 +1,4 @@
 import ClassList from '../base/enums/classList';
-import ErrorsList from '../base/enums/errorsList';
 import InnerText from '../base/enums/innerText';
 import Values from '../base/enums/values';
 import { getHours, getMinutes, makeElement } from '../base/helpers';
@@ -38,66 +37,48 @@ class TimeSlider {
     return input;
   }
 
-  private addListeners(emptyHours: HTMLInputElement, emptyMinutes: HTMLInputElement, emptySlider: HTMLInputElement) {
-    const hours = emptyHours;
-    const minutes = emptyMinutes;
-    const slider = emptySlider;
+  private setTimeInterval(hours: HTMLInputElement, minutes: HTMLInputElement, time: string | Values) {
+    hours.value = getHours(Number(time)).toString();
+    minutes.value = getMinutes(Number(time)).toString();
+  }
 
-    hours.value = getHours(Number(slider.value)).toString();
-    minutes.value = getMinutes(Number(slider.value)).toString();
+  private setCorrectTimeInterval(hours: HTMLInputElement, minutes: HTMLInputElement) {
+    const time = Number(hours.value) * 60 + Number(minutes.value);
+    console.log(time);
+    if (time > this.maxTime) this.setTimeInterval(hours, minutes, this.maxTime);
+    if (time < this.minTime) this.setTimeInterval(hours, minutes, this.minTime);
+  }
 
-    slider.addEventListener('input', (e) => {
-      const { target } = e;
-      if (!(target instanceof HTMLInputElement)) throw new Error(ErrorsList.elementIsNotInput);
-      hours.value = getHours(Number(slider.value)).toString();
-      minutes.value = getMinutes(Number(slider.value)).toString();
-    });
+  private setSlider(slider: HTMLInputElement, hours: HTMLInputElement, minutes: HTMLInputElement) {
+    slider.value = (Number(hours.value) * 60 + Number(minutes.value)).toString();
+  }
 
-    hours.addEventListener('input', (e) => {
-      const { target } = e;
-      if (!(target instanceof HTMLInputElement)) throw new Error(ErrorsList.elementIsNotInput);
-      const time = Number(hours.value) * 60 + Number(minutes.value);
+  private addListeners(hours: HTMLInputElement, minutes: HTMLInputElement, slider: HTMLInputElement) {
+    this.setTimeInterval(hours, minutes, slider.value);
+
+    slider.addEventListener('input', () => this.setTimeInterval(hours, minutes, slider.value));
+
+    hours.addEventListener('input', () => {
       hours.value = hours.value.replace(/\D+/g, '');
       if (hours.value.length > 1 && hours.value[0] === '0') hours.value = hours.value.substring(1);
-      if (time > this.maxTime) {
-        hours.value = getHours(Number(this.maxTime)).toString();
-        minutes.value = getMinutes(Number(this.maxTime)).toString();
-      }
-      if (time < this.minTime) {
-        hours.value = getHours(Number(this.minTime)).toString();
-        minutes.value = getMinutes(Number(this.minTime)).toString();
-      }
-      slider.value = (Number(hours.value) * 60 + Number(minutes.value)).toString();
+      this.setCorrectTimeInterval(hours, minutes);
+      this.setSlider(slider, hours, minutes);
     });
 
-    minutes.addEventListener('input', (e) => {
-      const { target } = e;
-      if (!(target instanceof HTMLInputElement)) throw new Error(ErrorsList.elementIsNotInput);
-      const time = Number(hours.value) * 60 + Number(minutes.value);
+    minutes.addEventListener('input', () => {
       minutes.value = minutes.value.replace(/\D+/g, '');
       minutes.value = minutes.value.slice(0, 2);
       if (Number(minutes.value) > 59) minutes.value = '59';
-      if (time > this.maxTime) {
-        hours.value = getHours(Number(this.maxTime)).toString();
-        minutes.value = getMinutes(Number(this.maxTime)).toString();
-      }
-      if (time < this.minTime) {
-        hours.value = getHours(Number(this.minTime)).toString();
-        minutes.value = getMinutes(Number(this.minTime)).toString();
-      }
-      slider.value = (Number(hours.value) * 60 + Number(minutes.value)).toString();
+      this.setSlider(slider, hours, minutes);
     });
 
-    hours.addEventListener('blur', (e) => {
-      const { target } = e;
-      if (!(target instanceof HTMLInputElement)) throw new Error(ErrorsList.elementIsNotInput);
+    hours.addEventListener('blur', () => {
       if (hours.value === '') hours.value = '0';
     });
 
-    minutes.addEventListener('blur', (e) => {
-      const { target } = e;
-      if (!(target instanceof HTMLInputElement)) throw new Error(ErrorsList.elementIsNotInput);
+    minutes.addEventListener('blur', () => {
       minutes.value = minutes.value.padStart(2, '0');
+      this.setCorrectTimeInterval(hours, minutes);
     });
     return { hours, minutes, slider };
   }

@@ -57,6 +57,12 @@ function getMinutes(min: number) {
   return (min % 60).toString().padStart(2, '0');
 }
 
+function getInputTarget(e: Event) {
+  const { target } = e;
+  if (!(target instanceof HTMLInputElement)) throw new Error(ErrorsList.elementIsNotInput);
+  return target;
+}
+
 function makeColorTransparent(color: string, transPercent: number) {
   const percent = 256 * (transPercent / 100);
   return color + percent.toString(16);
@@ -81,4 +87,5 @@ export {
   makeElement,
   getHours,
   getMinutes,
+  getInputTarget,
 };
