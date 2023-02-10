@@ -696,6 +696,8 @@ Returns json data about the user statistics.
 
 - `GET` /api/statistics
   
+  Respose `200` `OK`
+  ```
   [
     {
       "userId": 63df879ff7a5081606fb4fb8,
@@ -716,6 +718,7 @@ Returns json data about the user statistics.
       "__v": 0
     }
   ]
+  ```
   
 - `POST` /api/statistics/confirmDay
   
