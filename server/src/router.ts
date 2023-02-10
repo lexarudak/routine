@@ -6,6 +6,7 @@ import ThoughtController from './controllers/ThoughtController';
 import PlanController from './controllers/PlanController';
 import WeekDistributionController from './controllers/WeekDistributionController';
 import DayDistributionController from './controllers/DayDistributionController';
+import StatisticsController from './controllers/StatisticsController';
 
 const router = Router();
 
@@ -39,5 +40,8 @@ router.post('/weekDistribution/adjustPlan', WeekDistributionController.adjustPla
 
 router.get('/dayDistribution/get/:dayOfWeek', DayDistributionController.get.bind(DayDistributionController));
 router.post('/dayDistribution/adjustPlan', DayDistributionController.adjustPlan.bind(DayDistributionController));
+
+router.get('/statistics/get', StatisticsController.get.bind(StatisticsController));
+router.post('/statistics/confirmDay', StatisticsController.confirmDay.bind(StatisticsController));
 
 export default router;

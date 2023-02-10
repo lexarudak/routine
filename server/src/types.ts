@@ -91,6 +91,11 @@ export type TDBStatistics = {
   deviation: number;
 };
 
+export type TStatisticConfirmDay = {
+  dayOfWeek: number;
+  dayDistribution: TWeekDistribution[];
+};
+
 export type TUser = Omit<TDBUser, '_id'>;
 export type TThought = Omit<TDBThought, '_id'>;
 export type TPlan = Omit<TDBPlan, '_id'>;
