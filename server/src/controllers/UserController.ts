@@ -2,9 +2,9 @@ import { validationResult } from 'express-validator';
 import { Request, Response } from 'express';
 import UserService from '../services/UserService';
 import Controller from './Controller';
-import config from '../config';
-import * as Type from '../types';
-import * as Enum from '../enums';
+import config from '../common/config';
+import * as Type from '../common/types';
+import * as Enum from '../common/enums';
 
 class UserController extends Controller {
   async get(req: Request, res: Response) {

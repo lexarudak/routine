@@ -1,7 +1,6 @@
 import Statistics from '../schemas/Statistics';
 import WeekDistributionService from './WeekDistributionService';
-import { ClientError } from '../errors';
-import * as Type from '../types';
+import * as Type from '../common/types';
 import { Types } from 'mongoose';
 
 class StatisticsService {
@@ -23,7 +22,7 @@ class StatisticsService {
         const averageStatistic: Type.TStatistics = {
           userId: statistic.userId,
           planId: statistic.planId,
-          deviation: Math.round(entireDeviation / numberOfConfirmedDays)
+          deviation: Math.round(entireDeviation / numberOfConfirmedDays),
         };
 
         result.push(averageStatistic);
@@ -64,8 +63,8 @@ class StatisticsService {
       const statistics: Type.TStatistics = {
         userId: userId,
         planId: new Types.ObjectId(planId),
-        deviation: 0
-      }
+        deviation: 0,
+      };
 
       switch (false) {
         case Boolean(distributionPlan):
@@ -75,18 +74,18 @@ class StatisticsService {
           break;
         case Boolean(distributionFact):
           if (distributionPlan) {
-            statistics.deviation = -distributionPlan.duration
+            statistics.deviation = -distributionPlan.duration;
           }
           break;
         default:
           if (distributionPlan && distributionFact) {
-            statistics.deviation = distributionPlan.duration - distributionFact.duration
+            statistics.deviation = distributionPlan.duration - distributionFact.duration;
           }
           break;
       }
       const createdItem = await this.create(userId, statistics);
       result.push(createdItem);
-    };
+    }
 
     return result;
   }

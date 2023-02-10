@@ -1,7 +1,7 @@
 import Thought from '../schemas/Thought';
 import PlanService from './PlanService';
-import { ClientError } from '../errors';
-import * as Type from '../types';
+import { ClientError } from '../common/errors';
+import * as Type from '../common/types';
 import { Types } from 'mongoose';
 
 class ThoughtService {
@@ -41,6 +41,8 @@ class ThoughtService {
       const plan: Type.TPlan = {
         userId: thought.userId as Types.ObjectId,
         title: thought.title,
+        text: '',
+        color: '#000000',
         duration: 15,
       };
       return await PlanService.create(userId, plan);

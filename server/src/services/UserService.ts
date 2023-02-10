@@ -1,10 +1,10 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import config from '../config';
-import { ClientError } from '../errors';
+import config from '../common/config';
+import { ClientError } from '../common/errors';
 import User from '../schemas/User';
-import * as Type from '../types';
-import * as Enum from '../enums';
+import * as Type from '../common/types';
+import * as Enum from '../common/enums';
 
 class UserService {
   async get() {

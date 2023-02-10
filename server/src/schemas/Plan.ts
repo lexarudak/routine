@@ -1,12 +1,12 @@
 import { Schema, model } from 'mongoose';
-import { TPlan } from '../types';
+import { TPlan } from '../common/types';
 
 const schema = new Schema<TPlan>({
   userId: { type: Schema.Types.ObjectId },
   title: { type: String, required: true },
   text: { type: String, default: '' },
-  color: { type: String, default: '#549F7B' },
-  duration: { type: Number, default: 0 },
+  color: { type: String, required: true },
+  duration: { type: Number, required: true },
 });
 
 export default model('Plan', schema);

@@ -1,7 +1,7 @@
 import WeekDistribution from '../schemas/WeekDistribution';
 import PlanService from './PlanService';
-import { ClientError } from '../errors';
-import * as Type from '../types';
+import { ClientError } from '../common/errors';
+import * as Type from '../common/types';
 import { Types } from 'mongoose';
 
 class WeekDistributionService {

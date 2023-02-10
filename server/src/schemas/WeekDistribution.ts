@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { TWeekDistribution } from '../types';
+import { TWeekDistribution } from '../common/types';
 
 const schema = new Schema<TWeekDistribution>({
   userId: { type: Schema.Types.ObjectId },

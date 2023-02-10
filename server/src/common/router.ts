@@ -1,12 +1,12 @@
 import Router from 'express';
 import { check } from 'express-validator';
 
-import UserController from './controllers/UserController';
-import ThoughtController from './controllers/ThoughtController';
-import PlanController from './controllers/PlanController';
-import WeekDistributionController from './controllers/WeekDistributionController';
-import DayDistributionController from './controllers/DayDistributionController';
-import StatisticsController from './controllers/StatisticsController';
+import UserController from '../controllers/UserController';
+import ThoughtController from '../controllers/ThoughtController';
+import PlanController from '../controllers/PlanController';
+import WeekDistributionController from '../controllers/WeekDistributionController';
+import DayDistributionController from '../controllers/DayDistributionController';
+import StatisticsController from '../controllers/StatisticsController';
 
 const router = Router();
 
