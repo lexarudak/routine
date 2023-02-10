@@ -1,9 +1,9 @@
 import express from 'express';
 import cookieParser from 'cookie-parser';
 import mongoose from 'mongoose';
-import router from './router';
-import config from './config';
-import cors from './cors';
+import router from './common/router';
+import config from './common/config';
+import cors from './common/cors';
 
 const srv = express();
 srv.use(cors);
