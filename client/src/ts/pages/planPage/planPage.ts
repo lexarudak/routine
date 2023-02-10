@@ -11,8 +11,8 @@ import PlanLayout from './components/planLayout';
 import testPlans from './components/testPlans';
 import testWeekDistribution from './components/testWeekDistribution';
 import Popup from '../../components/popup';
-import PlanEditor from './components/planEditor';
 import ErrorsList from '../../base/enums/errorsList';
+import PlanEditor from './components/planEditor';
 
 class PlanPage extends Page {
   layout: PlanLayout;
@@ -29,14 +29,14 @@ class PlanPage extends Page {
 
   fillWeekTime;
 
-  constructor(goTo: GoToFn, popup: Popup) {
+  constructor(goTo: GoToFn, popup: Popup, editor: PlanEditor) {
     super(PagesList.planPage, goTo);
     this.popup = popup;
     this.allPlans = [];
     this.planRounds = [];
     this.weekDistribution = [[]];
     this.layout = new PlanLayout(goTo);
-    this.editor = new PlanEditor(this.popup);
+    this.editor = editor;
     this.fillWeekTime = 0;
   }
 

@@ -4,6 +4,7 @@ import HomePage from './pages/homePage/homePage';
 import LoginPage from './pages/loginPage/loginPage';
 import NotFoundPage from './pages/notFoundPage/notFoundPage';
 import Page from './pages/page';
+import PlanEditor from './pages/planPage/components/planEditor';
 import PlanPage from './pages/planPage/planPage';
 
 class Router {
@@ -27,9 +28,9 @@ class Router {
 
   // static sundayPage: Page;
 
-  constructor(popup: Popup) {
+  constructor(popup: Popup, editor: PlanEditor) {
     Router.homePage = new HomePage(this.goTo);
-    Router.planPage = new PlanPage(this.goTo, popup);
+    Router.planPage = new PlanPage(this.goTo, popup, editor);
     Router.loginPage = new LoginPage(this.goTo);
     Router.notFoundPage = new NotFoundPage(this.goTo);
   }
