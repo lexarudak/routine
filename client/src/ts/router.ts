@@ -3,18 +3,17 @@ import Popup from './components/popup';
 import HomePage from './pages/homePage/homePage';
 import LoginPage from './pages/loginPage/loginPage';
 import NotFoundPage from './pages/notFoundPage/notFoundPage';
-import Page from './pages/page';
 import PlanEditor from './pages/planPage/components/planEditor';
 import PlanPage from './pages/planPage/planPage';
 
 class Router {
-  static homePage: Page;
+  static homePage: HomePage;
 
-  static planPage: Page;
+  static planPage: PlanPage;
 
-  static notFoundPage: Page;
+  static notFoundPage: NotFoundPage;
 
-  static loginPage: Page;
+  static loginPage: LoginPage;
 
   // static accountPage: Page;
 
@@ -29,14 +28,13 @@ class Router {
   // static sundayPage: Page;
 
   constructor(popup: Popup, editor: PlanEditor) {
-    Router.homePage = new HomePage(this.goTo);
+    Router.homePage = new HomePage(this.goTo, editor);
     Router.planPage = new PlanPage(this.goTo, popup, editor);
-    Router.loginPage = new LoginPage(this.goTo);
-    Router.notFoundPage = new NotFoundPage(this.goTo);
+    Router.loginPage = new LoginPage(this.goTo, editor);
+    Router.notFoundPage = new NotFoundPage(this.goTo, editor);
   }
 
   private static async render(pathname: string) {
-    // console.log('render:', pathname);
     switch (pathname) {
       case RoutsList.planPage:
         await Router.planPage.draw();

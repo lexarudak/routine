@@ -17,7 +17,6 @@ class App {
 
   start() {
     this.router.startRouter();
-    this.popup.start();
   }
 }
 

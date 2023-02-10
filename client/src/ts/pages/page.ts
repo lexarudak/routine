@@ -2,15 +2,19 @@ import PagesList from '../base/enums/pageList';
 import { getExistentElementByClass } from '../base/helpers';
 import ClassList from '../base/enums/classList';
 import { GoToFn } from '../base/types';
+import PlanEditor from './planPage/components/planEditor';
 
 abstract class Page {
   protected name: PagesList;
 
   protected goTo: GoToFn;
 
-  constructor(name: PagesList, goTo: GoToFn) {
+  protected editor: PlanEditor;
+
+  constructor(name: PagesList, goTo: GoToFn, editor: PlanEditor) {
     this.name = name;
     this.goTo = goTo;
+    this.editor = editor;
   }
 
   protected async getFilledPage(): Promise<HTMLElement> {

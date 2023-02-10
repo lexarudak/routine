@@ -1,31 +1,34 @@
-import ClassList from '../base/enums/classList';
-import InnerText from '../base/enums/innerText';
-import Values from '../base/enums/values';
-import { getHours, getMinutes, makeElement } from '../base/helpers';
+import ClassList from '../../../base/enums/classList';
+import InnerText from '../../../base/enums/innerText';
+import Values from '../../../base/enums/values';
+import { getHours, getMinutes, makeElement } from '../../../base/helpers';
 
 class TimeSlider {
   minTime;
 
   maxTime;
 
+  currentTime: number | undefined;
+
   constructor() {
     this.minTime = Values.minPlanDuration;
     this.maxTime = Values.minPlanDuration;
   }
 
-  public setTimer(minTime: number, maxTime: number) {
-    this.minTime = minTime;
+  public setTimer(minTime: number, maxTime: number, currentTime?: number) {
+    this.minTime = minTime > Values.minPlanDuration ? minTime : Values.minPlanDuration;
     this.maxTime = maxTime;
+    this.currentTime = currentTime;
   }
 
-  private makeSlider(value?: number) {
+  private makeSlider() {
     const slider = document.createElement('input');
     slider.classList.add(ClassList.timeContainerSlider);
     slider.type = 'range';
     slider.id = Values.timeSliderId;
     slider.min = this.minTime.toString();
     slider.max = this.maxTime.toString();
-    slider.value = (value || this.minTime).toString();
+    slider.value = (this.currentTime || this.minTime).toString();
     return slider;
   }
 

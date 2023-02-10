@@ -5,8 +5,8 @@ import { SetAttribute } from '../../../base/enums/attributes';
 import Days from '../../../base/enums/days';
 import InnerText from '../../../base/enums/innerText';
 import RoutsList from '../../../base/enums/routsList';
-import { GoToFn } from '../../../base/types';
 import Values from '../../../base/enums/values';
+import { GoToFn } from '../../../base/types';
 
 class PlanLayout {
   goTo: GoToFn;

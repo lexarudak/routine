@@ -10,6 +10,23 @@ class Api {
     return this.userEnter(loginData, Path.login);
   }
 
+  public static async getAllPlans() {
+    return this.getValue(Path.allPlans);
+  }
+
+  private static async getValue(path: Path) {
+    const response = await fetch(`${Path.origin}${path}`, {
+      method: 'GET',
+    });
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(response.status.toString());
+    }
+
+    return data;
+  }
+
   private static async userEnter(userData: RegistrationData | LoginData, path: Path) {
     const options: RequestInit = {
       method: 'POST',

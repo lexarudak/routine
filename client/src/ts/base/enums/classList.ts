@@ -48,6 +48,7 @@ const enum ClassList {
   weekendFieldsBig = 'weekend-fields__big',
   weekendFieldsSmall = 'weekend-fields__small',
   planRound = 'plan-round',
+  planRoundBlur = 'plan-round__blur',
   planRoundVal = 'plan-round__value',
   // Editor
   editor = 'editor',

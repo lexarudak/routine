@@ -2,10 +2,11 @@ import PageList from '../../base/enums/pageList';
 import RoutsList from '../../base/enums/routsList';
 import { GoToFn } from '../../base/types';
 import Page from '../page';
+import PlanEditor from '../planPage/components/planEditor';
 
 class HomePage extends Page {
-  constructor(goTo: GoToFn) {
-    super(PageList.homePage, goTo);
+  constructor(goTo: GoToFn, editor: PlanEditor) {
+    super(PageList.homePage, goTo, editor);
   }
 
   protected async getFilledPage(): Promise<HTMLElement> {

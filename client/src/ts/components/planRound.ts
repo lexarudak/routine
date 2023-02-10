@@ -1,6 +1,6 @@
 import ButtonClasses from '../base/enums/buttonClasses';
 import ClassList from '../base/enums/classList';
-import { minToHour } from '../base/helpers';
+import { makeElement, minToHour } from '../base/helpers';
 import { Plan } from '../base/interface';
 import colorsAndFonts from './colorsAndFonts';
 import PlanRoundConfig from './planRoundConfig';
@@ -23,14 +23,20 @@ class PlanRound {
     return `${width / PlanRoundConfig.fontSizeK}px`;
   }
 
+  private getBlurHeight(width: number, freeTime: number) {
+    const percent = freeTime / this.planInfo.duration;
+    return `${percent * width}px`;
+  }
+
   private getValueSize(width: number) {
     const k = PlanRoundConfig.timeSizeK;
     const k2 = PlanRoundConfig.timeSizeK2;
     return `${width / k + k / k2}px`;
   }
 
-  public draw(width: number) {
+  public draw(width: number, freeTime: number) {
     const round = document.createElement('div');
+    const blur = makeElement(ClassList.planRoundBlur);
     const name = document.createElement('span');
     const time = document.createElement('span');
     round.classList.add(ClassList.planRound, ButtonClasses.button);
@@ -46,10 +52,11 @@ class PlanRound {
     const val = this.getUniqValue();
     round.style.margin = `${val}px`;
     round.style.alignSelf = `${alignValues[val % alignValues.length]}`;
+    blur.style.height = this.getBlurHeight(width, freeTime);
     const fontColor = colorsAndFonts.get(this.planInfo.color);
     if (fontColor) round.style.color = fontColor;
 
-    round.append(name, time);
+    round.append(name, time, blur);
     return round;
   }
 }

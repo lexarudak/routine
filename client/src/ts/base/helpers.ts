@@ -57,9 +57,9 @@ function getMinutes(min: number) {
   return (min % 60).toString().padStart(2, '0');
 }
 
-function getInputTarget(e: Event) {
+function getEventTarget(e: Event) {
   const { target } = e;
-  if (!(target instanceof HTMLInputElement)) throw new Error(ErrorsList.elementIsNotInput);
+  if (!(target instanceof HTMLElement)) throw new Error(ErrorsList.elementNotFound);
   return target;
 }
 
@@ -87,5 +87,5 @@ export {
   makeElement,
   getHours,
   getMinutes,
-  getInputTarget,
+  getEventTarget,
 };

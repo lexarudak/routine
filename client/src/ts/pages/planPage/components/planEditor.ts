@@ -2,13 +2,14 @@ import { GetAttribute, SetAttribute } from '../../../base/enums/attributes';
 import ClassList from '../../../base/enums/classList';
 import ErrorsList from '../../../base/enums/errorsList';
 import InnerText from '../../../base/enums/innerText';
-import { getExistentElementByClass, makeElement } from '../../../base/helpers';
+import { getExistentElementByClass, getExistentInputElement, makeElement } from '../../../base/helpers';
 import { Plan } from '../../../base/interface';
 import colorsAndFonts from '../../../components/colorsAndFonts';
 import Popup from '../../../components/popup';
-import TimeSlider from '../../../components/timeSlider';
+import TimeSlider from './timeSlider';
 import defaultPlan from './defaultPlan';
 import savePlanIcon from './savePlanIcon';
+import Values from '../../../base/enums/values';
 
 class PlanEditor {
   popup: Popup;
@@ -17,24 +18,49 @@ class PlanEditor {
 
   slider: TimeSlider;
 
-  maxHours;
+  pickedColor: string | undefined;
 
   constructor(popup: Popup) {
     this.popup = popup;
     this.plan = defaultPlan;
     this.open = this.open.bind(this);
-    this.maxHours = 0;
     this.slider = new TimeSlider();
+    this.saveToLocalStorage = this.saveToLocalStorage.bind(this);
   }
 
   public open(minTime: number, maxTime: number, plan?: Plan) {
-    console.log(minTime, maxTime);
+    this.slider.setTimer(minTime, maxTime, plan?.duration);
+    console.log(plan?.duration);
     if (plan) {
       this.plan = plan;
+      this.popup.editorMode(this.sendPlan);
     } else {
-      this.slider.setTimer(minTime, maxTime);
+      this.popup.newPlanMode(this.saveToLocalStorage);
+      this.loadToLocalStorage();
     }
     this.drawEditor();
+  }
+
+  private sendPlan() {
+    console.log('send plan');
+  }
+
+  private saveToLocalStorage() {
+    this.setPlan();
+    localStorage.setItem(Values.newPlanSave, JSON.stringify(this.plan));
+  }
+
+  private loadToLocalStorage() {
+    const savePlan = localStorage.getItem(Values.newPlanSave);
+    this.plan = savePlan ? JSON.parse(savePlan) : defaultPlan;
+  }
+
+  private setPlan() {
+    if (this.pickedColor) this.plan.color = this.pickedColor;
+    this.plan.duration = Number(getExistentInputElement(`.${ClassList.timeContainerSlider}`).value);
+    this.plan.title = getExistentInputElement(`.${ClassList.editorTitle}`).value;
+    const textArea = document.querySelector(`.${ClassList.editorText}`);
+    if (textArea instanceof HTMLTextAreaElement) this.plan.text = textArea.value;
   }
 
   private drawEditor() {
@@ -58,7 +84,7 @@ class PlanEditor {
   private makeTitle() {
     const title = document.createElement('input');
     title.classList.add(ClassList.editorTitle);
-    title.value = InnerText.defaultPlanName;
+    title.value = this.plan.title;
     title.addEventListener('blur', function trim() {
       this.value = this.value.trim();
     });
@@ -85,6 +111,7 @@ class PlanEditor {
     const text = document.createElement('textarea');
     text.classList.add(ClassList.editorText);
     text.value = this.plan.text;
+    console.log(this.plan.text);
     return text;
   }
 
@@ -99,10 +126,6 @@ class PlanEditor {
     const container = makeElement(ClassList.editorColorPicker);
 
     container.addEventListener('click', () => this.toggleColorBox());
-    container.addEventListener('click', function changeBackground(e) {
-      console.log(e.target, this);
-    });
-
     return container;
   }
 
@@ -131,16 +154,16 @@ class PlanEditor {
     if (target instanceof HTMLElement) {
       const color = target.dataset[GetAttribute.pickerColor];
       if (color) {
-        this.plan.color = color;
-        this.paintEditor();
+        this.pickedColor = color;
+        this.paintEditor(color);
       }
     }
   }
 
-  private paintEditor() {
+  private paintEditor(color: string) {
     const editor = getExistentElementByClass(ClassList.editor);
-    editor.style.backgroundColor = this.plan.color;
-    const secondColor = colorsAndFonts.get(this.plan.color);
+    editor.style.backgroundColor = color;
+    const secondColor = colorsAndFonts.get(color);
     if (secondColor) {
       editor.style.color = secondColor;
       getExistentElementByClass(ClassList.editorSaveIcon).style.stroke = secondColor;

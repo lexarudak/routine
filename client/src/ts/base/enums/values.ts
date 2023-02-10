@@ -12,6 +12,7 @@ const enum Values {
   timeSliderId = 'time-slider-id',
   hoursInputId = 'hours-input-id',
   minutesInputId = 'minutes-input-id',
+  newPlanSave = 'new-plan-save',
 }
 
 export default Values;

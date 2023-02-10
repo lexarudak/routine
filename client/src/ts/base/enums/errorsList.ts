@@ -16,6 +16,7 @@ const enum ErrorsList {
   cantBeEmpty = "Can't be empty!",
   wrongElementName = 'Wrong element name',
   freeYourTime = 'Free up your time before adding a plan',
+  noLogin = 'no login',
 }
 
 export default ErrorsList;

@@ -1,23 +1,27 @@
+/* eslint-disable no-underscore-dangle */
 import ClassList from '../../base/enums/classList';
 import PagesList from '../../base/enums/pageList';
 import PlanRoundConfig from '../../components/planRoundConfig';
 import Values from '../../base/enums/values';
 import { getExistentElementByClass, minToHour } from '../../base/helpers';
 import { Plan } from '../../base/interface';
-import { GoToFn, WeekInfo } from '../../base/types';
+import { GoToFn, PlanDis, WeekInfo } from '../../base/types';
 import PlanRound from '../../components/planRound';
 import Page from '../page';
 import PlanLayout from './components/planLayout';
-import testPlans from './components/testPlans';
+// import testPlans from './components/testPlans';
 import testWeekDistribution from './components/testWeekDistribution';
 import Popup from '../../components/popup';
 import ErrorsList from '../../base/enums/errorsList';
 import PlanEditor from './components/planEditor';
+import Api from '../../api';
 
 class PlanPage extends Page {
   layout: PlanLayout;
 
   allPlans: Plan[];
+
+  allPlansDist: PlanDis;
 
   planRounds: PlanRound[];
 
@@ -25,18 +29,16 @@ class PlanPage extends Page {
 
   popup: Popup;
 
-  editor: PlanEditor;
-
   fillWeekTime;
 
   constructor(goTo: GoToFn, popup: Popup, editor: PlanEditor) {
-    super(PagesList.planPage, goTo);
+    super(PagesList.planPage, goTo, editor);
     this.popup = popup;
     this.allPlans = [];
     this.planRounds = [];
+    this.allPlansDist = {};
     this.weekDistribution = [[]];
     this.layout = new PlanLayout(goTo);
-    this.editor = editor;
     this.fillWeekTime = 0;
   }
 
@@ -63,6 +65,18 @@ class PlanPage extends Page {
     this.planRounds = this.allPlans.map((plan) => {
       return new PlanRound(plan);
     });
+  }
+
+  private setPlanDistTime() {
+    const flatArr = this.weekDistribution.flat();
+    this.allPlansDist = flatArr.reduce((acc, val) => {
+      if (acc[val._id]) {
+        acc[val._id] += val.duration;
+      } else {
+        acc[val._id] = val.duration;
+      }
+      return acc;
+    }, <PlanDis>{});
   }
 
   private showElements() {
@@ -99,8 +113,23 @@ class PlanPage extends Page {
       if (width < PlanRoundConfig.minRoundSize) width = PlanRoundConfig.minRoundSize;
       if (width > maxRoundSize) width = maxRoundSize;
 
-      (ind % 2 === 0 ? bigZone : smallZone).append(round.draw(width));
+      const roundDiv = this.addRoundListener(round, width);
+
+      (ind % 2 === 0 ? bigZone : smallZone).append(roundDiv);
     });
+  }
+
+  private addRoundListener(round: PlanRound, width: number) {
+    const freeTime = round.planInfo.duration - this.allPlansDist[round.planInfo._id];
+    const roundDiv = round.draw(width, freeTime);
+    roundDiv.addEventListener('click', () => {
+      this.editor.open(
+        round.planInfo.duration - freeTime,
+        round.planInfo.duration + Values.allWeekMinutes - this.fillWeekTime,
+        round.planInfo
+      );
+    });
+    return roundDiv;
   }
 
   private fillDays() {
@@ -141,18 +170,18 @@ class PlanPage extends Page {
   }
 
   private async setWeekInfo() {
-    const weekInfo: WeekInfo = await Promise.all([this.getAllPlans(), this.getWeekDistribution()]);
+    const weekInfo: WeekInfo = await Promise.all([Api.getAllPlans(), this.getWeekDistribution()]);
     [this.allPlans, this.weekDistribution] = weekInfo;
   }
 
-  private async getAllPlans(): Promise<Plan[]> {
-    // it should be Api get Fn
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(testPlans);
-      }, 300);
-    });
-  }
+  // private async getAllPlans(): Promise<Plan[]> {
+  //   // it should be Api get Fn
+  //   return new Promise((resolve) => {
+  //     setTimeout(() => {
+  //       resolve(testPlans);
+  //     }, 300);
+  //   });
+  // }
 
   private async getWeekDistribution(): Promise<Plan[][]> {
     // it should be Api get Fn
@@ -186,6 +215,7 @@ class PlanPage extends Page {
     const page = await this.getFilledPage();
     container.append(page);
     this.fillWeekLine();
+    this.setPlanDistTime();
     this.fillPlansFields();
     this.fillDays();
     this.showElements();
