@@ -32,7 +32,7 @@ class UserController extends Controller {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        res.status(400).json({ message: 'Incorrect request', errors });
+        res.status(Enum.StatusCodes.BadRequest).json({ message: 'Incorrect request', errors });
         return;
       }
 

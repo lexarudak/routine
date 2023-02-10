@@ -45,7 +45,7 @@ class UserService extends Service {
 
     const isPasswordValid = bcrypt.compareSync(login.password, userDB.password);
     if (!isPasswordValid) {
-      throw new ClientError(`Invalid password`);
+      throw new ClientError(Enum.ErrorMessages.e1001);
     }
 
     const expiresIn = login.remember ? config.get('tokenExpiresInLong') : config.get('tokenExpiresInShort');

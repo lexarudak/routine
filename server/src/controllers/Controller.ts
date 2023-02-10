@@ -13,24 +13,24 @@ export default class Controller {
     try {
       const token = req.cookies[Enum.Constants.tokenDescription];
       if (!token) {
-        throw new ClientError('No authorization data', Enum.StatusCodes.Unauthorized);
+        throw new ClientError(Enum.ErrorMessages.e1002, Enum.StatusCodes.Unauthorized);
       }
       const decoded = jwt.verify(token, config.get('jwtSecretKey'));
       if (!decoded) {
-        throw new ClientError('Invalid JWT token', Enum.StatusCodes.Unauthorized);
+        throw new ClientError(Enum.ErrorMessages.e1003, Enum.StatusCodes.Unauthorized);
       }
       const payload = decoded as { id: Types.ObjectId };
       if (!payload.id) {
-        throw new ClientError('No user ID in JWT token', Enum.StatusCodes.Unauthorized);
+        throw new ClientError(Enum.ErrorMessages.e1004, Enum.StatusCodes.Unauthorized);
       }
       const user = await User.findById(payload.id);
       if (!user) {
-        throw new ClientError('No user with received authorization data', Enum.StatusCodes.Unauthorized);
+        throw new ClientError(Enum.ErrorMessages.e1005, Enum.StatusCodes.Unauthorized);
       }
       return user._id;
     } catch (error) {
       if (error instanceof Error) {
-        throw new ClientError(`The user is unauthorized (${error.message})`, Enum.StatusCodes.Unauthorized);
+        throw new ClientError(`${Enum.ErrorMessages.e1006} (${error.message})`, Enum.StatusCodes.Unauthorized);
       } else {
         throw error;
       }
