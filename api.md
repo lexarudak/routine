@@ -324,7 +324,7 @@ Returns json data about thought.
   ```
   {
     "title": "Do gym every morning",
-    "text": "Lorem ipsum,
+    "text": "Lorem ipsum",
     "color": "#549F7B",
     "duration": 120
   }
@@ -334,9 +334,9 @@ Returns json data about thought.
   ```
   {
     "_id": "63dab20a1bad4d34504b5c18",
-    "title": "Do gym every morning",
     "userId": 63dd5008939161908112e05f,
-    "text": "",
+    "title": "Do gym every morning",
+    "text": "Lorem ipsum",
     "color": "#549F7B",
     "duration": 120
     "__v": 0
