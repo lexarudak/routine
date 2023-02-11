@@ -55,24 +55,6 @@ Returns json data about users.
   ]
   ```  
   
-- `GET` /api/users/:id
-  
-  Request
-  `/api/users/63dbd176bb3349816256d074`
-  
-  Respose `200` `OK`
-  ```
-  {
-    "_id": "63dbd176bb3349816256d074",
-    "name": "Steven Gundry",
-    "email": "steven.gundry@gmail.com",
-    "confirmationDay": "yesterday",
-    "confirmationTime": 660,
-    "createdAt": "2023-02-04T12:45:53.196Z",
-    "__v": 0
-  }
-  ```
-  
 - `DELETE` /api/users/:id 
   
   Request
