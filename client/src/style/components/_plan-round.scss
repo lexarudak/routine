@@ -7,8 +7,14 @@
   border-radius: 100%;
   border: none;
   padding: 10px;
-  transition: .2s;
+  transition: 0.2s;
   transform: scale(0);
+  opacity: 1;
+
+  &_drag {
+    opacity: 0.3;
+  }
+
 
   & > span {
     overflow: hidden;

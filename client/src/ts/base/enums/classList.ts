@@ -37,6 +37,8 @@ const enum ClassList {
   planAddButton = 'plan__button-add',
   planAddButtonValue = 'plan__button-add-value',
   planRemoveZone = 'plan__remove',
+  planRemoveZoneDrag = 'plan__remove_drag',
+  planRemoveZoneOver = 'plan__remove_over',
   planDaysContainer = 'plan__days',
   planDay = 'plan__day',
   planDayLine = 'plan__day-line',
@@ -50,6 +52,7 @@ const enum ClassList {
   planRound = 'plan-round',
   planRoundBlur = 'plan-round__blur',
   planRoundVal = 'plan-round__value',
+  planRoundDrag = 'plan-round_drag',
   // Editor
   editor = 'editor',
   editorTools = 'editor__tools',

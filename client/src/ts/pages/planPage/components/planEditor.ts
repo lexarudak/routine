@@ -1,8 +1,16 @@
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable @typescript-eslint/naming-convention */
 import { GetAttribute, SetAttribute } from '../../../base/enums/attributes';
 import ClassList from '../../../base/enums/classList';
 import ErrorsList from '../../../base/enums/errorsList';
 import InnerText from '../../../base/enums/innerText';
-import { getExistentElementByClass, getExistentInputElement, makeElement } from '../../../base/helpers';
+import {
+  buttonOff,
+  buttonOn,
+  getExistentElementByClass,
+  getExistentInputElement,
+  makeElement,
+} from '../../../base/helpers';
 import { Plan } from '../../../base/interface';
 import colorsAndFonts from '../../../components/colorsAndFonts';
 import Popup from '../../../components/popup';
@@ -10,8 +18,14 @@ import TimeSlider from './timeSlider';
 import defaultPlan from './defaultPlan';
 import savePlanIcon from './savePlanIcon';
 import Values from '../../../base/enums/values';
+import EditorMode from '../../../base/enums/editorMode';
+import Api from '../../../api';
+import { GoToFn } from '../../../base/types';
+import RoutsList from '../../../base/enums/routsList';
 
 class PlanEditor {
+  goTo: GoToFn;
+
   popup: Popup;
 
   plan: Plan;
@@ -20,43 +34,88 @@ class PlanEditor {
 
   pickedColor: string | undefined;
 
-  constructor(popup: Popup) {
+  mode: EditorMode;
+
+  constructor(popup: Popup, goTo: GoToFn) {
+    this.goTo = goTo;
+    this.mode = EditorMode.newPlan;
     this.popup = popup;
     this.plan = defaultPlan;
     this.open = this.open.bind(this);
     this.slider = new TimeSlider();
     this.saveToLocalStorage = this.saveToLocalStorage.bind(this);
+    this.sendPlan = this.sendPlan.bind(this);
   }
 
   public open(minTime: number, maxTime: number, plan?: Plan) {
     this.slider.setTimer(minTime, maxTime, plan?.duration);
-    console.log(plan?.duration);
+    console.log(plan);
     if (plan) {
-      this.plan = plan;
+      this.mode = EditorMode.editPlan;
+      this.plan = { ...plan };
       this.popup.editorMode(this.sendPlan);
+      this.loadToLocalStorage();
     } else {
+      console.log('new plan mode');
+      this.mode = EditorMode.newPlan;
       this.popup.newPlanMode(this.saveToLocalStorage);
       this.loadToLocalStorage();
     }
     this.drawEditor();
   }
 
-  private sendPlan() {
-    console.log('send plan');
+  private loadToLocalStorage() {
+    console.log('load');
+    const savedNewPlan = localStorage.getItem(Values.newPlanSave);
+    const savedExistPlan = localStorage.getItem(this.plan._id);
+    switch (this.mode) {
+      case EditorMode.newPlan:
+        console.log(savedNewPlan);
+        this.plan = savedNewPlan ? JSON.parse(savedNewPlan) : defaultPlan;
+        break;
+      case EditorMode.editPlan:
+        this.plan = savedExistPlan ? JSON.parse(savedExistPlan) : this.plan;
+        localStorage.removeItem(this.plan._id);
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  private async sendPlan() {
+    this.setPlan();
+    const { _id, title, text, color, duration } = this.plan;
+    switch (this.mode) {
+      case EditorMode.newPlan:
+        await Api.createNewPlan({ title, text, color, duration });
+        localStorage.removeItem(Values.newPlanSave);
+        break;
+      case EditorMode.editPlan:
+        await Api.editPlan({ _id, title, text, color, duration });
+        break;
+
+      default:
+        break;
+    }
   }
 
   private saveToLocalStorage() {
     this.setPlan();
-    localStorage.setItem(Values.newPlanSave, JSON.stringify(this.plan));
-  }
+    switch (this.mode) {
+      case EditorMode.newPlan:
+        localStorage.setItem(Values.newPlanSave, JSON.stringify(this.plan));
+        break;
+      case EditorMode.editPlan:
+        localStorage.setItem(this.plan._id, JSON.stringify(this.plan));
+        break;
 
-  private loadToLocalStorage() {
-    const savePlan = localStorage.getItem(Values.newPlanSave);
-    this.plan = savePlan ? JSON.parse(savePlan) : defaultPlan;
+      default:
+        break;
+    }
   }
 
   private setPlan() {
-    if (this.pickedColor) this.plan.color = this.pickedColor;
     this.plan.duration = Number(getExistentInputElement(`.${ClassList.timeContainerSlider}`).value);
     this.plan.title = getExistentInputElement(`.${ClassList.editorTitle}`).value;
     const textArea = document.querySelector(`.${ClassList.editorText}`);
@@ -116,9 +175,27 @@ class PlanEditor {
   }
 
   private makeAcceptButton(secColor: string) {
-    const container = makeElement(ClassList.editorButton);
-
+    const container = document.createElement('button');
+    container.classList.add(ClassList.editorButton);
     container.innerHTML = savePlanIcon(secColor, ClassList.editorSaveIcon);
+
+    container.addEventListener('click', async () => {
+      buttonOff(container);
+      try {
+        await this.sendPlan();
+        this.goTo(RoutsList.planPage);
+      } catch (error) {
+        if (error instanceof Error) {
+          this.saveToLocalStorage();
+          if (error.message === ErrorsList.needLogin) {
+            this.goTo(RoutsList.loginPage);
+          }
+        }
+      } finally {
+        buttonOn(container);
+        this.popup.easyClose();
+      }
+    });
     return container;
   }
 
@@ -154,7 +231,7 @@ class PlanEditor {
     if (target instanceof HTMLElement) {
       const color = target.dataset[GetAttribute.pickerColor];
       if (color) {
-        this.pickedColor = color;
+        this.plan.color = color;
         this.paintEditor(color);
       }
     }

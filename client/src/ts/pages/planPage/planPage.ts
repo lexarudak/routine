@@ -9,12 +9,11 @@ import { GoToFn, PlanDis, WeekInfo } from '../../base/types';
 import PlanRound from '../../components/planRound';
 import Page from '../page';
 import PlanLayout from './components/planLayout';
-// import testPlans from './components/testPlans';
-import testWeekDistribution from './components/testWeekDistribution';
 import Popup from '../../components/popup';
 import ErrorsList from '../../base/enums/errorsList';
 import PlanEditor from './components/planEditor';
 import Api from '../../api';
+import RoutsList from '../../base/enums/routsList';
 
 class PlanPage extends Page {
   layout: PlanLayout;
@@ -129,6 +128,19 @@ class PlanPage extends Page {
         round.planInfo
       );
     });
+    const bin = getExistentElementByClass(ClassList.planRemoveZone);
+    roundDiv.addEventListener('dragstart', function dragstart() {
+      setTimeout(() => {
+        this.classList.add(ClassList.planRoundDrag);
+        bin.classList.add(ClassList.planRemoveZoneDrag);
+        bin.style.transform = 'scale(2)';
+      }, 50);
+    });
+    roundDiv.addEventListener('dragend', function dragend() {
+      this.classList.remove(ClassList.planRoundDrag);
+      bin.classList.remove(ClassList.planRemoveZoneDrag);
+      bin.style.transform = 'scale(1)';
+    });
     return roundDiv;
   }
 
@@ -170,26 +182,8 @@ class PlanPage extends Page {
   }
 
   private async setWeekInfo() {
-    const weekInfo: WeekInfo = await Promise.all([Api.getAllPlans(), this.getWeekDistribution()]);
+    const weekInfo: WeekInfo = await Promise.all([Api.getAllPlans(), Api.getWeekDistribution()]);
     [this.allPlans, this.weekDistribution] = weekInfo;
-  }
-
-  // private async getAllPlans(): Promise<Plan[]> {
-  //   // it should be Api get Fn
-  //   return new Promise((resolve) => {
-  //     setTimeout(() => {
-  //       resolve(testPlans);
-  //     }, 300);
-  //   });
-  // }
-
-  private async getWeekDistribution(): Promise<Plan[][]> {
-    // it should be Api get Fn
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(testWeekDistribution);
-      }, 300);
-    });
   }
 
   protected async getFilledPage(): Promise<HTMLElement> {
@@ -210,16 +204,25 @@ class PlanPage extends Page {
   }
 
   public async draw() {
-    const container = getExistentElementByClass(ClassList.mainContainer);
-    container.innerHTML = '';
-    const page = await this.getFilledPage();
-    container.append(page);
-    this.fillWeekLine();
-    this.setPlanDistTime();
-    this.fillPlansFields();
-    this.fillDays();
-    this.showElements();
-    this.setAddButton();
+    try {
+      const container = getExistentElementByClass(ClassList.mainContainer);
+      container.innerHTML = '';
+      const page = await this.getFilledPage();
+
+      container.append(page);
+      this.fillWeekLine();
+      this.setPlanDistTime();
+      this.fillPlansFields();
+      this.fillDays();
+      this.showElements();
+      this.setAddButton();
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message === ErrorsList.needLogin) {
+          this.goTo(RoutsList.loginPage);
+        }
+      }
+    }
   }
 }
 

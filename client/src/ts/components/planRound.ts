@@ -1,3 +1,5 @@
+/* eslint-disable no-underscore-dangle */
+import { SetAttribute } from '../base/enums/attributes';
 import ButtonClasses from '../base/enums/buttonClasses';
 import ClassList from '../base/enums/classList';
 import { makeElement, minToHour } from '../base/helpers';
@@ -39,6 +41,8 @@ class PlanRound {
     const blur = makeElement(ClassList.planRoundBlur);
     const name = document.createElement('span');
     const time = document.createElement('span');
+    round.setAttribute('draggable', 'true');
+    round.setAttribute(SetAttribute.planId, this.planInfo._id);
     round.classList.add(ClassList.planRound, ButtonClasses.button);
     time.classList.add(ClassList.planRoundVal);
 

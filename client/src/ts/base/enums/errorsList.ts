@@ -10,6 +10,7 @@ const enum ErrorsList {
   noUser = "cant't find this account",
   existUser = 'this user already exist',
   notFound = '404',
+  needLogin = '401',
   badRequest = '400',
   minToHourError = 'Wrong value in minToHour fn',
   notStandardColor = 'This color is not standard',

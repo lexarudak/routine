@@ -1,6 +1,6 @@
 import ClassList from '../base/enums/classList';
 // import ErrorsList from '../base/enums/errorsList';
-import { getEventTarget, getExistentElementByClass } from '../base/helpers';
+import { getExistentElementByClass } from '../base/helpers';
 
 class Popup {
   popup: HTMLElement;
@@ -32,13 +32,19 @@ class Popup {
   // }
 
   public close(e: Event, callback: () => void, fnToDelete: (e: Event) => void) {
-    const target = getEventTarget(e);
-    if (target.classList.contains(ClassList.popup)) {
-      callback();
-      console.log('close works');
-      this.clean(target);
-      this.popup.removeEventListener('click', fnToDelete);
+    const { target } = e;
+    if (target instanceof HTMLElement) {
+      if (target.classList.contains(ClassList.popup)) {
+        callback();
+        console.log('close works');
+        this.clean(target);
+        this.popup.removeEventListener('click', fnToDelete);
+      }
     }
+  }
+
+  public easyClose() {
+    this.clean(this.popup);
   }
 
   private clean(target: HTMLElement) {

@@ -7,6 +7,8 @@ import PlanEditor from './pages/planPage/components/planEditor';
 import PlanPage from './pages/planPage/planPage';
 
 class Router {
+  private editor: PlanEditor;
+
   static homePage: HomePage;
 
   static planPage: PlanPage;
@@ -27,11 +29,12 @@ class Router {
 
   // static sundayPage: Page;
 
-  constructor(popup: Popup, editor: PlanEditor) {
-    Router.homePage = new HomePage(this.goTo, editor);
-    Router.planPage = new PlanPage(this.goTo, popup, editor);
-    Router.loginPage = new LoginPage(this.goTo, editor);
-    Router.notFoundPage = new NotFoundPage(this.goTo, editor);
+  constructor(popup: Popup) {
+    this.editor = new PlanEditor(popup, this.goTo);
+    Router.homePage = new HomePage(this.goTo, this.editor);
+    Router.planPage = new PlanPage(this.goTo, popup, this.editor);
+    Router.loginPage = new LoginPage(this.goTo, this.editor);
+    Router.notFoundPage = new NotFoundPage(this.goTo, this.editor);
   }
 
   private static async render(pathname: string) {

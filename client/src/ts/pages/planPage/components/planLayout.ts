@@ -1,12 +1,15 @@
 import ButtonClasses from '../../../base/enums/buttonClasses';
 import ButtonNames from '../../../base/enums/buttonNames';
 import ClassList from '../../../base/enums/classList';
-import { SetAttribute } from '../../../base/enums/attributes';
+import { GetAttribute, SetAttribute } from '../../../base/enums/attributes';
 import Days from '../../../base/enums/days';
 import InnerText from '../../../base/enums/innerText';
 import RoutsList from '../../../base/enums/routsList';
 import Values from '../../../base/enums/values';
 import { GoToFn } from '../../../base/types';
+import { getExistentElementByClass } from '../../../base/helpers';
+import Api from '../../../api';
+import ErrorsList from '../../../base/enums/errorsList';
 
 class PlanLayout {
   goTo: GoToFn;
@@ -89,6 +92,37 @@ class PlanLayout {
     const bin = document.createElement('div');
     bin.style.backgroundImage = Values.binImg;
     remove.append(bin);
+
+    remove.addEventListener('dragover', function enter(e) {
+      e.preventDefault();
+      this.classList.add(ClassList.planRemoveZoneOver);
+    });
+    remove.addEventListener('dragleave', function leave() {
+      this.classList.remove(ClassList.planRemoveZoneOver);
+    });
+    remove.addEventListener('drop', async (e) => {
+      console.log('drop');
+      e.stopPropagation();
+      e.preventDefault();
+      const { currentTarget } = e;
+      if (currentTarget instanceof HTMLElement) currentTarget.classList.remove(ClassList.planRemoveZoneOver);
+      const round = getExistentElementByClass(ClassList.planRoundDrag);
+      const id = round.dataset[GetAttribute.planId];
+      if (id) {
+        try {
+          console.log('try');
+          await Api.deletePlan(id);
+          this.goTo(RoutsList.planPage);
+          console.log('try 2');
+        } catch (error) {
+          if (error instanceof Error) {
+            if (error.message === ErrorsList.needLogin) {
+              this.goTo(RoutsList.loginPage);
+            }
+          }
+        }
+      }
+    });
     return remove;
   }
 
