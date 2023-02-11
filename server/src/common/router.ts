@@ -12,7 +12,7 @@ const router = Router();
 
 const validationParameters = [
   check('email', 'Incorrect email').isEmail(),
-  check('password', 'Password must be longer than 3 symbols').isLength({ min: 3 }),
+  check('password', 'Password must be at least 3 characters long').isLength({ min: 3 }),
 ];
 
 router.get('/users', UserController.get.bind(UserController));

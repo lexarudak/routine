@@ -22,7 +22,7 @@ class StatisticsService extends Service {
         await this.addAverageStatistics(statistics[i], statisticsByPlan, result);
         processedPlanIDs.push(planId);
       }
-    };
+    }
 
     return result;
   }
@@ -55,10 +55,7 @@ class StatisticsService extends Service {
     return await Statistics.deleteMany({ userId: userId, planId: planId });
   }
 
-  private getCalculatedDeviation(
-    distributionPlan: Type.TWeekDistribution | undefined,
-    distributionFact: Type.TWeekDistribution | undefined) {
-
+  private getCalculatedDeviation(distributionPlan: Type.TWeekDistribution | undefined, distributionFact: Type.TWeekDistribution | undefined) {
     switch (false) {
       case Boolean(distributionPlan):
         if (distributionFact) {
@@ -82,7 +79,7 @@ class StatisticsService extends Service {
   async confirmDay(userId: Types.ObjectId, item: Type.TStatisticsConfirmDay) {
     const result: Type.TStatistics[] = [];
 
-    const distributionsPlan = await WeekDistributionService.getByDay(userId, item.dayOfWeek) as Type.TWeekDistribution[];
+    const distributionsPlan = (await WeekDistributionService.getByDay(userId, item.dayOfWeek)) as Type.TWeekDistribution[];
     const distributionsFact = item.dayDistribution;
 
     const plans = new Set<string>();

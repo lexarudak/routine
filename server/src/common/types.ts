@@ -12,7 +12,7 @@ export type TDuration = {
   duration: number;
 };
 export type TDeviation = {
-  deviation: number
+  deviation: number;
 };
 
 export type TPeriod = {
