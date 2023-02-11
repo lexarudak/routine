@@ -709,20 +709,29 @@ Returns json data about the user statistics.
   ```
   [
     {
-      "userId": 63df879ff7a5081606fb4fb8,
-      "planId": 63e158255010e434534cfae5,
+      "_id": "63e5055da4b15d5eb3b0be2f",
+      "userId": "63e001da88d251dc53e36d1f",
+      "title": "Plan 6",
+      "text": "Lorem ipsum",
+      "color": "#FF00FF",
       "deviation": 15
       "__v": 0
     },
     {
-      "userId": 63df879ff7a5081606fb4fb8,
-      "planId": 63e158255010e434534cfae5,
+      "_id": "63e69c64ca00602898c89ff1",
+      "userId": "63e001da88d251dc53e36d1f",
+      "title": "Thought test 12-4",
+      "text": "Do gym every morning",
+      "color": "#549F7B",
       "deviation": -20
       "__v": 0
     },
     {
-      "userId": 63df879ff7a5081606fb4fb8,
-      "planId": 63e158255010e434534cfae5,
+      "_id": "63e158255010e434534cfae5",
+      "userId": "63e001da88d251dc53e36d1f",
+      "title": "Plan 3",
+      "text": "Lorem ipsum",
+      "color": "#FF00FF",
       "deviation": 10
       "__v": 0
     }
