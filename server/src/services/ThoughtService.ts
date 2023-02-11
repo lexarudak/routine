@@ -35,7 +35,7 @@ class ThoughtService extends Service {
     if (thought) {
       const plan: Type.TPlan = {
         userId: thought.userId,
-        title: thought.title,
+        title: item.title,
         text: item.text,
         color: item.color,
         duration: item.duration,
