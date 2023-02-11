@@ -323,7 +323,8 @@ Returns json data about thought.
   `/api/thoughts/convertToPlan/63dab20a1bad4d34504b5c18`
   ```
   {
-    "text": "Do gym every morning",
+    "title": "Do gym every morning",
+    "text": "Lorem ipsum,
     "color": "#549F7B",
     "duration": 120
   }
