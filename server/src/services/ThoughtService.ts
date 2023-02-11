@@ -1,18 +1,18 @@
-import Thought from '../schemas/Thought';
-import PlanService from './PlanService';
-import { ClientError } from '../errors';
-import * as Type from '../types';
 import { Types } from 'mongoose';
 
-class ThoughtService {
+import Service from './Service';
+import Thought from '../schemas/Thought';
+import PlanService from './PlanService';
+
+import * as Type from '../common/types';
+
+class ThoughtService extends Service {
   async get(userId: Types.ObjectId) {
     return await Thought.find({ userId: userId });
   }
 
-  async getById(userId: Types.ObjectId, id: string) {
-    if (!id) {
-      throw new ClientError('ID not specified');
-    }
+  async getById(userId: Types.ObjectId, id: Types.ObjectId) {
+    this.checkId(id);
     return await Thought.findById(id).where({ userId: userId });
   }
 
@@ -23,35 +23,31 @@ class ThoughtService {
   }
 
   async update(userId: Types.ObjectId, item: Type.TDBThought) {
-    if (!item._id) {
-      throw new ClientError('ID not specified');
-    }
-    const itemForUpdate = {
-      title: item.title,
-    };
+    this.checkId(item._id);
+    const itemForUpdate = { title: item.title };
     return await Thought.findByIdAndUpdate(item._id, itemForUpdate, { new: true }).where({ userId: userId });
   }
 
-  async transferToPlan(userId: Types.ObjectId, id: string) {
-    if (!id) {
-      throw new ClientError('ID not specified');
-    }
+  async convertToPlan(userId: Types.ObjectId, id: Types.ObjectId, item: Type.TPlan) {
+    this.checkId(id);
     const thought = await this.delete(userId, id);
+
     if (thought) {
       const plan: Type.TPlan = {
-        userId: thought.userId as Types.ObjectId,
+        userId: thought.userId,
         title: thought.title,
-        duration: 15,
+        text: item.text,
+        color: item.color,
+        duration: item.duration,
       };
+
       return await PlanService.create(userId, plan);
     }
     return null;
   }
 
-  async delete(userId: Types.ObjectId, id: string) {
-    if (!id) {
-      throw new ClientError('ID not specified');
-    }
+  async delete(userId: Types.ObjectId, id: Types.ObjectId) {
+    this.checkId(id);
     return await Thought.findByIdAndDelete(id).where({ userId: userId });
   }
 }

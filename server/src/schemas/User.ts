@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { TUser } from '../types';
+import { TUser } from '../common/types';
 
 const schema = new Schema<TUser>({
   name: { type: String, required: true },

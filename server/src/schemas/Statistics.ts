@@ -1,5 +1,5 @@
 import { Schema, model } from 'mongoose';
-import { TStatistics } from '../types';
+import { TStatistics } from '../common/types';
 
 const schema = new Schema<TStatistics>({
   userId: { type: Schema.Types.ObjectId },

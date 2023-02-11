@@ -1,20 +1,22 @@
+import { Types } from 'mongoose';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import config from '../config';
-import { ClientError } from '../errors';
-import User from '../schemas/User';
-import * as Type from '../types';
-import * as Enum from '../enums';
 
-class UserService {
+import User from '../schemas/User';
+import Service from './Service';
+
+import config from '../common/config';
+import { ClientError } from '../common/errors';
+import * as Type from '../common/types';
+import * as Enum from '../common/enums';
+
+class UserService extends Service {
   async get() {
     return await User.find();
   }
 
-  async getById(id: string) {
-    if (!id) {
-      throw new ClientError('ID not specified');
-    }
+  async getById(id: Types.ObjectId) {
+    this.checkId(id);
     return await User.findById(id);
   }
 
@@ -38,12 +40,12 @@ class UserService {
   async login(login: Type.TLogin) {
     const userDB = await User.findOne({ email: login.email });
     if (!userDB) {
-      throw new ClientError(`User with email ${login.email} not found`, 404);
+      throw new ClientError(`User with email ${login.email} not found`, Enum.StatusCodes.NotFound);
     }
 
     const isPasswordValid = bcrypt.compareSync(login.password, userDB.password);
     if (!isPasswordValid) {
-      throw new ClientError(`Invalid password`);
+      throw new ClientError(Enum.ErrorMessages.e1001);
     }
 
     const expiresIn = login.remember ? config.get('tokenExpiresInLong') : config.get('tokenExpiresInShort');
@@ -54,21 +56,19 @@ class UserService {
   }
 
   async update(user: Type.TDBUser) {
-    if (!user._id) {
-      throw new ClientError('ID not specified');
-    }
+    this.checkId(user._id);
+
     const userForUpdate = {
       name: user.name,
       confirmationDay: user.confirmationDay,
       confirmationTime: user.confirmationTime,
     };
+
     return await User.findByIdAndUpdate(user._id, userForUpdate, { new: true });
   }
 
-  async delete(id: string) {
-    if (!id) {
-      throw new ClientError('ID not specified');
-    }
+  async delete(id: Types.ObjectId) {
+    this.checkId(id);
     return await User.findByIdAndDelete(id);
   }
 }

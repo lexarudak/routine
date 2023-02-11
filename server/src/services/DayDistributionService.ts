@@ -1,11 +1,13 @@
+import { Types } from 'mongoose';
+
+import Service from './Service';
 import DayDistribution from '../schemas/DayDistribution';
 import PlanService from './PlanService';
 import WeekDistributionService from './WeekDistributionService';
-import { ClientError } from '../errors';
-import * as Type from '../types';
-import { Types } from 'mongoose';
 
-class DayDistributionService {
+import * as Type from '../common/types';
+
+class DayDistributionService extends Service {
   async get(userId: Types.ObjectId, dayOfWeek: number) {
     const result: Type.TDayDistributionData = { distributedPlans: [], notDistributedPlans: [] };
 
@@ -33,14 +35,14 @@ class DayDistributionService {
   }
 
   private async addDistributedPlan(dayDistribution: Type.TDBDayDistribution, result: Type.TDayDistributionData) {
-    const plan = await PlanService.getById(dayDistribution.userId, dayDistribution.planId.toString());
+    const plan = await PlanService.getById(dayDistribution.userId, dayDistribution.planId);
     if (plan) {
       const distributedPlan: Type.TDistributedPlan = {
         _id: plan._id,
         userId: plan.userId,
         title: plan.title,
-        text: plan.text || '',
-        color: plan.color || '',
+        text: plan.text,
+        color: plan.color,
         from: dayDistribution.from,
         to: dayDistribution.to,
       };
@@ -50,14 +52,14 @@ class DayDistributionService {
 
   private async addNotDistributedPlan(weekDistribution: Type.TDBWeekDistribution, result: Type.TDayDistributionData) {
     if (weekDistribution.duration) {
-      const plan = await PlanService.getById(weekDistribution.userId, weekDistribution.planId.toString());
+      const plan = await PlanService.getById(weekDistribution.userId, weekDistribution.planId);
       if (plan) {
         const notDistributedPlan: Type.TNotDistributedPlan = {
           _id: plan._id,
           userId: plan.userId,
           title: plan.title,
-          text: plan.text || '',
-          color: plan.color || '',
+          text: plan.text,
+          color: plan.color,
           duration: weekDistribution.duration,
         };
         result.notDistributedPlans.push(notDistributedPlan);
@@ -70,17 +72,12 @@ class DayDistributionService {
   }
 
   async create(userId: Types.ObjectId, item: Type.TDayDistribution) {
-    if (item.dayOfWeek < 0 || item.dayOfWeek > 6) {
-      throw new ClientError(`Incorrect value of parameter "day of week"`, 400);
-    }
-    if (item.from < 0 || item.from > 1440) {
-      throw new ClientError(`Incorrect value of parameter "from"`, 400);
-    }
-    if (item.to < 0 || item.to > 1440) {
-      throw new ClientError(`Incorrect value of parameter "to"`, 400);
-    }
+    this.checkDayOfWeek(item.dayOfWeek);
+    this.checkPeriod(item.from, item.to);
+
     const clone = Object.assign({}, item);
     clone.userId = userId;
+
     return await DayDistribution.create(clone);
   }
 

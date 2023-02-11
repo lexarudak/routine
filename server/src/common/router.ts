@@ -1,17 +1,18 @@
 import Router from 'express';
 import { check } from 'express-validator';
 
-import UserController from './controllers/UserController';
-import ThoughtController from './controllers/ThoughtController';
-import PlanController from './controllers/PlanController';
-import WeekDistributionController from './controllers/WeekDistributionController';
-import DayDistributionController from './controllers/DayDistributionController';
+import UserController from '../controllers/UserController';
+import ThoughtController from '../controllers/ThoughtController';
+import PlanController from '../controllers/PlanController';
+import WeekDistributionController from '../controllers/WeekDistributionController';
+import DayDistributionController from '../controllers/DayDistributionController';
+import StatisticsController from '../controllers/StatisticsController';
 
 const router = Router();
 
 const validationParameters = [
   check('email', 'Incorrect email').isEmail(),
-  check('password', 'Password must be longer than 3 and shorter than 12 symbols').isLength({ min: 3, max: 12 }),
+  check('password', 'Password must be longer than 3 symbols').isLength({ min: 3 }),
 ];
 
 router.get('/users', UserController.get.bind(UserController));
@@ -25,7 +26,7 @@ router.get('/thoughts', ThoughtController.get.bind(ThoughtController));
 router.get('/thoughts/:id', ThoughtController.getById.bind(ThoughtController));
 router.post('/thoughts', ThoughtController.create.bind(ThoughtController));
 router.post('/thoughts/update', ThoughtController.update.bind(ThoughtController));
-router.post('/thoughts/transferToPlan/:id', ThoughtController.transferToPlan.bind(ThoughtController));
+router.post('/thoughts/convertToPlan/:id', ThoughtController.convertToPlan.bind(ThoughtController));
 router.delete('/thoughts/:id', ThoughtController.delete.bind(ThoughtController));
 
 router.get('/plans', PlanController.get.bind(PlanController));
@@ -39,5 +40,8 @@ router.post('/weekDistribution/adjustPlan', WeekDistributionController.adjustPla
 
 router.get('/dayDistribution/get/:dayOfWeek', DayDistributionController.get.bind(DayDistributionController));
 router.post('/dayDistribution/adjustPlan', DayDistributionController.adjustPlan.bind(DayDistributionController));
+
+router.get('/statistics/get', StatisticsController.get.bind(StatisticsController));
+router.post('/statistics/confirmDay', StatisticsController.confirmDay.bind(StatisticsController));
 
 export default router;
