@@ -3,7 +3,6 @@
 import { GetAttribute, SetAttribute } from '../../../base/enums/attributes';
 import ClassList from '../../../base/enums/classList';
 import ErrorsList from '../../../base/enums/errorsList';
-import InnerText from '../../../base/enums/innerText';
 import {
   buttonOff,
   buttonOn,
@@ -22,6 +21,7 @@ import EditorMode from '../../../base/enums/editorMode';
 import Api from '../../../api';
 import { GoToFn } from '../../../base/types';
 import RoutsList from '../../../base/enums/routsList';
+import InnerText from '../../../base/enums/innerText';
 
 class PlanEditor {
   goTo: GoToFn;
@@ -40,7 +40,7 @@ class PlanEditor {
     this.goTo = goTo;
     this.mode = EditorMode.newPlan;
     this.popup = popup;
-    this.plan = defaultPlan;
+    this.plan = { ...defaultPlan };
     this.open = this.open.bind(this);
     this.slider = new TimeSlider();
     this.saveToLocalStorage = this.saveToLocalStorage.bind(this);
@@ -70,8 +70,8 @@ class PlanEditor {
     const savedExistPlan = localStorage.getItem(this.plan._id);
     switch (this.mode) {
       case EditorMode.newPlan:
-        console.log(savedNewPlan);
-        this.plan = savedNewPlan ? JSON.parse(savedNewPlan) : defaultPlan;
+        console.log('savedNewPlan', savedNewPlan, defaultPlan);
+        this.plan = savedNewPlan ? JSON.parse(savedNewPlan) : { ...defaultPlan };
         break;
       case EditorMode.editPlan:
         this.plan = savedExistPlan ? JSON.parse(savedExistPlan) : this.plan;
@@ -81,6 +81,7 @@ class PlanEditor {
       default:
         break;
     }
+    console.log('this plan', this.plan);
   }
 
   private async sendPlan() {
