@@ -455,6 +455,7 @@ Returns json data about user's plans.
   {
     "_id": "63e158255010e434534cfae5",
     "title": "Plan 3",
+    "text": "Lorem ipsum",
     "color": "#FF00FF",
     "duration": 75
   }
