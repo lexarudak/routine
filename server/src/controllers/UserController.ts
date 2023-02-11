@@ -19,9 +19,9 @@ class UserController extends Controller {
     }
   }
 
-  async getById(req: Request, res: Response) {
+  async delete(req: Request, res: Response) {
     try {
-      const user = await UserService.getById(new Types.ObjectId(req.params.id));
+      const user = await UserService.delete(new Types.ObjectId(req.params.id));
       res.json(user);
     } catch (error) {
       this.error(res, error);
@@ -60,19 +60,21 @@ class UserController extends Controller {
     }
   }
 
-  async update(req: Request, res: Response) {
+  async profile(req: Request, res: Response) {
     try {
-      const updatedUser = await UserService.update(req.body);
-      res.json(updatedUser);
+      const userId = await this.getUserId(req);
+      const user = await UserService.getById(userId);
+      res.json(user);
     } catch (error) {
       this.error(res, error);
     }
   }
 
-  async delete(req: Request, res: Response) {
+  async update(req: Request, res: Response) {
     try {
-      const user = await UserService.delete(new Types.ObjectId(req.params.id));
-      res.json(user);
+      const userId = await this.getUserId(req);
+      const updatedUser = await UserService.update(userId, req.body);
+      res.json(updatedUser);
     } catch (error) {
       this.error(res, error);
     }

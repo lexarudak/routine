@@ -55,8 +55,8 @@ class UserService extends Service {
     return userData;
   }
 
-  async update(user: Type.TDBUser) {
-    this.checkId(user._id);
+  async update(userId: Types.ObjectId, user: Type.TDBUser) {
+    this.checkId(userId);
 
     const userForUpdate = {
       name: user.name,
@@ -64,7 +64,7 @@ class UserService extends Service {
       confirmationTime: user.confirmationTime,
     };
 
-    return await User.findByIdAndUpdate(user._id, userForUpdate, { new: true });
+    return await User.findByIdAndUpdate(userId, userForUpdate, { new: true });
   }
 
   async delete(id: Types.ObjectId) {
