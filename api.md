@@ -197,7 +197,6 @@ Returns json data about users.
   Request
   ```
   {
-    "_id": "63dbce8efc36f95ae5646e7e",
     "name": "Mr. John Doe",
     "confirmationDay": "yesterday",
     "confirmationTime": 1020
