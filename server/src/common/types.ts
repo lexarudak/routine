@@ -8,6 +8,13 @@ export type TDBId = {
   _id: Types.ObjectId;
 };
 
+export type TDuration = {
+  duration: number;
+};
+export type TDeviation = {
+  deviation: number
+};
+
 export type TPeriod = {
   from: number;
   to: number;
@@ -117,7 +124,10 @@ export type TStatistics = {
 
 export type TDBStatistics = TDBId & TStatistics;
 
-export type TStatisticConfirmDay = {
+export type TStatisticsConfirmDay = {
   dayOfWeek: number;
   dayDistribution: TWeekDistribution[];
 };
+
+export type TStatisticsDataItem = Omit<TDBPlan, 'duration'> & TDeviation;
+export type TStatisticsData = TStatisticsDataItem[];
