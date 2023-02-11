@@ -127,25 +127,12 @@ Returns json data about users.
   
   Respose `400` `Bad Request`
   ```
-  {
-    "message": "Incorrect request",
-    "errors": {
-      "errors": [
-        {
-          "value": "user-gmail.com",
-          "msg": "Incorrect email",
-          "param": "email",
-          "location": "body"
-        },
-        {
-          "value": "1",
-          "msg": "Password must be longer than 3 symbols",
-          "param": "password",
-          "location": "body"
-        }
-      ]
-    }
-  }
+  "Incorrect request"
+  ```
+  
+  Respose `400` `Bad Request`
+  ```
+  "Password must be at least 3 characters long"
   ```
   
 - `POST` /api/users/login
