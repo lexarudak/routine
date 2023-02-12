@@ -17,6 +17,23 @@ function getExistentElementByClass<T extends HTMLElement>(
   return getExistentElement(`.${selector}`, node);
 }
 
+const createElement = (tag: string, className: string): HTMLElement => {
+  const element: HTMLElement = document.createElement(tag);
+  element.classList.add(className);
+  return element;
+};
+
+function createNewElement<T extends HTMLElement>(tag: string, className: string): T {
+  const element = document.createElement(tag);
+  element.classList.add(className);
+  return <T>element;
+}
+
+const client = {
+  width: document.documentElement.clientWidth,
+  height: document.documentElement.clientHeight,
+};
+
 function getExistentInputElement<T extends HTMLElement>(
   selector: string,
   node: Document | HTMLElement = document
@@ -39,4 +56,14 @@ function buttonOff(...buttons: HTMLButtonElement[]) {
   });
 }
 
-export { isHTMLElement, getExistentElement, getExistentInputElement, getExistentElementByClass, buttonOn, buttonOff };
+export {
+  isHTMLElement,
+  getExistentElement,
+  getExistentElementByClass,
+  createElement,
+  createNewElement,
+  client,
+  getExistentInputElement,
+  buttonOn,
+  buttonOff,
+};

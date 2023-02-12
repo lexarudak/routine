@@ -1,4 +1,4 @@
-import ClassList from '../../base/enums/classList';
+import { ClassList } from '../../base/enums/classList';
 import InnerText from '../../base/enums/innerText';
 import PageList from '../../base/enums/pageList';
 import Values from '../../base/enums/values';
