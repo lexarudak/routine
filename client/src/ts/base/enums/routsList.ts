@@ -9,6 +9,7 @@ const enum RoutsList {
   fridayPage = '/friday',
   saturdayPage = '/saturday',
   sundayPage = '/sunday',
+  loginPage = '/login',
 }
 
 export default RoutsList;

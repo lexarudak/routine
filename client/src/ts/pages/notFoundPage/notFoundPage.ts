@@ -12,7 +12,7 @@ class NotFoundPage extends Page {
     super(PagesList.notFound, goToFn);
   }
 
-  protected getFilledPage(): HTMLElement {
+  protected async getFilledPage(): Promise<HTMLElement> {
     const page = document.createElement('section');
 
     const name = document.createElement('h1');

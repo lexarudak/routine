@@ -7,6 +7,16 @@
   transition: .3s;
   cursor: pointer;
 
+  &:disabled:hover{
+    box-shadow: $shadow;
+    transform: scale(1);
+  }
+
+  &:hover {
+    box-shadow: $none-shadow;
+    transform: scale(.98);
+  }
+
   &_main {
     color: $font-main;
     border-color: $font-main;
@@ -15,5 +25,49 @@
       color: $success;
       border-color: $success;
     }
+  }
+
+  &_signIn {
+    border-color: $font-light;
+    color: $font-light;
+    background-color: transparent;
+
+    &:disabled {
+      border-color: $font-light-trans;
+      color: $font-light-trans;
+
+      &:hover {
+        border-color: $font-light-trans;
+        color: $font-light-trans;
+
+        & > * {
+            color: $font-light-trans;
+            ;
+          }
+      }
+    }
+
+    &:hover {
+      border-color: $sign-in-active;
+
+      & > * {
+        color: $sign-in-active;;
+      }
+    }
+  }
+}
+
+.nav-button {
+  cursor: pointer;
+  color: $font-medium;
+  border: none;
+  background: none;
+  font-size: 20px;
+  transition: .3s;
+  width: auto;
+
+  &:hover {
+    color: $success;
+    transform: scale(.95);
   }
 }

@@ -34,4 +34,36 @@ const client = {
   height: document.documentElement.clientHeight,
 };
 
-export { isHTMLElement, getExistentElement, getExistentElementByClass, createElement, createNewElement, client };
+function getExistentInputElement<T extends HTMLElement>(
+  selector: string,
+  node: Document | HTMLElement = document
+): HTMLInputElement {
+  const el = node.querySelector<T>(selector);
+  if (el === null) throw new Error(ErrorsList.elementNotFound);
+  if (!(el instanceof HTMLInputElement)) throw new Error(ErrorsList.elementIsNotInput);
+  return el;
+}
+
+function buttonOn(...buttons: HTMLButtonElement[]) {
+  buttons.forEach((button) => {
+    button.disabled = false;
+  });
+}
+
+function buttonOff(...buttons: HTMLButtonElement[]) {
+  buttons.forEach((button) => {
+    button.disabled = true;
+  });
+}
+
+export {
+  isHTMLElement,
+  getExistentElement,
+  getExistentElementByClass,
+  createElement,
+  createNewElement,
+  client,
+  getExistentInputElement,
+  buttonOn,
+  buttonOff,
+};

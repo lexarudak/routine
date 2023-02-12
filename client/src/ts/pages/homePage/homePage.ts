@@ -79,7 +79,7 @@ class HomePage extends Page {
       };
       animate();
     }
-    canvas.addEventListener('click', () => console.log(client.width, client.height));
+    // canvas.addEventListener('click', () => console.log(client.width, client.height));
     return canvas;
   }
 
@@ -149,7 +149,7 @@ class HomePage extends Page {
     return clock;
   }
 
-  protected getFilledPage(): HTMLElement {
+  protected async getFilledPage(): Promise<HTMLElement> {
     const page = document.createElement(HomePageClassList.section);
     const flyingThought = this.createFlyingThought();
     const thought = this.createThought();
@@ -166,6 +166,7 @@ class HomePage extends Page {
     page.append(flyingThought, thought, signIn, plan, clock);
 
     setTimeout(() => this.clockInst.getTime());
+    page.addEventListener('click', () => this.goTo(RoutsList.loginPage));
     return page;
   }
 }

@@ -5,8 +5,6 @@ import Links from '../../../base/enums/links';
 class Clock {
   getIcon(date: Date) {
     const hours = date.getHours();
-    console.log(hours);
-
     getExistentElement('.chart');
     if (hours >= 6 && hours < 12) return Links.morning;
     if (hours >= 12 && hours < 18) return Links.day;

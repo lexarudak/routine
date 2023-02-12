@@ -20,7 +20,6 @@ class ThoughtBuilder extends Thought {
     });
 
     this.createThoughtsList(getExistentElement('.thought__container'));
-    console.log(thoughtData);
     console.log('create:', thoughtText);
     this.thoughtText = '';
     getExistentElement<HTMLInputElement>('.thought__input').value = this.thoughtText;
