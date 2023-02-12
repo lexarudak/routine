@@ -2,15 +2,19 @@ import PagesList from '../base/enums/pageList';
 import { getExistentElementByClass } from '../base/helpers';
 import { ClassList } from '../base/enums/classList';
 import { GoToFn } from '../base/types';
+import PlanEditor from './planPage/components/planEditor';
 
 abstract class Page {
   protected name: PagesList;
 
   protected goTo: GoToFn;
 
-  constructor(name: PagesList, goTo: GoToFn) {
+  protected editor: PlanEditor;
+
+  constructor(name: PagesList, goTo: GoToFn, editor: PlanEditor) {
     this.name = name;
     this.goTo = goTo;
+    this.editor = editor;
   }
 
   protected async getFilledPage(): Promise<HTMLElement> {
@@ -19,11 +23,17 @@ abstract class Page {
     return emptyPage;
   }
 
+  protected async animatedFilledPageAppend(container: HTMLElement) {
+    container.classList.add(ClassList.mainContainerHide);
+    const page = await this.getFilledPage();
+    container.innerHTML = '';
+    container.classList.remove(ClassList.mainContainerHide);
+    container.append(page);
+  }
+
   public async draw() {
     const container = getExistentElementByClass(ClassList.mainContainer);
-    container.innerHTML = '';
-    const page = await this.getFilledPage();
-    container.append(page);
+    await this.animatedFilledPageAppend(container);
   }
 }
 

@@ -1,99 +1,351 @@
-import { ClassList } from '../../base/enums/classList';
+/* eslint-disable no-underscore-dangle */
+import ClassList from '../../base/enums/classList';
 import PagesList from '../../base/enums/pageList';
+import PlanRoundConfig from '../../components/planRoundConfig';
 import Values from '../../base/enums/values';
-import { getExistentElementByClass } from '../../base/helpers';
+import { buttonOff, getExistentElementByClass, loginRedirect, makeElement, minToHour } from '../../base/helpers';
 import { Plan } from '../../base/interface';
-import { GoToFn, WeekInfo } from '../../base/types';
+import { GoToFn, PlanDis, WeekInfo } from '../../base/types';
+import PlanRound from '../../components/planRound';
 import Page from '../page';
 import PlanLayout from './components/planLayout';
-import testPlans from './components/testPlans';
-import testWeekDistribution from './components/testWeekDistribution';
-// import testPlans from './components/testPlans';
+import Popup from '../../components/popup';
+import ErrorsList from '../../base/enums/errorsList';
+import PlanEditor from './components/planEditor';
+import Api from '../../api';
+import { GetAttribute } from '../../base/enums/attributes';
+import TimeSlider from './components/timeSlider';
+import colorsAndFonts from '../../components/colorsAndFonts';
+import savePlanIcon from './components/savePlanIcon';
+import RoutsList from '../../base/enums/routsList';
 
 class PlanPage extends Page {
   layout: PlanLayout;
 
   allPlans: Plan[];
 
-  weekDistribution: Plan[][] | [][];
+  allPlansDist: PlanDis;
 
-  constructor(goTo: GoToFn) {
-    super(PagesList.planPage, goTo);
+  planRounds: PlanRound[];
+
+  weekDistribution: Plan[][];
+
+  popup: Popup;
+
+  fillWeekTime;
+
+  constructor(goTo: GoToFn, popup: Popup, editor: PlanEditor) {
+    super(PagesList.planPage, goTo, editor);
+    this.popup = popup;
     this.allPlans = [];
+    this.planRounds = [];
+    this.allPlansDist = {};
     this.weekDistribution = [[]];
-    this.layout = new PlanLayout();
+    this.layout = new PlanLayout(goTo);
+    this.fillWeekTime = 0;
+    this.addDayListener = this.addDayListener.bind(this);
   }
 
-  private getFilledHours() {
-    return this.allPlans
-      .reduce((acc, val) => {
-        return acc + val.duration;
-      }, 0)
-      .toString();
+  private isFreeTimeInWeek() {
+    return Values.allWeekMinutes - this.fillWeekTime >= Values.minPlanDuration;
   }
 
-  private sortAllPlans() {
-    return this.allPlans.sort((a, b) => (a.duration > b.duration ? +1 : 1));
+  private ifFreeTimeInDay(minutes: number) {
+    return minutes >= Values.minPlanDuration;
+  }
+
+  private getFreeDayMinutes(dayId: string) {
+    const dayPlans = this.weekDistribution[Number(dayId)];
+    const filledMinutes = dayPlans.reduce((acc, plan) => {
+      return acc + plan.duration;
+    }, 0);
+    return Values.allDayMinutes - filledMinutes;
+  }
+
+  private getFreePlanMinutes(plan: Plan) {
+    return plan.duration - (this.allPlansDist[plan._id] || 0);
+  }
+
+  private ifFreeTimeInPlan(minutes: number) {
+    return minutes >= Values.minPlanDuration;
+  }
+
+  private getPlan(planId: string) {
+    return this.allPlans.filter((plan) => plan._id === planId)[0];
+  }
+
+  private getCurrentDay(e: Event) {
+    const { currentTarget } = e;
+    if (!(currentTarget instanceof HTMLElement)) throw new Error(ErrorsList.elementNotFound);
+    return currentTarget;
+  }
+
+  private getDragId() {
+    const id = getExistentElementByClass(ClassList.planRoundDrag).dataset[GetAttribute.planId];
+    if (id) return id;
+    throw new Error(ErrorsList.noId);
+  }
+
+  private setPushPlanData(plan: Plan, dayId: string, slider: TimeSlider) {
+    return { dayOfWeek: Number(dayId), planId: plan._id, duration: slider.currentTime };
+  }
+
+  private async pushPlanToThisDay(e: Event, plan: Plan, dayId: string, slider: TimeSlider) {
+    const userData = this.setPushPlanData(plan, dayId, slider);
+    const { currentTarget } = e;
+    if (!(currentTarget instanceof HTMLButtonElement)) throw new Error(ErrorsList.elementIsNotButton);
+    buttonOff(currentTarget);
+    this.popup.editorModeOff();
+
+    try {
+      await Api.pushPlanToDay(userData);
+      this.goTo(RoutsList.planPage);
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message === ErrorsList.needLogin) {
+          this.goTo(RoutsList.loginPage);
+        }
+      }
+    } finally {
+      this.popup.easyClose();
+    }
+  }
+
+  private makeSliderForDay(dayId: string, plan: Plan, freeDayMinutes: number, freePlanMinutes: number) {
+    const container = makeElement(ClassList.sliderPopup);
+    const secColor = colorsAndFonts.get(plan.color);
+    container.style.background = plan.color;
+    const button = document.createElement('button');
+    button.classList.add(ClassList.editorButton);
+    if (secColor) {
+      container.style.color = secColor;
+      button.innerHTML = savePlanIcon(secColor, ClassList.editorSaveIcon);
+    }
+
+    const slider = new TimeSlider();
+    slider.setTimer(Values.minPlanDuration, Math.min(freeDayMinutes, freePlanMinutes));
+
+    button.addEventListener('click', async (e) => this.pushPlanToThisDay(e, plan, dayId, slider));
+
+    container.append(slider.draw(), button);
+    return container;
+  }
+
+  private addListenersToAllDays(listener: (day: HTMLElement) => void) {
+    const allDays = document.querySelectorAll(`.${ClassList.planDay}`);
+    allDays.forEach((day) => {
+      if (day instanceof HTMLElement) listener(day);
+    });
+  }
+
+  private addDayListener(day: HTMLElement) {
+    day.addEventListener('dragover', function enter(e) {
+      e.preventDefault();
+      this.classList.add(ClassList.planDayOver);
+    });
+    day.addEventListener('dragleave', function leave() {
+      this.classList.remove(ClassList.planDayOver);
+    });
+    day.addEventListener('drop', async (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const currentDay = this.getCurrentDay(e);
+      currentDay.classList.remove(ClassList.planDayOver);
+
+      const dayId = currentDay.dataset[GetAttribute.dayId];
+      const planId = this.getDragId();
+      if (!dayId || !planId) throw new Error(ErrorsList.noId);
+      const plan = this.getPlan(planId);
+      const freeDayMinutes = this.getFreeDayMinutes(dayId);
+      const freePlanMinutes = this.getFreePlanMinutes(plan);
+
+      if (!this.ifFreeTimeInDay(freeDayMinutes)) {
+        this.popup.open(this.layout.makeBanner(ErrorsList.freeYourTime));
+      } else if (!this.ifFreeTimeInPlan(freePlanMinutes)) {
+        this.popup.open(this.layout.makeBanner(ErrorsList.thisPlanIsDist));
+      } else {
+        this.popup.open(this.makeSliderForDay(dayId, plan, freeDayMinutes, freePlanMinutes));
+      }
+    });
+  }
+
+  private setAddButton() {
+    getExistentElementByClass(ClassList.planAddButton).addEventListener('click', () => {
+      if (this.isFreeTimeInWeek()) {
+        this.editor.open(Values.minPlanDuration, Values.allWeekMinutes - this.fillWeekTime);
+      } else {
+        this.popup.open(this.layout.makeBanner(ErrorsList.freeYourTime));
+      }
+    });
+  }
+
+  private sortAllPlans(plansArr: Plan[]) {
+    return plansArr.sort((a, b) => (a.duration > b.duration ? -1 : 1));
+  }
+
+  private makePlans() {
+    this.planRounds = [];
+    this.planRounds = this.allPlans.map((plan) => {
+      return new PlanRound(plan);
+    });
+  }
+
+  private setPlanDistTime() {
+    const flatArr = this.weekDistribution.flat();
+    this.allPlansDist = flatArr.reduce((acc, plan) => {
+      if (acc[plan._id]) {
+        acc[plan._id] += plan.duration;
+      } else {
+        acc[plan._id] = plan.duration;
+      }
+      return acc;
+    }, <PlanDis>{});
+  }
+
+  private showElements() {
+    const scale = Values.scaleNormal;
+    setTimeout(() => {
+      getExistentElementByClass(ClassList.planAddButton).style.transform = scale;
+      getExistentElementByClass(ClassList.planRemoveZone).style.transform = scale;
+      getExistentElementByClass(ClassList.weekLine).childNodes.forEach((val) => {
+        if (val instanceof HTMLDivElement) val.style.transform = scale;
+      });
+      const rounds = document.querySelectorAll(`.${ClassList.planRound}`);
+      rounds.forEach((val) => {
+        if (val instanceof HTMLDivElement) val.style.transform = scale;
+      });
+      const days = document.querySelectorAll(`.${ClassList.planDayLine}`);
+      days.forEach((day) => {
+        if (day instanceof HTMLDivElement) {
+          day.childNodes.forEach((val) => {
+            if (val instanceof HTMLDivElement) val.style.transform = scale;
+          });
+        }
+      });
+    }, 0);
+  }
+
+  private fillPlansFields() {
+    const bigZone = getExistentElementByClass(ClassList.weekendFieldsBig);
+    const smallZone = getExistentElementByClass(ClassList.weekendFieldsSmall);
+    const maxRoundSize = bigZone.clientWidth * PlanRoundConfig.maxSizeK;
+
+    this.planRounds.forEach((round, ind) => {
+      const timePer = round.planInfo.duration / (PlanRoundConfig.maxProcDur - PlanRoundConfig.minProcDur);
+      let width = (maxRoundSize - PlanRoundConfig.minRoundSize) * timePer + PlanRoundConfig.minRoundSize;
+      if (width < PlanRoundConfig.minRoundSize) width = PlanRoundConfig.minRoundSize;
+      if (width > maxRoundSize) width = maxRoundSize;
+
+      const roundDiv = this.addRoundListener(round, width);
+
+      (ind % 2 === 0 ? bigZone : smallZone).append(roundDiv);
+    });
+  }
+
+  private addRoundListener(round: PlanRound, width: number) {
+    const freeTime = round.planInfo.duration - (this.allPlansDist[round.planInfo._id] || 0);
+    const roundDiv = round.draw(width, freeTime);
+    roundDiv.addEventListener('click', () => {
+      this.editor.open(
+        round.planInfo.duration - freeTime,
+        round.planInfo.duration + Values.allWeekMinutes - this.fillWeekTime,
+        round.planInfo
+      );
+    });
+    const days = getExistentElementByClass(ClassList.planDaysContainer);
+    const bin = getExistentElementByClass(ClassList.planRemoveZone);
+    roundDiv.addEventListener('dragstart', function dragstart() {
+      setTimeout(() => {
+        this.classList.add(ClassList.planRoundDrag);
+        bin.classList.add(ClassList.planRemoveZoneDrag);
+        days.classList.add(ClassList.planDaysContainerDrag);
+        bin.style.transform = Values.scaleBig;
+      }, 50);
+    });
+    roundDiv.addEventListener('dragend', function dragend() {
+      this.classList.remove(ClassList.planRoundDrag);
+      bin.classList.remove(ClassList.planRemoveZoneDrag);
+      days.classList.remove(ClassList.planDaysContainerDrag);
+      bin.style.transform = Values.scaleNormal;
+    });
+    return roundDiv;
+  }
+
+  private fillDays() {
+    const daysArr = document.querySelectorAll(`.${ClassList.planDay}`);
+    daysArr.forEach((day, ind) => {
+      if (day.firstChild instanceof HTMLElement) {
+        const sortDay = this.sortAllPlans(this.weekDistribution[ind]);
+        const fillHours = this.fillLine(day.firstChild, sortDay, Values.allDayMinutes, true);
+        if (day.lastChild instanceof HTMLElement) {
+          day.lastChild.innerHTML = minToHour(Values.allDayMinutes - fillHours);
+        }
+      }
+    });
+  }
+
+  private fillLine(line: HTMLElement, data: Plan[], maxMins: number, isVertical: boolean) {
+    line.innerHTML = '';
+    const containerSize = isVertical ? line.clientHeight : line.clientWidth;
+    const k = containerSize / maxMins;
+    const fullMinutes = data.reduce((acc, val) => {
+      const section = document.createElement('div');
+      section.style.height = isVertical ? `${val.duration * k}px` : `100%`;
+      section.style.width = isVertical ? `100%` : `${val.duration * k}px`;
+      section.style.backgroundColor = val.color;
+      line.append(section);
+      return acc + val.duration;
+    }, 0);
+    return fullMinutes;
   }
 
   private fillWeekLine() {
     const weekLine = getExistentElementByClass(ClassList.weekLine);
-    weekLine.innerHTML = '';
-    const containerWidth = weekLine.clientWidth;
-    const sortWeek = this.sortAllPlans();
-    const k = containerWidth / Values.allWeekHours;
-    sortWeek.forEach((val) => {
-      const section = document.createElement('div');
-      section.style.width = `${val.duration * k}px`;
-      section.style.height = `100%`;
-      section.style.backgroundColor = val.color;
-      weekLine.append(section);
-    });
+    const sortWeek = this.sortAllPlans(this.allPlans);
+    const fillWeekTime = this.fillLine(weekLine, sortWeek, Values.allWeekMinutes, false);
+    this.fillWeekTime = fillWeekTime;
+
+    getExistentElementByClass(ClassList.weekTextValue).innerText = minToHour(fillWeekTime);
+    getExistentElementByClass(ClassList.planAddButtonValue).innerText = minToHour(Values.allWeekMinutes - fillWeekTime);
   }
 
   private async setWeekInfo() {
-    const weekInfo: WeekInfo = await Promise.all([this.getAllPlans(), this.getWeekDistribution()]);
+    const weekInfo: WeekInfo = await Promise.all([Api.getAllPlans(), Api.getWeekDistribution()]);
     [this.allPlans, this.weekDistribution] = weekInfo;
-  }
-
-  private async getAllPlans(): Promise<Plan[]> {
-    // it should be Api get Fn
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(testPlans);
-      }, 500);
-    });
-  }
-
-  private async getWeekDistribution(): Promise<Plan[][]> {
-    // it should be Api get Fn
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(testWeekDistribution);
-      }, 500);
-    });
   }
 
   protected async getFilledPage(): Promise<HTMLElement> {
     await this.setWeekInfo();
+
+    this.makePlans();
 
     const container = document.createElement('section');
     container.classList.add(ClassList.planContainer);
 
     container.append(
       this.layout.makeHomeButton(this.goTo),
-      this.layout.makeWeekText(this.getFilledHours()),
-      this.layout.makeWeekLine()
+      this.layout.makeWeekText(),
+      this.layout.makeWeekLine(),
+      this.layout.makePlanBody()
     );
     return container;
   }
 
   public async draw() {
-    const container = getExistentElementByClass(ClassList.mainContainer);
-    container.innerHTML = '';
-    const page = await this.getFilledPage();
-    container.append(page);
-    this.fillWeekLine();
+    try {
+      const container = getExistentElementByClass(ClassList.mainContainer);
+      await this.animatedFilledPageAppend(container);
+
+      this.fillWeekLine();
+      this.setPlanDistTime();
+      this.fillPlansFields();
+      this.fillDays();
+      this.showElements();
+      this.setAddButton();
+      this.addListenersToAllDays(this.addDayListener);
+    } catch (error) {
+      loginRedirect(error, this.goTo);
+    }
   }
 }
 

@@ -1,0 +1,38 @@
+.plan-round {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  border: none;
+  padding: 10px;
+  transition: 0.2s;
+  transform: scale(0);
+  opacity: 1;
+
+  &_drag {
+    opacity: 0.3;
+  }
+
+
+  & > span {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+
+  &__value {
+    position: absolute;
+    top: 75%;
+    transform: translateY(-50%);
+  }
+
+  &__blur {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    backdrop-filter: grayscale(75%);
+  }
+}

@@ -1,5 +1,15 @@
-const enum Attributes {
-  stroke = 'stroke',
+export const enum SetAttribute {
+  dayId = 'data-day-id',
+  planId = 'data-plan-id',
+  pickerColor = 'data-picker-color',
 }
 
-export default Attributes;
+export const enum GetAttribute {
+  dayId = 'dayId',
+  planId = 'planId',
+  pickerColor = 'pickerColor',
+}
+
+export const enum Attributes {
+  stroke = 'stroke',
+}

@@ -13,6 +13,12 @@
     align-items: center;
     justify-content: center;
     position: relative;
+    opacity: 1;
+    transition: .2s;
+
+    &_hide {
+      opacity: 0;
+    }
   }
 }
 

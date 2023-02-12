@@ -1,0 +1,125 @@
+.editor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 40px;
+  width: 90%;
+  height: 90%;
+  padding: 30px;
+  box-shadow: $shadow;
+  position: relative;
+  transition: background-color .3s;
+
+  &__tools {
+    width: 100%;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    flex-direction: row-reverse;
+    gap: 15px;
+    background-color: inherit;
+  }
+
+  &__button {
+    border: none;
+    padding: 0;
+    background: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    transition: .3s;
+
+    &:hover {
+      transform: scale(.95);
+    }
+  }
+
+  &__save-icon {
+    transition: .3s;
+  }
+
+  &__title {
+    text-align: center;
+    background: transparent;
+    border: none;
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: 500;
+    width: 50%;
+    color: inherit;
+
+
+    &::placeholder {
+      color: $font-medium;
+    }
+  }
+
+  &__text {
+    background: transparent;
+    border-radius: 15px;
+    margin-top: 30px;
+    width: 100%;
+    flex-grow: 1;
+    outline: none;
+    padding: 30px;
+    border: 1px solid;
+    resize: none;
+    color: inherit;
+
+    &::placeholder {
+      color: $font-medium;
+    }
+  }
+
+  &__color-picker {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    border-radius: 100%;
+    border: 1px solid;
+    cursor: pointer;
+    transition: .3s;
+
+    &:hover {
+      transform: scale(.95);
+    }
+  }
+
+  &__color-box {
+    position: absolute;
+    top: 80px;
+    right: 70px;
+    transition: .3s;
+    width: 200px;
+    height: 0px;
+    border-radius: 10px;
+    overflow: hidden;
+    opacity: 0;
+    visibility: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    backdrop-filter: blur(4px);
+    transform: translateY(-30px);
+    
+
+    &_active {
+      opacity: 1;
+      visibility: visible;
+      height: 200px;
+      transform: translateY(0px);
+    }
+  }
+
+  &__color-round {
+    width: 30px;
+    height: 30px;
+    margin: 5px;
+    border-radius: 100%;
+    border: 1px solid;
+    cursor: pointer;
+  }
+}

@@ -17,3 +17,19 @@ export interface LoginData {
   password: string;
   remember: boolean;
 }
+
+export type NewPlanData = Pick<PlanData, 'title' | 'text' | 'color' | 'duration'>;
+
+export interface PlanData {
+  _id: string;
+  title: string;
+  text: string;
+  color: string;
+  duration: number;
+}
+
+export interface PlanToDay {
+  dayOfWeek: number;
+  planId: string;
+  duration: number;
+}

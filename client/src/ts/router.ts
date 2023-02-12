@@ -1,18 +1,21 @@
 import RoutsList from './base/enums/routsList';
+import Popup from './components/popup';
 import HomePage from './pages/homePage/homePage';
 import LoginPage from './pages/loginPage/loginPage';
 import NotFoundPage from './pages/notFoundPage/notFoundPage';
-import Page from './pages/page';
+import PlanEditor from './pages/planPage/components/planEditor';
 import PlanPage from './pages/planPage/planPage';
 
 class Router {
-  static homePage: Page;
+  private editor: PlanEditor;
 
-  static planPage: Page;
+  static homePage: HomePage;
 
-  static notFoundPage: Page;
+  static planPage: PlanPage;
 
-  static loginPage: Page;
+  static notFoundPage: NotFoundPage;
+
+  static loginPage: LoginPage;
 
   // static accountPage: Page;
 
@@ -26,15 +29,15 @@ class Router {
 
   // static sundayPage: Page;
 
-  constructor() {
-    Router.homePage = new HomePage(this.goTo);
-    Router.planPage = new PlanPage(this.goTo);
-    Router.loginPage = new LoginPage(this.goTo);
-    Router.notFoundPage = new NotFoundPage(this.goTo);
+  constructor(popup: Popup) {
+    this.editor = new PlanEditor(popup, this.goTo);
+    Router.homePage = new HomePage(this.goTo, this.editor);
+    Router.planPage = new PlanPage(this.goTo, popup, this.editor);
+    Router.loginPage = new LoginPage(this.goTo, this.editor);
+    Router.notFoundPage = new NotFoundPage(this.goTo, this.editor);
   }
 
   private static async render(pathname: string) {
-    // console.log('render:', pathname);
     switch (pathname) {
       case RoutsList.planPage:
         await Router.planPage.draw();
@@ -51,7 +54,7 @@ class Router {
     }
   }
 
-  public goTo(pageName: RoutsList) {
+  public goTo(pageName: RoutsList | string) {
     window.history.pushState({ pageName }, pageName, pageName);
     Router.render(pageName);
     window.scrollTo(0, 0);

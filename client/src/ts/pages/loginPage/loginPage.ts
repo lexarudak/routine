@@ -13,6 +13,7 @@ import RoutsList from '../../base/enums/routsList';
 import LoginLayout from './components/loginLayout';
 import Api from '../../api';
 import ErrorsList from '../../base/enums/errorsList';
+import PlanEditor from '../planPage/components/planEditor';
 
 class LoginPage extends Page {
   status: InnerText.signIn | InnerText.signUp;
@@ -31,8 +32,8 @@ class LoginPage extends Page {
 
   signButton: HTMLButtonElement;
 
-  constructor(goTo: GoToFn) {
-    super(PageList.loginPage, goTo);
+  constructor(goTo: GoToFn, editor: PlanEditor) {
+    super(PageList.loginPage, goTo, editor);
     this.layout = new LoginLayout();
     this.status = InnerText.signIn;
     this.nameInput = new NameInput(Values.namePlaceholder);

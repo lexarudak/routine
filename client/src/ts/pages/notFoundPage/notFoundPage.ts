@@ -6,10 +6,11 @@ import PagesList from '../../base/enums/pageList';
 import RoutsList from '../../base/enums/routsList';
 import { GoToFn } from '../../base/types';
 import Page from '../page';
+import PlanEditor from '../planPage/components/planEditor';
 
 class NotFoundPage extends Page {
-  constructor(goToFn: GoToFn) {
-    super(PagesList.notFound, goToFn);
+  constructor(goToFn: GoToFn, editor: PlanEditor) {
+    super(PagesList.notFound, goToFn, editor);
   }
 
   protected async getFilledPage(): Promise<HTMLElement> {

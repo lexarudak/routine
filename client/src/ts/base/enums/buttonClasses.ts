@@ -3,6 +3,7 @@ const enum ButtonClasses {
   main = 'button_main',
   signIn = 'button_signIn',
   navButton = 'nav-button',
+  roundButton = 'round-button',
 }
 
 export default ButtonClasses;
