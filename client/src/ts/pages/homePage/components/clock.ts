@@ -52,7 +52,7 @@ class Clock {
 
       hr.style.transform = `rotateZ(${hours + minutes / hourCount}deg)`;
       min.style.transform = `rotateZ(${minutes}deg)`;
-      console.log(hours / hourDeg, minutes / deg);
+      // console.log(hours / hourDeg, minutes / deg);
     }, 1000);
   }
 }

@@ -6,9 +6,11 @@ const enum ClassList {
 
 const enum HomePageClassList {
   section = 'section',
+  canvas = 'canvas',
   thought = 'thought',
   thoughtTitle = 'thought__title',
   thoughtAdd = 'thought__add',
+  thoughtItem = 'thought__item',
   thoughtAddBtn = 'thought__add-btn',
   thoughtCreateBtn = 'thought__create-btn',
   thoughtInput = 'thought__input',
@@ -25,6 +27,7 @@ const enum HomePageClassList {
   minutesCircle = 'minutes__circle',
   dayInfo = 'day-info',
   dayIcon = 'day-info__icon',
+  none = 'none',
 }
 
 export { ClassList, HomePageClassList };

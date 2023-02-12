@@ -29,4 +29,9 @@ function createNewElement<T extends HTMLElement>(tag: string, className: string)
   return <T>element;
 }
 
-export { isHTMLElement, getExistentElement, getExistentElementByClass, createElement, createNewElement };
+const client = {
+  width: document.documentElement.clientWidth,
+  height: document.documentElement.clientHeight,
+};
+
+export { isHTMLElement, getExistentElement, getExistentElementByClass, createElement, createNewElement, client };

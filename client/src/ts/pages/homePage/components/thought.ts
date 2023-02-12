@@ -1,56 +1,47 @@
-import { createElement, createNewElement, isHTMLElement, getExistentElement } from '../../../base/helpers';
+import { createElement, createNewElement, isHTMLElement } from '../../../base/helpers';
 import { HomePageClassList } from '../../../base/enums/classList';
 
 class Thought {
   thoughtText: string;
 
-  constructor() {
-    this.thoughtText = '';
+  constructor(text: string) {
+    this.thoughtText = text;
   }
 
   createThought(thoughtText: string, e: Event) {
-    if (!thoughtText) return;
-    if (!isHTMLElement(e.target)) return;
-    if (e.target.closest('.thought__main')) {
-      const newThought = this.draw(thoughtText);
-      getExistentElement('.thought').append(newThought);
-    }
-    console.log(thoughtText);
+    console.log(thoughtText, e);
   }
 
-  draw(title = '') {
-    const thoughtAdd = createElement('div', HomePageClassList.thoughtAdd);
+  openCloseThought(e: Event, thoughtAdd: HTMLElement) {
+    if (!isHTMLElement(e.target)) return;
+    if (e.target.closest('.open')) {
+      thoughtAdd.classList.remove('open');
+    } else {
+      thoughtAdd.classList.add('open');
+    }
+  }
+
+  draw(elClass: string) {
+    const thoughtAdd = createElement('div', elClass);
     const thoughtAddBtn = createElement('div', HomePageClassList.thoughtAddBtn);
+    thoughtAdd.classList.add('none');
 
     const thoughtInput = createNewElement<HTMLInputElement>('input', HomePageClassList.thoughtInput);
-    thoughtInput.value = title;
+    thoughtInput.value = this.thoughtText;
     thoughtInput.addEventListener('blur', () => {
       if (!thoughtInput.value) return;
       this.thoughtText = thoughtInput.value;
     });
 
     const thoughtCreate = createNewElement('div', HomePageClassList.thoughtCreateBtn);
+
     thoughtCreate.addEventListener('click', (e) => {
       this.createThought(this.thoughtText, e);
-      thoughtInput.value = '';
     });
+
+    thoughtAddBtn.addEventListener('click', (e) => this.openCloseThought(e, thoughtAdd));
 
     thoughtAdd.append(thoughtInput, thoughtCreate, thoughtAddBtn);
-    const popup = createNewElement('div', 'blur');
-
-    thoughtAddBtn.addEventListener('click', (e) => {
-      if (!isHTMLElement(e.target)) return;
-      if (e.target.closest('.open')) {
-        thoughtAdd.classList.remove('open');
-        // if (!document.querySelector('.open'))
-        document.body.removeChild(popup);
-      } else {
-        thoughtAdd.classList.add('open');
-        // if (!document.querySelector('.blur'))
-        document.body.append(popup);
-      }
-    });
-
     return thoughtAdd;
   }
 }

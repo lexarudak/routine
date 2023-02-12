@@ -36,7 +36,7 @@ section {
   width: 730px;
   height: 730px;
   position: absolute;
-  right: 200px;
+  right: 260px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -191,4 +191,10 @@ section {
   &__month {
     font-size: 22px;
   }
+}
+
+canvas {
+  position: absolute;
+  top: 0;
+  bottom: 0;
 }
