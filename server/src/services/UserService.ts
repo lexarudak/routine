@@ -24,7 +24,7 @@ class UserService extends Service<Type.TUser> {
   }
 
   async getById(id: Types.ObjectId) {
-    return await this.model.findById(id) as Type.TDBUser;
+    return (await this.model.findById(id)) as Type.TDBUser;
   }
 
   async create(item: Type.TUser) {
@@ -68,7 +68,7 @@ class UserService extends Service<Type.TUser> {
       confirmationDay: item.confirmationDay,
       confirmationTime: item.confirmationTime,
     };
-    return await this.model.findByIdAndUpdate(userId, itemForUpdate, { new: true }) as Type.TDBUser;
+    return (await this.model.findByIdAndUpdate(userId, itemForUpdate, { new: true })) as Type.TDBUser;
   }
 
   async delete(id: Types.ObjectId) {

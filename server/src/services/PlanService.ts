@@ -36,13 +36,13 @@ class PlanService extends Service<Type.TPlan> {
       color: item.color,
       duration: item.duration,
     };
-    return await this.model.findByIdAndUpdate(item._id, itemForUpdate, { new: true }).where({ userId: userId }) as Type.TDBPlan;
+    return (await this.model.findByIdAndUpdate(item._id, itemForUpdate, { new: true }).where({ userId: userId })) as Type.TDBPlan;
   }
 
   async delete(userId: Types.ObjectId, id: Types.ObjectId) {
     const services = [StatisticsService, DayDistributionService, WeekDistributionService];
     await Promise.all(services.map((service) => service.deleteByParameters({ userId, planId: new Types.ObjectId(id) })));
-    return await this.model.findByIdAndDelete(id).where({ userId: userId }) as Type.TDBPlan;
+    return (await this.model.findByIdAndDelete(id).where({ userId: userId })) as Type.TDBPlan;
   }
 }
 
