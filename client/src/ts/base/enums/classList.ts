@@ -1,5 +1,6 @@
 const enum ClassList {
   mainContainer = 'main__container',
+  mainContainerHide = 'main__container_hide',
   banner = 'banner',
   // 404
   page404text = 'page-404__text',
@@ -40,7 +41,9 @@ const enum ClassList {
   planRemoveZoneDrag = 'plan__remove_drag',
   planRemoveZoneOver = 'plan__remove_over',
   planDaysContainer = 'plan__days',
+  planDaysContainerDrag = 'plan__days_drag',
   planDay = 'plan__day',
+  planDayOver = 'plan__day_over',
   planDayLine = 'plan__day-line',
   planDayName = 'plan__day-name',
   planDayHours = 'plan__day-hours',

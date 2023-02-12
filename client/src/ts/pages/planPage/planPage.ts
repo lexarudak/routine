@@ -3,7 +3,7 @@ import ClassList from '../../base/enums/classList';
 import PagesList from '../../base/enums/pageList';
 import PlanRoundConfig from '../../components/planRoundConfig';
 import Values from '../../base/enums/values';
-import { getExistentElementByClass, minToHour } from '../../base/helpers';
+import { getExistentElementByClass, loginRedirect, minToHour } from '../../base/helpers';
 import { Plan } from '../../base/interface';
 import { GoToFn, PlanDis, WeekInfo } from '../../base/types';
 import PlanRound from '../../components/planRound';
@@ -13,7 +13,8 @@ import Popup from '../../components/popup';
 import ErrorsList from '../../base/enums/errorsList';
 import PlanEditor from './components/planEditor';
 import Api from '../../api';
-import RoutsList from '../../base/enums/routsList';
+import { GetAttribute } from '../../base/enums/attributes';
+import TimeSlider from './components/timeSlider';
 
 class PlanPage extends Page {
   layout: PlanLayout;
@@ -39,15 +40,96 @@ class PlanPage extends Page {
     this.weekDistribution = [[]];
     this.layout = new PlanLayout(goTo);
     this.fillWeekTime = 0;
+    this.addDayListener = this.addDayListener.bind(this);
   }
 
-  private isFreeTime() {
+  private isFreeTimeInWeek() {
     return Values.allWeekMinutes - this.fillWeekTime >= Values.minPlanDuration;
+  }
+
+  private ifFreeTimeInDay(minutes: number) {
+    console.log(minutes);
+    return minutes >= Values.allDayMinutes - Values.minPlanDuration;
+  }
+
+  private getFreeDayMinutes(dayId: string) {
+    const dayPlans = this.weekDistribution[Number(dayId)];
+    const filledMinutes = dayPlans.reduce((acc, plan) => {
+      return acc + plan.duration;
+    }, 0);
+    return Values.allDayMinutes - filledMinutes;
+  }
+
+  private ifFreeTimeInPlan(planId: string, planDur: number) {
+    console.log(planDur, this.allPlansDist[planId]);
+    return planDur - (this.allPlansDist[planId] || 0) >= Values.minPlanDuration;
+  }
+
+  private getPlanDuration(planId: string) {
+    return this.allPlans.filter((plan) => plan._id === planId)[0].duration;
+  }
+
+  private getCurrentDay(e: Event) {
+    const { currentTarget } = e;
+    if (!(currentTarget instanceof HTMLElement)) throw new Error(ErrorsList.elementNotFound);
+    return currentTarget;
+  }
+
+  private getDragId() {
+    const id = getExistentElementByClass(ClassList.planRoundDrag).dataset[GetAttribute.planId];
+    if (id) return id;
+    throw new Error(ErrorsList.noId);
+  }
+
+  private makeSliderForDay() {
+    const slider = new TimeSlider();
+    return slider.draw();
+  }
+
+  private addListenersToAllDays(listener: (day: HTMLElement) => void) {
+    const allDays = document.querySelectorAll(`.${ClassList.planDay}`);
+    allDays.forEach((day) => {
+      if (day instanceof HTMLElement) listener(day);
+    });
+  }
+
+  private addDayListener(day: HTMLElement) {
+    day.addEventListener('dragover', function enter(e) {
+      e.preventDefault();
+      this.classList.add(ClassList.planDayOver);
+    });
+    day.addEventListener('dragleave', function leave() {
+      this.classList.remove(ClassList.planDayOver);
+    });
+    day.addEventListener('drop', async (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const currentDay = this.getCurrentDay(e);
+      currentDay.classList.remove(ClassList.planDayOver);
+
+      const dayId = currentDay.dataset[GetAttribute.dayId];
+      const planId = this.getDragId();
+      if (!dayId || !planId) throw new Error(ErrorsList.noId);
+      const planDur = this.getPlanDuration(planId);
+      const freeDayMinutes = this.getFreeDayMinutes(dayId);
+
+      this.popup.editorMode();
+      if (!this.ifFreeTimeInDay(freeDayMinutes)) {
+        this.popup.open(this.layout.makeBanner(ErrorsList.freeYourTime));
+      } else if (!this.ifFreeTimeInPlan(planId, planDur)) {
+        this.popup.open(this.layout.makeBanner(ErrorsList.thisPlanIsDist));
+      } else {
+        this.popup.open(this.makeSliderForDay());
+      }
+      // this.ifFreeTimeInPlan();
+
+      console.log(planId);
+    });
   }
 
   private setAddButton() {
     getExistentElementByClass(ClassList.planAddButton).addEventListener('click', () => {
-      if (this.isFreeTime()) {
+      if (this.isFreeTimeInWeek()) {
         this.editor.open(Values.minPlanDuration, Values.allWeekMinutes - this.fillWeekTime);
       } else {
         this.popup.open(this.layout.makeBanner(ErrorsList.freeYourTime));
@@ -67,19 +149,20 @@ class PlanPage extends Page {
   }
 
   private setPlanDistTime() {
+    console.log('s');
     const flatArr = this.weekDistribution.flat();
-    this.allPlansDist = flatArr.reduce((acc, val) => {
-      if (acc[val._id]) {
-        acc[val._id] += val.duration;
+    this.allPlansDist = flatArr.reduce((acc, plan) => {
+      if (acc[plan._id]) {
+        acc[plan._id] += plan.duration;
       } else {
-        acc[val._id] = val.duration;
+        acc[plan._id] = plan.duration;
       }
       return acc;
     }, <PlanDis>{});
   }
 
   private showElements() {
-    const scale = 'scale(1)';
+    const scale = Values.scaleNormal;
     setTimeout(() => {
       getExistentElementByClass(ClassList.planAddButton).style.transform = scale;
       getExistentElementByClass(ClassList.planRemoveZone).style.transform = scale;
@@ -119,7 +202,7 @@ class PlanPage extends Page {
   }
 
   private addRoundListener(round: PlanRound, width: number) {
-    const freeTime = round.planInfo.duration - this.allPlansDist[round.planInfo._id];
+    const freeTime = round.planInfo.duration - (this.allPlansDist[round.planInfo._id] || 0);
     const roundDiv = round.draw(width, freeTime);
     roundDiv.addEventListener('click', () => {
       this.editor.open(
@@ -128,18 +211,21 @@ class PlanPage extends Page {
         round.planInfo
       );
     });
+    const days = getExistentElementByClass(ClassList.planDaysContainer);
     const bin = getExistentElementByClass(ClassList.planRemoveZone);
     roundDiv.addEventListener('dragstart', function dragstart() {
       setTimeout(() => {
         this.classList.add(ClassList.planRoundDrag);
         bin.classList.add(ClassList.planRemoveZoneDrag);
-        bin.style.transform = 'scale(2)';
+        days.classList.add(ClassList.planDaysContainerDrag);
+        bin.style.transform = Values.scaleBig;
       }, 50);
     });
     roundDiv.addEventListener('dragend', function dragend() {
       this.classList.remove(ClassList.planRoundDrag);
       bin.classList.remove(ClassList.planRemoveZoneDrag);
-      bin.style.transform = 'scale(1)';
+      days.classList.remove(ClassList.planDaysContainerDrag);
+      bin.style.transform = Values.scaleNormal;
     });
     return roundDiv;
   }
@@ -168,6 +254,7 @@ class PlanPage extends Page {
       line.append(section);
       return acc + val.duration;
     }, 0);
+    console.log(fullMinutes);
     return fullMinutes;
   }
 
@@ -206,22 +293,17 @@ class PlanPage extends Page {
   public async draw() {
     try {
       const container = getExistentElementByClass(ClassList.mainContainer);
-      container.innerHTML = '';
-      const page = await this.getFilledPage();
+      await this.animatedFilledPageAppend(container);
 
-      container.append(page);
       this.fillWeekLine();
       this.setPlanDistTime();
       this.fillPlansFields();
       this.fillDays();
       this.showElements();
       this.setAddButton();
+      this.addListenersToAllDays(this.addDayListener);
     } catch (error) {
-      if (error instanceof Error) {
-        if (error.message === ErrorsList.needLogin) {
-          this.goTo(RoutsList.loginPage);
-        }
-      }
+      loginRedirect(error, this.goTo);
     }
   }
 }

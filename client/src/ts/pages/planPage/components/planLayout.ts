@@ -7,9 +7,8 @@ import InnerText from '../../../base/enums/innerText';
 import RoutsList from '../../../base/enums/routsList';
 import Values from '../../../base/enums/values';
 import { GoToFn } from '../../../base/types';
-import { getExistentElementByClass } from '../../../base/helpers';
+import { getExistentElementByClass, loginRedirect } from '../../../base/helpers';
 import Api from '../../../api';
-import ErrorsList from '../../../base/enums/errorsList';
 
 class PlanLayout {
   goTo: GoToFn;
@@ -101,25 +100,17 @@ class PlanLayout {
       this.classList.remove(ClassList.planRemoveZoneOver);
     });
     remove.addEventListener('drop', async (e) => {
-      console.log('drop');
       e.stopPropagation();
       e.preventDefault();
       const { currentTarget } = e;
       if (currentTarget instanceof HTMLElement) currentTarget.classList.remove(ClassList.planRemoveZoneOver);
-      const round = getExistentElementByClass(ClassList.planRoundDrag);
-      const id = round.dataset[GetAttribute.planId];
+      const id = getExistentElementByClass(ClassList.planRoundDrag).dataset[GetAttribute.planId];
       if (id) {
         try {
-          console.log('try');
           await Api.deletePlan(id);
           this.goTo(RoutsList.planPage);
-          console.log('try 2');
         } catch (error) {
-          if (error instanceof Error) {
-            if (error.message === ErrorsList.needLogin) {
-              this.goTo(RoutsList.loginPage);
-            }
-          }
+          loginRedirect(error, this.goTo);
         }
       }
     });

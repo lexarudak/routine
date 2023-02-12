@@ -23,10 +23,12 @@ class Api {
   }
 
   public static async createNewPlan(userData: NewPlanData) {
+    console.log('create', userData);
     return this.post(userData, Path.plans);
   }
 
   public static async editPlan(userData: PlanData) {
+    console.log('edit', userData);
     return this.post(userData, Path.plans, Path.update);
   }
 

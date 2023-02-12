@@ -1,6 +1,7 @@
 const enum ErrorsList {
   elementNotFound = 'Ups! This element is not found!',
   elementIsNotInput = 'Ups! This element is not input!',
+  elementIsNotButton = 'Ups! This element is not button!',
   defaultInputError = 'Wrong value',
   wrongName = 'from 2 to 50 characters',
   wrongPass = 'wrong password',
@@ -17,7 +18,9 @@ const enum ErrorsList {
   cantBeEmpty = "Can't be empty!",
   wrongElementName = 'Wrong element name',
   freeYourTime = 'Free up your time before adding a plan',
+  thisPlanIsDist = 'This plan is fully distributed',
   noLogin = 'no login',
+  noId = 'no id',
 }
 
 export default ErrorsList;

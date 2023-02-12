@@ -23,11 +23,17 @@ abstract class Page {
     return emptyPage;
   }
 
+  protected async animatedFilledPageAppend(container: HTMLElement) {
+    container.classList.add(ClassList.mainContainerHide);
+    const page = await this.getFilledPage();
+    container.innerHTML = '';
+    container.classList.remove(ClassList.mainContainerHide);
+    container.append(page);
+  }
+
   public async draw() {
     const container = getExistentElementByClass(ClassList.mainContainer);
-    container.innerHTML = '';
-    const page = await this.getFilledPage();
-    container.append(page);
+    await this.animatedFilledPageAppend(container);
   }
 }
 

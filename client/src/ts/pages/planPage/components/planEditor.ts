@@ -3,13 +3,7 @@
 import { GetAttribute, SetAttribute } from '../../../base/enums/attributes';
 import ClassList from '../../../base/enums/classList';
 import ErrorsList from '../../../base/enums/errorsList';
-import {
-  buttonOff,
-  buttonOn,
-  getExistentElementByClass,
-  getExistentInputElement,
-  makeElement,
-} from '../../../base/helpers';
+import { buttonOff, getExistentElementByClass, getExistentInputElement, makeElement } from '../../../base/helpers';
 import { Plan } from '../../../base/interface';
 import colorsAndFonts from '../../../components/colorsAndFonts';
 import Popup from '../../../components/popup';
@@ -53,12 +47,12 @@ class PlanEditor {
     if (plan) {
       this.mode = EditorMode.editPlan;
       this.plan = { ...plan };
-      this.popup.editorMode(this.sendPlan);
+      this.popup.editorMode();
       this.loadToLocalStorage();
     } else {
       console.log('new plan mode');
       this.mode = EditorMode.newPlan;
-      this.popup.newPlanMode(this.saveToLocalStorage);
+      this.popup.editorMode(this.saveToLocalStorage);
       this.loadToLocalStorage();
     }
     this.drawEditor();
@@ -180,8 +174,12 @@ class PlanEditor {
     container.classList.add(ClassList.editorButton);
     container.innerHTML = savePlanIcon(secColor, ClassList.editorSaveIcon);
 
-    container.addEventListener('click', async () => {
-      buttonOff(container);
+    container.addEventListener('click', async (e) => {
+      const { currentTarget } = e;
+      if (!(currentTarget instanceof HTMLButtonElement)) throw new Error(ErrorsList.elementIsNotButton);
+      buttonOff(currentTarget);
+      console.log(currentTarget);
+
       try {
         await this.sendPlan();
         this.goTo(RoutsList.planPage);
@@ -193,7 +191,6 @@ class PlanEditor {
           }
         }
       } finally {
-        buttonOn(container);
         this.popup.easyClose();
       }
     });

@@ -1,5 +1,7 @@
 import ClassList from './enums/classList';
 import ErrorsList from './enums/errorsList';
+import RoutsList from './enums/routsList';
+import { GoToFn } from './types';
 
 function isHTMLElement<T>(el: T | HTMLElement): el is HTMLElement {
   return el instanceof EventTarget;
@@ -75,6 +77,14 @@ function makeElement(classList: ClassList, element?: string) {
   return el;
 }
 
+function loginRedirect(error: unknown, goTo: GoToFn) {
+  if (error instanceof Error) {
+    if (error.message === ErrorsList.needLogin) {
+      goTo(RoutsList.loginPage);
+    }
+  }
+}
+
 export {
   isHTMLElement,
   getExistentElement,
@@ -88,4 +98,5 @@ export {
   getHours,
   getMinutes,
   getEventTarget,
+  loginRedirect,
 };

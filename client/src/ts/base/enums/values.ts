@@ -13,6 +13,9 @@ const enum Values {
   hoursInputId = 'hours-input-id',
   minutesInputId = 'minutes-input-id',
   newPlanSave = 'new-plan-save',
+  scaleNormal = 'scale(1)',
+  scaleMedium = 'scale(1.2)',
+  scaleBig = 'scale(1.45)',
 }
 
 export default Values;

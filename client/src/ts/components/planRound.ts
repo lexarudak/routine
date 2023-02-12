@@ -26,7 +26,7 @@ class PlanRound {
   }
 
   private getBlurHeight(width: number, freeTime: number) {
-    const percent = freeTime / this.planInfo.duration;
+    const percent = 1 - freeTime / this.planInfo.duration;
     return `${percent * width}px`;
   }
 
