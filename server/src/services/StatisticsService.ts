@@ -36,7 +36,7 @@ class StatisticsService extends Service<Type.TStatistics> {
       const entireDeviation = statisticsByPlan.reduce((deviation, statistic) => deviation + statistic.deviation, 0);
       const averageDeviation = Math.round(entireDeviation / numberOfConfirmedDays);
 
-      const averageStatistic: Type.TStatisticsDataItem = Object.assign({}, plan.toObject(), { deviation: averageDeviation });
+      const averageStatistic: Type.TStatisticsDataItem = Object.assign({}, plan, { deviation: averageDeviation });
       result.push(averageStatistic);
     }
   }

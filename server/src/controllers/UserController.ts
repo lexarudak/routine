@@ -61,23 +61,13 @@ class UserController extends Controller {
   }
 
   async profile(req: Request, res: Response) {
-    try {
-      const userId = await this.getUserId(req);
-      const user = await UserService.getById(userId);
-      res.json(user);
-    } catch (error) {
-      this.error(res, error);
-    }
+    const process = async (userId: Types.ObjectId) => await UserService.getById(userId);
+    this.handleWithAuthorization<Type.TDBUser>(req, res, process);
   }
 
   async update(req: Request, res: Response) {
-    try {
-      const userId = await this.getUserId(req);
-      const updatedUser = await UserService.update(userId, req.body);
-      res.json(updatedUser);
-    } catch (error) {
-      this.error(res, error);
-    }
+    const process = async (userId: Types.ObjectId) => await UserService.update(userId, req.body);
+    this.handleWithAuthorization<Type.TDBUser>(req, res, process);
   }
 
   private setJwtToken(res: Response, token: string, remember = false) {

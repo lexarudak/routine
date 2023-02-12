@@ -14,7 +14,7 @@ class ThoughtService extends Service<Type.TThought> {
   }
 
   async getById(userId: Types.ObjectId, id: Types.ObjectId) {
-    return await this.model.findById(id).where({ userId: userId });
+    return (await this.model.findById(id).where({ userId: userId })) as Type.TDBThought;
   }
 
   async create(userId: Types.ObjectId, item: Type.TThought) {
@@ -24,7 +24,7 @@ class ThoughtService extends Service<Type.TThought> {
 
   async update(userId: Types.ObjectId, item: Type.TDBThought) {
     const itemForUpdate: Partial<Type.TDBThought> = { title: item.title };
-    return await this.model.findByIdAndUpdate(item._id, itemForUpdate, { new: true }).where({ userId: userId });
+    return (await this.model.findByIdAndUpdate(item._id, itemForUpdate, { new: true }).where({ userId: userId })) as Type.TDBThought;
   }
 
   async convertToPlan(userId: Types.ObjectId, id: Types.ObjectId, item: Type.TPlan) {
@@ -44,7 +44,7 @@ class ThoughtService extends Service<Type.TThought> {
   }
 
   async delete(userId: Types.ObjectId, id: Types.ObjectId) {
-    return await this.model.findByIdAndDelete(id).where({ userId: userId });
+    return (await this.model.findByIdAndDelete(id).where({ userId: userId })) as Type.TDBThought;
   }
 }
 

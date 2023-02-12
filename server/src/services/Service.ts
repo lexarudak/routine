@@ -28,11 +28,11 @@ export default abstract class Service<T> {
 
   protected checkPeriod(from: number, to: number) {
     switch (true) {
-      case (from < 0 || from > 1440):
+      case from < 0 || from > 1440:
         throw new ClientError(`${Enum.ErrorMessages.e2002} "from"`);
-      case (to < 0 || to > 1440):
+      case to < 0 || to > 1440:
         throw new ClientError(`${Enum.ErrorMessages.e2002} "to"`);
-      case (from > to):
+      case from > to:
         throw new ClientError(Enum.ErrorMessages.e2003);
       default:
         break;

@@ -31,7 +31,7 @@ class WeekDistributionService extends Service<Type.TWeekDistribution> {
     this.checkDuration(item.duration);
 
     const itemForCreate = Object.assign({}, item, { userId: userId });
-    return await this.model.create(itemForCreate);
+    return await this.model.create(itemForCreate) as Type.TWeekDistribution;
   }
 
   async adjustPlan(userId: Types.ObjectId, item: Type.TDBWeekDistribution) {
@@ -54,12 +54,14 @@ class WeekDistributionService extends Service<Type.TWeekDistribution> {
     }
 
     const duration = distribution.duration + item.duration;
+    const id = distribution._id;
+
     if (duration) {
       this.checkDuration(item.duration);
       const itemForUpdate: Partial<Type.TDBWeekDistribution> = { duration: duration };
-      return await this.model.findByIdAndUpdate(distribution._id, itemForUpdate, { new: true }).where({ userId: userId });
+      return await this.model.findByIdAndUpdate(id, itemForUpdate, { new: true }).where({ userId: userId }) as Type.TWeekDistribution;
     } else {
-      return await this.model.findByIdAndDelete(distribution._id).where({ userId: userId });
+      return await this.model.findByIdAndDelete(id).where({ userId: userId }) as Type.TWeekDistribution;
     }
   }
 }
