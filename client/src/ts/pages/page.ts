@@ -1,6 +1,6 @@
 import PagesList from '../base/enums/pageList';
 import { getExistentElementByClass } from '../base/helpers';
-import ClassList from '../base/enums/classList';
+import { ClassList } from '../base/enums/classList';
 import { GoToFn } from '../base/types';
 import PlanEditor from './planPage/components/planEditor';
 

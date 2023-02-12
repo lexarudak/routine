@@ -1,4 +1,4 @@
-import ClassList from '../../../base/enums/classList';
+import { ClassList } from '../../../base/enums/classList';
 import ErrorsList from '../../../base/enums/errorsList';
 import InputType from '../../../base/enums/inputTypes';
 

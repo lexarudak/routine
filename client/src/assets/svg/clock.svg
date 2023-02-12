@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48"
+ xmlns:xlink="http://www.w3.org/1999/xlink">
+ <g>
+  <text x="22.685" y="1.989"  fill="#909090" font-weight="600" font-size="2.801px" font-family="Montserrat SemiBold">12</text>
+  <g transform="matrix(0.866025 -0.5 0.5 0.866025 55.3676 -21.7586)">
+   <text x="-51.067" y="1.927"  fill="#909090" font-weight="600" font-size="2.801px" font-family="Montserrat SemiBold">11</text>
+  </g>
+  <g transform="matrix(-0.5 0.866025 -0.866025 -0.5 19.6761 79.29)">
+   <text x="-50.951" y="1.927"  fill="#909090" font-weight="600" font-size="2.801px" font-family="Montserrat SemiBold">4</text>
+  </g>
+  <g transform="matrix(-7.95475E-14 1 -1 -7.95475E-14 47.9063 74.0343)">
+   <text x="-50.815" y="1.927"  fill="#909090" font-weight="600" font-size="2.801px" font-family="Montserrat SemiBold">3</text>
+  </g>
+  <g transform="matrix(0.5 0.866025 -0.866025 0.5 69.7265 55.3676)">
+   <text x="-50.815" y="1.927"  fill="#909090" font-weight="600" font-size="2.801px" font-family="Montserrat SemiBold">2</text>
+  </g>
+  <g transform="matrix(0.866025 0.5 -0.5 0.866025 79.29 28.2917)">
+   <text x="-50.534" y="1.927"  fill="#909090" font-weight="600" font-size="2.801px" font-family="Montserrat SemiBold">1</text>
+  </g>
+  <circle fill="#909090" cx="18.138" cy="1.973" r="0.334"/>
+  <g id="_2507254401248">
+   <g transform="matrix(0.5 -0.866025 0.866025 0.5 28.2917 -31.3222)">
+    <text x="-51.476" y="1.927"  fill="#909090" font-weight="600" font-size="2.801px" font-family="Montserrat SemiBold">10</text>
+   </g>
+   <g transform="matrix(2.64788E-14 -1 1 2.64788E-14 0.0615568 -26.0665)">
+    <text x="-50.878" y="1.927"  fill="#909090" font-weight="600" font-size="2.801px" font-family="Montserrat SemiBold">9</text>
+   </g>
+   <g transform="matrix(-0.5 -0.866025 0.866025 -0.5 -21.7586 -7.3998)">
+    <text x="-50.913" y="1.927"  fill="#909090" font-weight="600" font-size="2.801px" font-family="Montserrat SemiBold">8</text>
+   </g>
+   <circle fill="#909090" transform="matrix(0.689157 -0.397885 0.397885 0.689157 7.91609 7.84485)" r="0.42"/>
+   <circle fill="#909090" transform="matrix(0.397885 -0.689157 0.689157 0.397885 1.99925 18.041)" r="0.42"/>
+   <circle fill="#909090" transform="matrix(2.10387E-14 -0.79577 0.79577 2.10387E-14 1.97317 29.8295)" r="0.42"/>
+  </g>
+  <g id="_2507254399328">
+   <g transform="matrix(-0.866025 -0.5 0.5 -0.866025 -31.3222 19.6761)">
+    <text x="-50.852" y="1.927"  fill="#909090" font-weight="600" font-size="2.801px" font-family="Montserrat SemiBold">7</text>
+   </g>
+   <g transform="matrix(-1 -0 -0 -1 -26.0665 47.9063)">
+    <text x="-50.878" y="1.927"  fill="#909090" font-weight="600" font-size="2.801px" font-family="Montserrat SemiBold">6</text>
+   </g>
+   <g transform="matrix(-0.866025 0.5 -0.5 -0.866025 -7.3998 69.7265)">
+    <text x="-50.818" y="1.927"  fill="#909090" font-weight="600" font-size="2.801px" font-family="Montserrat SemiBold">5</text>
+   </g>
+   <circle fill="#909090" transform="matrix(-0.397885 -0.689157 0.689157 -0.397885 7.84485 40.0517)" r="0.42"/>
+   <circle fill="#909090" transform="matrix(-0.689157 -0.397885 0.397885 -0.689157 18.041 45.9686)" r="0.42"/>
+   <circle fill="#909090" cx="29.83" cy="45.995" r="0.334"/>
+   <circle fill="#909090" transform="matrix(-0.689157 0.397885 -0.397885 -0.689157 40.0517 40.123)" r="0.42"/>
+  </g>
+  <circle fill="#909090" transform="matrix(-0.397885 0.689157 -0.689157 -0.397885 45.9686 29.9268)" r="0.42"/>
+  <circle fill="#909090" transform="matrix(-6.31162E-14 0.79577 -0.79577 -6.31162E-14 45.9946 18.1383)" r="0.42"/>
+  <circle fill="#909090" transform="matrix(0.397885 0.689157 -0.689157 0.397885 40.123 7.91609)" r="0.42"/>
+  <circle fill="#909090" transform="matrix(0.689157 0.397885 -0.397885 0.689157 29.9268 1.99925)" r="0.42"/>
+ </g>
+</svg>

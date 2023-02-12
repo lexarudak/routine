@@ -9,3 +9,7 @@ export const enum GetAttribute {
   planId = 'planId',
   pickerColor = 'pickerColor',
 }
+
+export const enum Attributes {
+  stroke = 'stroke',
+}

@@ -1,5 +1,5 @@
 import ButtonClasses from '../../../base/enums/buttonClasses';
-import ClassList from '../../../base/enums/classList';
+import { ClassList } from '../../../base/enums/classList';
 import InnerText from '../../../base/enums/innerText';
 import Values from '../../../base/enums/values';
 
