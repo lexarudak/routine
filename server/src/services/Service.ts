@@ -1,13 +1,17 @@
-import { Types } from 'mongoose';
+import { Model } from 'mongoose';
 
 import { ClientError } from '../common/errors';
 import * as Enum from '../common/enums';
 
-export default class Service {
-  protected checkId(id: Types.ObjectId) {
-    if (!id) {
-      throw new ClientError(Enum.ErrorMessages.e2001);
-    }
+export default abstract class Service<T> {
+  protected abstract model: Model<T>;
+
+  public async getByParameters(parameters: Partial<T>) {
+    return await this.model.find(parameters);
+  }
+
+  public async deleteByParameters(parameters: Partial<T>) {
+    await this.model.deleteMany(parameters);
   }
 
   protected checkDayOfWeek(dayOfWeek: number) {
@@ -23,14 +27,15 @@ export default class Service {
   }
 
   protected checkPeriod(from: number, to: number) {
-    if (from < 0 || from > 1440) {
-      throw new ClientError(`${Enum.ErrorMessages.e2002} "from"`);
-    }
-    if (to < 0 || to > 1440) {
-      throw new ClientError(`${Enum.ErrorMessages.e2002} "to"`);
-    }
-    if (from > to) {
-      throw new ClientError(Enum.ErrorMessages.e2003);
+    switch (true) {
+      case from < 0 || from > 1440:
+        throw new ClientError(`${Enum.ErrorMessages.e2002} "from"`);
+      case to < 0 || to > 1440:
+        throw new ClientError(`${Enum.ErrorMessages.e2002} "to"`);
+      case from > to:
+        throw new ClientError(Enum.ErrorMessages.e2003);
+      default:
+        break;
     }
   }
 }

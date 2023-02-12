@@ -1,18 +1,20 @@
 import { Types } from 'mongoose';
 
-import Service from './Service';
 import Statistics from '../schemas/Statistics';
+import Service from './Service';
 import WeekDistributionService from './WeekDistributionService';
 import PlanService from './PlanService';
 
 import * as Type from '../common/types';
 
-class StatisticsService extends Service {
+class StatisticsService extends Service<Type.TStatistics> {
+  protected model = Statistics;
+
   async get(userId: Types.ObjectId) {
     const result: Type.TStatisticsData = [];
     const processedPlanIDs: string[] = [];
 
-    const statistics = await Statistics.find({ userId: userId });
+    const statistics = await this.model.find({ userId: userId });
 
     for (let i = 0; i < statistics.length; i++) {
       const planId = statistics[i].planId.toString();
@@ -28,31 +30,22 @@ class StatisticsService extends Service {
   }
 
   private async addAverageStatistics(statistic: Type.TStatistics, statisticsByPlan: Type.TStatistics[], result: Type.TStatisticsData) {
-    const numberOfConfirmedDays = statisticsByPlan.length;
-    const entireDeviation = statisticsByPlan.reduce((deviation, statistic) => deviation + statistic.deviation, 0);
-
     const plan = await PlanService.getById(statistic.userId, statistic.planId);
     if (plan) {
-      const averageStatistic: Type.TStatisticsDataItem = {
-        _id: plan._id,
-        userId: plan.userId,
-        title: plan.title,
-        text: plan.text,
-        color: plan.color,
-        deviation: Math.round(entireDeviation / numberOfConfirmedDays),
-      };
+      const numberOfConfirmedDays = statisticsByPlan.length;
+      const entireDeviation = statisticsByPlan.reduce((deviation, statistic) => deviation + statistic.deviation, 0);
+      const averageDeviation = Math.round(entireDeviation / numberOfConfirmedDays);
+
+      const averageStatistic: Type.TStatisticsDataItem & Partial<Type.TDuration> = Object.assign(plan, { deviation: averageDeviation });
+      delete averageStatistic.duration;
+
       result.push(averageStatistic);
     }
   }
 
   async create(userId: Types.ObjectId, item: Type.TStatistics) {
-    const clone = Object.assign({}, item);
-    clone.userId = userId;
-    return await Statistics.create(clone);
-  }
-
-  async deleteByPlan(userId: Types.ObjectId, planId: Types.ObjectId) {
-    return await Statistics.deleteMany({ userId: userId, planId: planId });
+    const itemForCreate = Object.assign({}, item, { userId: userId });
+    return await this.model.create(itemForCreate);
   }
 
   private getCalculatedDeviation(distributionPlan: Type.TWeekDistribution | undefined, distributionFact: Type.TWeekDistribution | undefined) {
@@ -79,7 +72,7 @@ class StatisticsService extends Service {
   async confirmDay(userId: Types.ObjectId, item: Type.TStatisticsConfirmDay) {
     const result: Type.TStatistics[] = [];
 
-    const distributionsPlan = (await WeekDistributionService.getByDay(userId, item.dayOfWeek)) as Type.TWeekDistribution[];
+    const distributionsPlan = (await WeekDistributionService.getByParameters({ userId, dayOfWeek: item.dayOfWeek })) as Type.TWeekDistribution[];
     const distributionsFact = item.dayDistribution;
 
     const plans = new Set<string>();

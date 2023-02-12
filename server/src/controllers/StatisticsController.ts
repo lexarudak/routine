@@ -1,26 +1,20 @@
 import { Request, Response } from 'express';
+import { Types } from 'mongoose';
+
 import Controller from './Controller';
 import StatisticsService from '../services/StatisticsService';
 
+import * as Type from '../common/types';
+
 class StatisticsController extends Controller {
   async get(req: Request, res: Response) {
-    try {
-      const userId = await this.getUserId(req);
-      const items = await StatisticsService.get(userId);
-      res.json(items);
-    } catch (error) {
-      this.error(res, error);
-    }
+    const process = async (userId: Types.ObjectId) => await StatisticsService.get(userId);
+    this.handleWithAuthorization<Type.TStatisticsData>(req, res, process);
   }
 
   async confirmDay(req: Request, res: Response) {
-    try {
-      const userId = await this.getUserId(req);
-      const updatedItems = await StatisticsService.confirmDay(userId, req.body);
-      res.json(updatedItems);
-    } catch (error) {
-      this.error(res, error);
-    }
+    const process = async (userId: Types.ObjectId) => await StatisticsService.confirmDay(userId, req.body);
+    this.handleWithAuthorization<Type.TStatistics[]>(req, res, process);
   }
 }
 

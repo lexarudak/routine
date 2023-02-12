@@ -4,65 +4,37 @@ import { Types } from 'mongoose';
 import Controller from './Controller';
 import ThoughtService from '../services/ThoughtService';
 
+import * as Type from '../common/types';
+
 class ThoughtController extends Controller {
   async get(req: Request, res: Response) {
-    try {
-      const userId = await this.getUserId(req);
-      const items = await ThoughtService.get(userId);
-      res.json(items);
-    } catch (error) {
-      this.error(res, error);
-    }
+    const process = async (userId: Types.ObjectId) => await ThoughtService.get(userId);
+    this.handleWithAuthorization<Type.TDBThought[]>(req, res, process);
   }
 
   async getById(req: Request, res: Response) {
-    try {
-      const userId = await this.getUserId(req);
-      const item = await ThoughtService.getById(userId, new Types.ObjectId(req.params.id));
-      res.json(item);
-    } catch (error) {
-      this.error(res, error);
-    }
+    const process = async (userId: Types.ObjectId) => await ThoughtService.getById(userId, new Types.ObjectId(req.params.id));
+    this.handleWithAuthorization<Type.TDBThought>(req, res, process);
   }
 
   async create(req: Request, res: Response) {
-    try {
-      const userId = await this.getUserId(req);
-      const item = await ThoughtService.create(userId, req.body);
-      res.json(item);
-    } catch (error) {
-      this.error(res, error);
-    }
+    const process = async (userId: Types.ObjectId) => await ThoughtService.create(userId, req.body);
+    this.handleWithAuthorization<Type.TDBThought>(req, res, process);
   }
 
   async update(req: Request, res: Response) {
-    try {
-      const userId = await this.getUserId(req);
-      const updatedItem = await ThoughtService.update(userId, req.body);
-      res.json(updatedItem);
-    } catch (error) {
-      this.error(res, error);
-    }
+    const process = async (userId: Types.ObjectId) => await ThoughtService.update(userId, req.body);
+    this.handleWithAuthorization<Type.TDBThought>(req, res, process);
   }
 
   async convertToPlan(req: Request, res: Response) {
-    try {
-      const userId = await this.getUserId(req);
-      const item = await ThoughtService.convertToPlan(userId, new Types.ObjectId(req.params.id), req.body);
-      res.json(item);
-    } catch (error) {
-      this.error(res, error);
-    }
+    const process = async (userId: Types.ObjectId) => await ThoughtService.convertToPlan(userId, new Types.ObjectId(req.params.id), req.body);
+    this.handleWithAuthorization<Type.TDBThought | null>(req, res, process);
   }
 
   async delete(req: Request, res: Response) {
-    try {
-      const userId = await this.getUserId(req);
-      const item = await ThoughtService.delete(userId, new Types.ObjectId(req.params.id));
-      res.json(item);
-    } catch (error) {
-      this.error(res, error);
-    }
+    const process = async (userId: Types.ObjectId) => await ThoughtService.delete(userId, new Types.ObjectId(req.params.id));
+    this.handleWithAuthorization<Type.TDBThought>(req, res, process);
   }
 }
 

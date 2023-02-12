@@ -8,7 +8,17 @@ import * as Enum from '../common/enums';
 
 import User from '../schemas/User';
 
-export default class Controller {
+export default abstract class Controller {
+  protected async handleWithAuthorization<T>(req: Request, res: Response, process: (userId: Types.ObjectId) => Promise<T>) {
+    try {
+      const id = await this.getUserId(req);
+      const content = await process(id);
+      res.json(content);
+    } catch (error) {
+      this.error(res, error);
+    }
+  }
+
   protected async getUserId(req: Request): Promise<Types.ObjectId> {
     try {
       const token = req.cookies[Enum.Constants.tokenDescription];

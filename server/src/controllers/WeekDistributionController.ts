@@ -1,26 +1,20 @@
 import { Request, Response } from 'express';
+import { Types } from 'mongoose';
+
 import Controller from './Controller';
 import WeekDistributionService from '../services/WeekDistributionService';
 
+import * as Type from '../common/types';
+
 class WeekDistributionController extends Controller {
   async get(req: Request, res: Response) {
-    try {
-      const userId = await this.getUserId(req);
-      const items = await WeekDistributionService.get(userId);
-      res.json(items);
-    } catch (error) {
-      this.error(res, error);
-    }
+    const process = async (userId: Types.ObjectId) => await WeekDistributionService.get(userId);
+    this.handleWithAuthorization<Type.TDBPlan[][]>(req, res, process);
   }
 
   async adjustPlan(req: Request, res: Response) {
-    try {
-      const userId = await this.getUserId(req);
-      const updatedItem = await WeekDistributionService.adjustPlan(userId, req.body);
-      res.json(updatedItem);
-    } catch (error) {
-      this.error(res, error);
-    }
+    const process = async (userId: Types.ObjectId) => await WeekDistributionService.adjustPlan(userId, req.body);
+    this.handleWithAuthorization<Type.TWeekDistribution>(req, res, process);
   }
 }
 
