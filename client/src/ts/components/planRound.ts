@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import { SetAttribute } from '../base/enums/attributes';
 import ButtonClasses from '../base/enums/buttonClasses';
-import ClassList from '../base/enums/classList';
+import { ClassList } from '../base/enums/classList';
 import { makeElement, minToHour } from '../base/helpers';
 import { Plan } from '../base/interface';
 import colorsAndFonts from './colorsAndFonts';

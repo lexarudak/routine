@@ -1,6 +1,6 @@
 import ButtonClasses from '../../../base/enums/buttonClasses';
 import ButtonNames from '../../../base/enums/buttonNames';
-import ClassList from '../../../base/enums/classList';
+import { ClassList } from '../../../base/enums/classList';
 import { GetAttribute, SetAttribute } from '../../../base/enums/attributes';
 import Days from '../../../base/enums/days';
 import InnerText from '../../../base/enums/innerText';

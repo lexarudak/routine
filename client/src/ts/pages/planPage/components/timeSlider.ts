@@ -1,4 +1,4 @@
-import ClassList from '../../../base/enums/classList';
+import { ClassList } from '../../../base/enums/classList';
 import InnerText from '../../../base/enums/innerText';
 import Values from '../../../base/enums/values';
 import { getHours, getMinutes, makeElement } from '../../../base/helpers';

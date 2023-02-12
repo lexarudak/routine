@@ -1,5 +1,5 @@
 /* eslint-disable no-underscore-dangle */
-import ClassList from '../../base/enums/classList';
+import { ClassList } from '../../base/enums/classList';
 import PagesList from '../../base/enums/pageList';
 import PlanRoundConfig from '../../components/planRoundConfig';
 import Values from '../../base/enums/values';

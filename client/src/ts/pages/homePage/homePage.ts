@@ -1,6 +1,5 @@
 import PageList from '../../base/enums/pageList';
 import { HomePageClassList } from '../../base/enums/classList';
-import Attributes from '../../base/enums/attributes';
 import { GoToFn } from '../../base/types';
 // import { ThoughtData } from '../../base/interfaces';
 import Page from '../page';
@@ -14,6 +13,8 @@ import FlyingThought from './components/flyingThought';
 import Thought from './components/thought';
 import ThoughtBuilder from './components/thoughtBuilder';
 import RoutsList from '../../base/enums/routsList';
+import PlanEditor from '../planPage/components/planEditor';
+import { Attributes } from '../../base/enums/attributes';
 
 class HomePage extends Page {
   toDoInst: ToDo;
@@ -22,8 +23,8 @@ class HomePage extends Page {
 
   chartInst: Chart;
 
-  constructor(goTo: GoToFn) {
-    super(PageList.homePage, goTo);
+  constructor(goTo: GoToFn, editor: PlanEditor) {
+    super(PageList.homePage, goTo, editor);
     this.toDoInst = new ToDo();
     this.clockInst = new Clock();
     this.chartInst = new Chart();

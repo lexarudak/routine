@@ -1,4 +1,4 @@
-import ClassList from '../base/enums/classList';
+import { ClassList } from '../base/enums/classList';
 import { getExistentElementByClass } from '../base/helpers';
 
 class Popup {

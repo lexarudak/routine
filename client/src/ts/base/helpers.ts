@@ -1,4 +1,4 @@
-import ClassList from './enums/classList';
+import { ClassList } from './enums/classList';
 import ErrorsList from './enums/errorsList';
 import RoutsList from './enums/routsList';
 import { GoToFn } from './types';
@@ -116,9 +116,6 @@ export {
   getMinutes,
   getEventTarget,
   loginRedirect,
-  isHTMLElement,
-  getExistentElement,
-  getExistentElementByClass,
   createElement,
   createNewElement,
   client,

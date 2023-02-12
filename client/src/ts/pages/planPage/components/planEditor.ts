@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable @typescript-eslint/naming-convention */
 import { GetAttribute, SetAttribute } from '../../../base/enums/attributes';
-import ClassList from '../../../base/enums/classList';
+import { ClassList } from '../../../base/enums/classList';
 import ErrorsList from '../../../base/enums/errorsList';
 import { buttonOff, getExistentElementByClass, getExistentInputElement, makeElement } from '../../../base/helpers';
 import { Plan } from '../../../base/interface';
