@@ -1,18 +1,20 @@
 import { Types } from 'mongoose';
 
-import Service from './Service';
 import DayDistribution from '../schemas/DayDistribution';
+import Service from './Service';
 import PlanService from './PlanService';
 import WeekDistributionService from './WeekDistributionService';
 
 import * as Type from '../common/types';
 
-class DayDistributionService extends Service {
+class DayDistributionService extends Service<Type.TDayDistribution> {
+  protected model = DayDistribution;
+
   async get(userId: Types.ObjectId, dayOfWeek: number) {
     const result: Type.TDayDistributionData = { distributedPlans: [], notDistributedPlans: [] };
 
-    const dayDistributions = await this.getByDay(userId, dayOfWeek);
-    const weekDistributions = await WeekDistributionService.getByDay(userId, dayOfWeek);
+    const dayDistributions = await this.getByParameters({ userId, dayOfWeek });
+    const weekDistributions = await WeekDistributionService.getByParameters({ userId, dayOfWeek });
 
     for (let i = 0; i < dayDistributions.length; i++) {
       const dayDistribution = dayDistributions[i];
@@ -37,15 +39,7 @@ class DayDistributionService extends Service {
   private async addDistributedPlan(dayDistribution: Type.TDBDayDistribution, result: Type.TDayDistributionData) {
     const plan = await PlanService.getById(dayDistribution.userId, dayDistribution.planId);
     if (plan) {
-      const distributedPlan: Type.TDistributedPlan = {
-        _id: plan._id,
-        userId: plan.userId,
-        title: plan.title,
-        text: plan.text,
-        color: plan.color,
-        from: dayDistribution.from,
-        to: dayDistribution.to,
-      };
+      const distributedPlan: Type.TDistributedPlan = Object.assign({}, plan.toObject(), { from: dayDistribution.from, to: dayDistribution.to });
       result.distributedPlans.push(distributedPlan);
     }
   }
@@ -54,46 +48,25 @@ class DayDistributionService extends Service {
     if (weekDistribution.duration) {
       const plan = await PlanService.getById(weekDistribution.userId, weekDistribution.planId);
       if (plan) {
-        const notDistributedPlan: Type.TNotDistributedPlan = {
-          _id: plan._id,
-          userId: plan.userId,
-          title: plan.title,
-          text: plan.text,
-          color: plan.color,
-          duration: weekDistribution.duration,
-        };
+        const notDistributedPlan: Type.TNotDistributedPlan = Object.assign({}, plan.toObject(), { duration: weekDistribution.duration });
         result.notDistributedPlans.push(notDistributedPlan);
       }
     }
-  }
-
-  async getByDay(userId: Types.ObjectId, dayOfWeek: number) {
-    return await DayDistribution.find({ userId: userId, dayOfWeek: dayOfWeek });
   }
 
   async create(userId: Types.ObjectId, item: Type.TDayDistribution) {
     this.checkDayOfWeek(item.dayOfWeek);
     this.checkPeriod(item.from, item.to);
 
-    const clone = Object.assign({}, item);
-    clone.userId = userId;
-
-    return await DayDistribution.create(clone);
-  }
-
-  async deleteByPlan(userId: Types.ObjectId, planId: Types.ObjectId) {
-    return await DayDistribution.deleteMany({ userId: userId, planId: planId });
-  }
-
-  async deleteByDay(userId: Types.ObjectId, dayOfWeek: number) {
-    return await DayDistribution.deleteMany({ userId: userId, dayOfWeek: dayOfWeek });
+    const itemForCreate = Object.assign({}, item, { userId: userId });
+    return await this.model.create(itemForCreate);
   }
 
   async adjustPlan(userId: Types.ObjectId, item: Type.TDayDistributionAdjastPlan) {
     const distributions = item.dayDistribution;
     const result: Type.TDayDistribution[] = [];
 
-    await this.deleteByDay(userId, item.dayOfWeek);
+    await this.deleteByParameters({ userId, dayOfWeek: item.dayOfWeek });
 
     for (let i = 0; i < distributions.length; i++) {
       const distribution = distributions[i];

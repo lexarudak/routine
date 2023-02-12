@@ -1,35 +1,33 @@
 import { Types } from 'mongoose';
 
-import Service from './Service';
 import Thought from '../schemas/Thought';
+import Service from './Service';
 import PlanService from './PlanService';
 
 import * as Type from '../common/types';
 
-class ThoughtService extends Service {
+class ThoughtService extends Service<Type.TThought> {
+  protected model = Thought;
+
   async get(userId: Types.ObjectId) {
-    return await Thought.find({ userId: userId });
+    return await this.model.find({ userId: userId });
   }
 
   async getById(userId: Types.ObjectId, id: Types.ObjectId) {
-    this.checkId(id);
-    return await Thought.findById(id).where({ userId: userId });
+    return await this.model.findById(id).where({ userId: userId });
   }
 
   async create(userId: Types.ObjectId, item: Type.TThought) {
-    const clone = Object.assign({}, item);
-    clone.userId = userId;
-    return await Thought.create(clone);
+    const itemForCreate = Object.assign({}, item, { userId: userId });
+    return await this.model.create(itemForCreate);
   }
 
   async update(userId: Types.ObjectId, item: Type.TDBThought) {
-    this.checkId(item._id);
-    const itemForUpdate = { title: item.title };
-    return await Thought.findByIdAndUpdate(item._id, itemForUpdate, { new: true }).where({ userId: userId });
+    const itemForUpdate: Partial<Type.TDBThought> = { title: item.title };
+    return await this.model.findByIdAndUpdate(item._id, itemForUpdate, { new: true }).where({ userId: userId });
   }
 
   async convertToPlan(userId: Types.ObjectId, id: Types.ObjectId, item: Type.TPlan) {
-    this.checkId(id);
     const thought = await this.delete(userId, id);
 
     if (thought) {
@@ -40,15 +38,13 @@ class ThoughtService extends Service {
         color: item.color,
         duration: item.duration,
       };
-
       return await PlanService.create(userId, plan);
     }
     return null;
   }
 
   async delete(userId: Types.ObjectId, id: Types.ObjectId) {
-    this.checkId(id);
-    return await Thought.findByIdAndDelete(id).where({ userId: userId });
+    return await this.model.findByIdAndDelete(id).where({ userId: userId });
   }
 }
 
