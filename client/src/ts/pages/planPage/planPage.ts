@@ -3,7 +3,7 @@ import ClassList from '../../base/enums/classList';
 import PagesList from '../../base/enums/pageList';
 import PlanRoundConfig from '../../components/planRoundConfig';
 import Values from '../../base/enums/values';
-import { getExistentElementByClass, loginRedirect, minToHour } from '../../base/helpers';
+import { buttonOff, getExistentElementByClass, loginRedirect, makeElement, minToHour } from '../../base/helpers';
 import { Plan } from '../../base/interface';
 import { GoToFn, PlanDis, WeekInfo } from '../../base/types';
 import PlanRound from '../../components/planRound';
@@ -15,6 +15,9 @@ import PlanEditor from './components/planEditor';
 import Api from '../../api';
 import { GetAttribute } from '../../base/enums/attributes';
 import TimeSlider from './components/timeSlider';
+import colorsAndFonts from '../../components/colorsAndFonts';
+import savePlanIcon from './components/savePlanIcon';
+import RoutsList from '../../base/enums/routsList';
 
 class PlanPage extends Page {
   layout: PlanLayout;
@@ -48,8 +51,7 @@ class PlanPage extends Page {
   }
 
   private ifFreeTimeInDay(minutes: number) {
-    console.log(minutes);
-    return minutes >= Values.allDayMinutes - Values.minPlanDuration;
+    return minutes >= Values.minPlanDuration;
   }
 
   private getFreeDayMinutes(dayId: string) {
@@ -60,13 +62,16 @@ class PlanPage extends Page {
     return Values.allDayMinutes - filledMinutes;
   }
 
-  private ifFreeTimeInPlan(planId: string, planDur: number) {
-    console.log(planDur, this.allPlansDist[planId]);
-    return planDur - (this.allPlansDist[planId] || 0) >= Values.minPlanDuration;
+  private getFreePlanMinutes(plan: Plan) {
+    return plan.duration - (this.allPlansDist[plan._id] || 0);
   }
 
-  private getPlanDuration(planId: string) {
-    return this.allPlans.filter((plan) => plan._id === planId)[0].duration;
+  private ifFreeTimeInPlan(minutes: number) {
+    return minutes >= Values.minPlanDuration;
+  }
+
+  private getPlan(planId: string) {
+    return this.allPlans.filter((plan) => plan._id === planId)[0];
   }
 
   private getCurrentDay(e: Event) {
@@ -81,9 +86,49 @@ class PlanPage extends Page {
     throw new Error(ErrorsList.noId);
   }
 
-  private makeSliderForDay() {
+  private setPushPlanData(plan: Plan, dayId: string, slider: TimeSlider) {
+    return { dayOfWeek: Number(dayId), planId: plan._id, duration: slider.currentTime };
+  }
+
+  private async pushPlanToThisDay(e: Event, plan: Plan, dayId: string, slider: TimeSlider) {
+    const userData = this.setPushPlanData(plan, dayId, slider);
+    const { currentTarget } = e;
+    if (!(currentTarget instanceof HTMLButtonElement)) throw new Error(ErrorsList.elementIsNotButton);
+    buttonOff(currentTarget);
+    this.popup.editorModeOff();
+
+    try {
+      await Api.pushPlanToDay(userData);
+      this.goTo(RoutsList.planPage);
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message === ErrorsList.needLogin) {
+          this.goTo(RoutsList.loginPage);
+        }
+      }
+    } finally {
+      this.popup.easyClose();
+    }
+  }
+
+  private makeSliderForDay(dayId: string, plan: Plan, freeDayMinutes: number, freePlanMinutes: number) {
+    const container = makeElement(ClassList.sliderPopup);
+    const secColor = colorsAndFonts.get(plan.color);
+    container.style.background = plan.color;
+    const button = document.createElement('button');
+    button.classList.add(ClassList.editorButton);
+    if (secColor) {
+      container.style.color = secColor;
+      button.innerHTML = savePlanIcon(secColor, ClassList.editorSaveIcon);
+    }
+
     const slider = new TimeSlider();
-    return slider.draw();
+    slider.setTimer(Values.minPlanDuration, Math.min(freeDayMinutes, freePlanMinutes));
+
+    button.addEventListener('click', async (e) => this.pushPlanToThisDay(e, plan, dayId, slider));
+
+    container.append(slider.draw(), button);
+    return container;
   }
 
   private addListenersToAllDays(listener: (day: HTMLElement) => void) {
@@ -110,20 +155,17 @@ class PlanPage extends Page {
       const dayId = currentDay.dataset[GetAttribute.dayId];
       const planId = this.getDragId();
       if (!dayId || !planId) throw new Error(ErrorsList.noId);
-      const planDur = this.getPlanDuration(planId);
+      const plan = this.getPlan(planId);
       const freeDayMinutes = this.getFreeDayMinutes(dayId);
+      const freePlanMinutes = this.getFreePlanMinutes(plan);
 
-      this.popup.editorMode();
       if (!this.ifFreeTimeInDay(freeDayMinutes)) {
         this.popup.open(this.layout.makeBanner(ErrorsList.freeYourTime));
-      } else if (!this.ifFreeTimeInPlan(planId, planDur)) {
+      } else if (!this.ifFreeTimeInPlan(freePlanMinutes)) {
         this.popup.open(this.layout.makeBanner(ErrorsList.thisPlanIsDist));
       } else {
-        this.popup.open(this.makeSliderForDay());
+        this.popup.open(this.makeSliderForDay(dayId, plan, freeDayMinutes, freePlanMinutes));
       }
-      // this.ifFreeTimeInPlan();
-
-      console.log(planId);
     });
   }
 
@@ -137,8 +179,8 @@ class PlanPage extends Page {
     });
   }
 
-  private sortAllPlans() {
-    return this.allPlans.sort((a, b) => (a.duration > b.duration ? +1 : 1));
+  private sortAllPlans(plansArr: Plan[]) {
+    return plansArr.sort((a, b) => (a.duration > b.duration ? -1 : 1));
   }
 
   private makePlans() {
@@ -149,7 +191,6 @@ class PlanPage extends Page {
   }
 
   private setPlanDistTime() {
-    console.log('s');
     const flatArr = this.weekDistribution.flat();
     this.allPlansDist = flatArr.reduce((acc, plan) => {
       if (acc[plan._id]) {
@@ -234,7 +275,8 @@ class PlanPage extends Page {
     const daysArr = document.querySelectorAll(`.${ClassList.planDay}`);
     daysArr.forEach((day, ind) => {
       if (day.firstChild instanceof HTMLElement) {
-        const fillHours = this.fillLine(day.firstChild, this.weekDistribution[ind], Values.allDayMinutes, true);
+        const sortDay = this.sortAllPlans(this.weekDistribution[ind]);
+        const fillHours = this.fillLine(day.firstChild, sortDay, Values.allDayMinutes, true);
         if (day.lastChild instanceof HTMLElement) {
           day.lastChild.innerHTML = minToHour(Values.allDayMinutes - fillHours);
         }
@@ -254,13 +296,12 @@ class PlanPage extends Page {
       line.append(section);
       return acc + val.duration;
     }, 0);
-    console.log(fullMinutes);
     return fullMinutes;
   }
 
   private fillWeekLine() {
     const weekLine = getExistentElementByClass(ClassList.weekLine);
-    const sortWeek = this.sortAllPlans();
+    const sortWeek = this.sortAllPlans(this.allPlans);
     const fillWeekTime = this.fillLine(weekLine, sortWeek, Values.allWeekMinutes, false);
     this.fillWeekTime = fillWeekTime;
 

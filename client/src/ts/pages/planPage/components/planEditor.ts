@@ -43,14 +43,12 @@ class PlanEditor {
 
   public open(minTime: number, maxTime: number, plan?: Plan) {
     this.slider.setTimer(minTime, maxTime, plan?.duration);
-    console.log(plan);
     if (plan) {
       this.mode = EditorMode.editPlan;
       this.plan = { ...plan };
       this.popup.editorMode();
       this.loadToLocalStorage();
     } else {
-      console.log('new plan mode');
       this.mode = EditorMode.newPlan;
       this.popup.editorMode(this.saveToLocalStorage);
       this.loadToLocalStorage();
@@ -59,12 +57,10 @@ class PlanEditor {
   }
 
   private loadToLocalStorage() {
-    console.log('load');
     const savedNewPlan = localStorage.getItem(Values.newPlanSave);
     const savedExistPlan = localStorage.getItem(this.plan._id);
     switch (this.mode) {
       case EditorMode.newPlan:
-        console.log('savedNewPlan', savedNewPlan, defaultPlan);
         this.plan = savedNewPlan ? JSON.parse(savedNewPlan) : { ...defaultPlan };
         break;
       case EditorMode.editPlan:
@@ -75,7 +71,6 @@ class PlanEditor {
       default:
         break;
     }
-    console.log('this plan', this.plan);
   }
 
   private async sendPlan() {
@@ -111,7 +106,7 @@ class PlanEditor {
   }
 
   private setPlan() {
-    this.plan.duration = Number(getExistentInputElement(`.${ClassList.timeContainerSlider}`).value);
+    this.plan.duration = this.slider.currentTime;
     this.plan.title = getExistentInputElement(`.${ClassList.editorTitle}`).value;
     const textArea = document.querySelector(`.${ClassList.editorText}`);
     if (textArea instanceof HTMLTextAreaElement) this.plan.text = textArea.value;
@@ -165,7 +160,6 @@ class PlanEditor {
     const text = document.createElement('textarea');
     text.classList.add(ClassList.editorText);
     text.value = this.plan.text;
-    console.log(this.plan.text);
     return text;
   }
 
@@ -178,7 +172,6 @@ class PlanEditor {
       const { currentTarget } = e;
       if (!(currentTarget instanceof HTMLButtonElement)) throw new Error(ErrorsList.elementIsNotButton);
       buttonOff(currentTarget);
-      console.log(currentTarget);
 
       try {
         await this.sendPlan();

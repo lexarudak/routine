@@ -13,6 +13,11 @@ class Popup {
     this.popup.addEventListener('click', closeFn);
   }
 
+  public editorModeOff(callback?: () => void) {
+    const closeFn = (e: Event) => this.close(e, closeFn, callback);
+    this.popup.removeEventListener('click', closeFn);
+  }
+
   public close(e: Event, fnToDelete: (e: Event) => void, callback?: () => void) {
     const { target } = e;
     if (target instanceof HTMLElement) {
@@ -21,6 +26,12 @@ class Popup {
         this.clean(target);
         this.popup.removeEventListener('click', fnToDelete);
       }
+      if (target.closest(`.${ClassList.editorButton}`)) {
+        this.popup.removeEventListener('click', fnToDelete);
+      }
+    }
+    if (target instanceof SVGElement) {
+      if (target.closest(`.${ClassList.editorButton}`)) this.popup.removeEventListener('click', fnToDelete);
     }
   }
 

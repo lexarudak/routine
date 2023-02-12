@@ -8,17 +8,18 @@ class TimeSlider {
 
   maxTime;
 
-  currentTime: number | undefined;
+  currentTime: number;
 
   constructor() {
     this.minTime = Values.minPlanDuration;
     this.maxTime = Values.minPlanDuration;
+    this.currentTime = Values.minPlanDuration;
   }
 
   public setTimer(minTime: number, maxTime: number, currentTime?: number) {
     this.minTime = minTime > Values.minPlanDuration ? minTime : Values.minPlanDuration;
     this.maxTime = maxTime;
-    this.currentTime = currentTime;
+    this.currentTime = currentTime || this.minTime;
   }
 
   private makeSlider() {
@@ -28,7 +29,7 @@ class TimeSlider {
     slider.id = Values.timeSliderId;
     slider.min = this.minTime.toString();
     slider.max = this.maxTime.toString();
-    slider.value = (this.currentTime || this.minTime).toString();
+    slider.value = this.currentTime.toString();
     return slider;
   }
 
@@ -43,6 +44,7 @@ class TimeSlider {
   private setTimeInterval(hours: HTMLInputElement, minutes: HTMLInputElement, time: string | Values) {
     hours.value = getHours(Number(time)).toString();
     minutes.value = getMinutes(Number(time)).toString();
+    this.currentTime = Number(time);
   }
 
   private setCorrectTimeInterval(hours: HTMLInputElement, minutes: HTMLInputElement) {
@@ -53,7 +55,9 @@ class TimeSlider {
   }
 
   private setSlider(slider: HTMLInputElement, hours: HTMLInputElement, minutes: HTMLInputElement) {
-    slider.value = (Number(hours.value) * 60 + Number(minutes.value)).toString();
+    const currentTime = Number(hours.value) * 60 + Number(minutes.value);
+    slider.value = currentTime.toString();
+    this.currentTime = currentTime;
   }
 
   private addListeners(hours: HTMLInputElement, minutes: HTMLInputElement, slider: HTMLInputElement) {

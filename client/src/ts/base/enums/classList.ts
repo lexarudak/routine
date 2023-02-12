@@ -72,6 +72,8 @@ const enum ClassList {
   timeContainerSlider = 'time-container__slider',
   timeContainerTimeInput = 'time-container__time-input',
   timeContainerTimeLabel = 'time-container__time-label',
+  // slider popup
+  sliderPopup = 'slider-popup',
 }
 
 export default ClassList;

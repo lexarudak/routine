@@ -1,5 +1,5 @@
 import Path from './base/enums/path';
-import { LoginData, NewPlanData, PlanData, RegistrationData } from './base/interface';
+import { LoginData, NewPlanData, PlanData, PlanToDay, RegistrationData } from './base/interface';
 
 class Api {
   public static async registration(registrationData: RegistrationData) {
@@ -11,7 +11,7 @@ class Api {
   }
 
   public static async getWeekDistribution() {
-    return this.get(Path.weekDistribution);
+    return this.get(Path.weekDistribution, Path.get);
   }
 
   public static async deletePlan(id: string) {
@@ -23,7 +23,6 @@ class Api {
   }
 
   public static async createNewPlan(userData: NewPlanData) {
-    console.log('create', userData);
     return this.post(userData, Path.plans);
   }
 
@@ -32,8 +31,12 @@ class Api {
     return this.post(userData, Path.plans, Path.update);
   }
 
-  private static async get(path: Path) {
-    const response = await fetch(`${Path.origin}${path}`, {
+  public static async pushPlanToDay(userData: PlanToDay) {
+    return this.post(userData, Path.weekDistribution, Path.adjustPlan);
+  }
+
+  private static async get(...path: Path[]) {
+    const response = await fetch(`${Path.origin}${path.join('')}`, {
       method: 'GET',
       credentials: 'include',
     });
@@ -46,7 +49,10 @@ class Api {
     return data;
   }
 
-  private static async post(userData: RegistrationData | LoginData | NewPlanData | PlanData, ...path: Path[]) {
+  private static async post(
+    userData: RegistrationData | LoginData | NewPlanData | PlanData | PlanToDay,
+    ...path: Path[]
+  ) {
     const options: RequestInit = {
       method: 'POST',
       headers: {

@@ -27,3 +27,9 @@ export interface PlanData {
   color: string;
   duration: number;
 }
+
+export interface PlanToDay {
+  dayOfWeek: number;
+  planId: string;
+  duration: number;
+}

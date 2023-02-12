@@ -1,0 +1,9 @@
+.slider-popup {
+  min-width: 55%;
+  border-radius: 70px;
+  box-shadow: $shadow;
+  padding: 50px;
+  transition: .3s;
+  display:  flex;
+  gap: 20px;
+}
