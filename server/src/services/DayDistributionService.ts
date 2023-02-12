@@ -39,10 +39,9 @@ class DayDistributionService extends Service<Type.TDayDistribution> {
   private async addDistributedPlan(dayDistribution: Type.TDBDayDistribution, result: Type.TDayDistributionData) {
     const plan = await PlanService.getById(dayDistribution.userId, dayDistribution.planId);
     if (plan) {
-      const distributedPlan: Type.TDistributedPlan & Partial<Type.TDuration> = Object.assign(plan, {
-        from: dayDistribution.from,
-        to: dayDistribution.to,
-      });
+      const period: Type.TPeriod = { from: dayDistribution.from, to: dayDistribution.to };
+
+      const distributedPlan: Type.TDistributedPlan & Partial<Type.TDuration> = Object.assign(plan, period);
       delete distributedPlan.duration;
 
       result.distributedPlans.push(distributedPlan);
