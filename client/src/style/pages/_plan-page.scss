@@ -3,6 +3,10 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  font-weight: normal;
+  padding: 20px;
+  padding-bottom: 5px;
+  
 
   &__text-container {
     display: flex;
@@ -10,6 +14,7 @@
     justify-content: flex-end;
     font-size: 14px;
     padding-right: 5px;
+    width: 100%;
   }
 
   &__week-line {
@@ -34,6 +39,7 @@
     position: relative;
     display: flex;
     align-items: flex-end;
+    width: 100%;
     height: calc(100% - 40px);
   }
 

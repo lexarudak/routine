@@ -3,6 +3,7 @@ const enum ClassList {
   mainContainerHide = 'main__container_hide',
   banner = 'banner',
   // 404
+  page404 = 'page-404',
   page404text = 'page-404__text',
   page404title = 'page-404__title',
   // Popup

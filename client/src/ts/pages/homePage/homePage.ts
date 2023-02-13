@@ -167,7 +167,6 @@ class HomePage extends Page {
     page.append(flyingThought, thought, signIn, plan, clock);
 
     setTimeout(() => this.clockInst.getTime());
-    page.addEventListener('click', () => this.goTo(RoutsList.loginPage));
     return page;
   }
 }

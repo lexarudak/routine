@@ -15,6 +15,7 @@ class NotFoundPage extends Page {
 
   protected async getFilledPage(): Promise<HTMLElement> {
     const page = document.createElement('section');
+    page.classList.add(ClassList.page404);
 
     const name = document.createElement('h1');
     name.innerText = this.name;
