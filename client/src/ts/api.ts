@@ -1,5 +1,5 @@
 import Path from './base/enums/path';
-import { LoginData, NewPlanData, PlanData, PlanToDay, RegistrationData } from './base/interface';
+import { LoginData, NewPlanData, PlanData, PlanToDay, RegistrationData, User, Statistics } from './base/interface';
 
 class Api {
   public static async registration(registrationData: RegistrationData) {
@@ -33,6 +33,14 @@ class Api {
 
   public static async pushPlanToDay(userData: PlanToDay) {
     return this.post(userData, Path.weekDistribution, Path.adjustPlan);
+  }
+
+  public static async getUserProfile(): Promise<User> {
+    return this.get(Path.users, Path.profile);
+  }
+
+  public static async getStatistics(): Promise<Statistics[]> {
+    return this.get(Path.statistics, Path.get);
   }
 
   private static async get(...path: Path[]) {

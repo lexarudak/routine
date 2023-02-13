@@ -7,6 +7,9 @@ const enum Path {
   get = '/get',
   weekDistribution = '/weekDistribution',
   adjustPlan = '/adjustPlan',
+  users = '/users',
+  profile = '/profile',
+  statistics = '/statistics',
 }
 
 export default Path;
