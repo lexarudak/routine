@@ -3,7 +3,7 @@ import { ClassList } from '../../base/enums/classList';
 import PagesList from '../../base/enums/pageList';
 import PlanRoundConfig from '../../components/planRoundConfig';
 import Values from '../../base/enums/values';
-import { buttonOff, getExistentElementByClass, loginRedirect, makeElement, minToHour } from '../../base/helpers';
+import { buttonOff, createNewElement, getExistentElementByClass, minToHour, sortAllPlans } from '../../base/helpers';
 import { Plan } from '../../base/interface';
 import { GoToFn, PlanDis, WeekInfo } from '../../base/types';
 import PlanRound from '../../components/planRound';
@@ -18,6 +18,8 @@ import TimeSlider from './components/timeSlider';
 import colorsAndFonts from '../../components/colorsAndFonts';
 import savePlanIcon from './components/savePlanIcon';
 import RoutsList from '../../base/enums/routsList';
+import ButtonNames from '../../base/enums/buttonNames';
+import InnerText from '../../base/enums/innerText';
 
 class PlanPage extends Page {
   layout: PlanLayout;
@@ -112,7 +114,7 @@ class PlanPage extends Page {
   }
 
   private makeSliderForDay(dayId: string, plan: Plan, freeDayMinutes: number, freePlanMinutes: number) {
-    const container = makeElement(ClassList.sliderPopup);
+    const container = createNewElement('div', ClassList.sliderPopup);
     const secColor = colorsAndFonts.get(plan.color);
     container.style.background = plan.color;
     const button = document.createElement('button');
@@ -159,6 +161,7 @@ class PlanPage extends Page {
       const freeDayMinutes = this.getFreeDayMinutes(dayId);
       const freePlanMinutes = this.getFreePlanMinutes(plan);
 
+      this.popup.editorMode();
       if (!this.ifFreeTimeInDay(freeDayMinutes)) {
         this.popup.open(this.layout.makeBanner(ErrorsList.freeYourTime));
       } else if (!this.ifFreeTimeInPlan(freePlanMinutes)) {
@@ -177,10 +180,6 @@ class PlanPage extends Page {
         this.popup.open(this.layout.makeBanner(ErrorsList.freeYourTime));
       }
     });
-  }
-
-  private sortAllPlans(plansArr: Plan[]) {
-    return plansArr.sort((a, b) => (a.duration > b.duration ? -1 : 1));
   }
 
   private makePlans() {
@@ -275,7 +274,7 @@ class PlanPage extends Page {
     const daysArr = document.querySelectorAll(`.${ClassList.planDay}`);
     daysArr.forEach((day, ind) => {
       if (day.firstChild instanceof HTMLElement) {
-        const sortDay = this.sortAllPlans(this.weekDistribution[ind]);
+        const sortDay = sortAllPlans(this.weekDistribution[ind]);
         const fillHours = this.fillLine(day.firstChild, sortDay, Values.allDayMinutes, true);
         if (day.lastChild instanceof HTMLElement) {
           day.lastChild.innerHTML = minToHour(Values.allDayMinutes - fillHours);
@@ -301,11 +300,11 @@ class PlanPage extends Page {
 
   private fillWeekLine() {
     const weekLine = getExistentElementByClass(ClassList.weekLine);
-    const sortWeek = this.sortAllPlans(this.allPlans);
+    const sortWeek = sortAllPlans(this.allPlans);
     const fillWeekTime = this.fillLine(weekLine, sortWeek, Values.allWeekMinutes, false);
     this.fillWeekTime = fillWeekTime;
 
-    getExistentElementByClass(ClassList.weekTextValue).innerText = minToHour(fillWeekTime);
+    getExistentElementByClass(ClassList.infoTextValue).innerText = minToHour(fillWeekTime);
     getExistentElementByClass(ClassList.planAddButtonValue).innerText = minToHour(Values.allWeekMinutes - fillWeekTime);
   }
 
@@ -319,12 +318,11 @@ class PlanPage extends Page {
 
     this.makePlans();
 
-    const container = document.createElement('section');
-    container.classList.add(ClassList.planContainer);
+    const container = createNewElement('section', ClassList.planContainer);
 
     container.append(
-      this.layout.makeHomeButton(this.goTo),
-      this.layout.makeWeekText(),
+      this.layout.makeNavButton(ButtonNames.home, RoutsList.homePage, this.goTo),
+      this.layout.makeInfoText(InnerText.allWeekHours),
       this.layout.makeWeekLine(),
       this.layout.makePlanBody()
     );
@@ -344,7 +342,7 @@ class PlanPage extends Page {
       this.setAddButton();
       this.addListenersToAllDays(this.addDayListener);
     } catch (error) {
-      loginRedirect(error, this.goTo);
+      this.goTo(RoutsList.loginPage);
     }
   }
 }

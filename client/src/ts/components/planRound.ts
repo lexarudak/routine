@@ -2,7 +2,7 @@
 import { SetAttribute } from '../base/enums/attributes';
 import ButtonClasses from '../base/enums/buttonClasses';
 import { ClassList } from '../base/enums/classList';
-import { makeColorTransparent, makeElement, minToHour } from '../base/helpers';
+import { createNewElement, makeColorTransparent, minToHour } from '../base/helpers';
 import { Plan } from '../base/interface';
 import colorsAndFonts from './colorsAndFonts';
 import PlanRoundConfig from './planRoundConfig';
@@ -38,7 +38,7 @@ class PlanRound {
 
   public draw(width: number, freeTime: number) {
     const round = document.createElement('div');
-    const blur = makeElement(ClassList.planRoundBlur);
+    const blur = createNewElement('div', ClassList.planRoundBlur);
     const name = document.createElement('span');
     const time = document.createElement('span');
     round.setAttribute('draggable', 'true');

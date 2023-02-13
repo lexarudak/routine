@@ -1,6 +1,7 @@
-import { ClassList } from './enums/classList';
+import Days from './enums/days';
 import ErrorsList from './enums/errorsList';
 import RoutsList from './enums/routsList';
+import { Plan } from './interface';
 import { GoToFn } from './types';
 
 function isHTMLElement<T>(el: T | HTMLElement): el is HTMLElement {
@@ -59,6 +60,10 @@ function buttonOff(...buttons: HTMLButtonElement[]) {
   });
 }
 
+function sortAllPlans(plansArr: Plan[]) {
+  return plansArr.sort((a, b) => (a.duration > b.duration ? -1 : 1));
+}
+
 function minToHour(min: number) {
   if (min < 60 && min >= 0) return `${min} min`;
   if (min >= 60) {
@@ -87,19 +92,20 @@ function makeColorTransparent(color: string, transPercent: number) {
   return color + percent.toString(16);
 }
 
-function makeElement(classList: ClassList, element?: string) {
-  const el = document.createElement(element || 'div');
-  if (!el) throw new Error(ErrorsList.wrongElementName);
-  el.classList.add(classList);
-  return el;
-}
-
 function loginRedirect(error: unknown, goTo: GoToFn) {
   if (error instanceof Error) {
     if (error.message === ErrorsList.needLogin) {
       goTo(RoutsList.loginPage);
     }
   }
+}
+
+function isDayOfWeek(path: string) {
+  for (let i = 0; i < 7; i += 1) {
+    const dayId = i.toString();
+    if (Days[i] === path.substring(1)) return dayId;
+  }
+  return '';
 }
 
 export {
@@ -111,7 +117,6 @@ export {
   buttonOff,
   minToHour,
   makeColorTransparent,
-  makeElement,
   getHours,
   getMinutes,
   getEventTarget,
@@ -119,4 +124,6 @@ export {
   createElement,
   createNewElement,
   client,
+  isDayOfWeek,
+  sortAllPlans,
 };

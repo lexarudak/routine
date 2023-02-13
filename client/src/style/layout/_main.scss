@@ -15,9 +15,11 @@
     position: relative;
     opacity: 1;
     transition: .2s;
+    visibility: visible;
 
     &_hide {
       opacity: 0;
+      visibility: hidden;
     }
   }
 }

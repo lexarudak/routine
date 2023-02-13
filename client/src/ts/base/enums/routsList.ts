@@ -3,6 +3,7 @@ const enum RoutsList {
   planPage = '/plan',
   accountPage = '/account',
   loginPage = '/login',
+  monday = '/monday',
 }
 
 export default RoutsList;

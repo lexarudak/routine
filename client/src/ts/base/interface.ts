@@ -33,3 +33,12 @@ export interface PlanToDay {
   planId: string;
   duration: number;
 }
+
+export interface DistDayPlan {
+  _id: string;
+  title: string;
+  text: string;
+  color: string;
+  from: number;
+  to: number;
+}

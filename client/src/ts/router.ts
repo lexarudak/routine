@@ -1,5 +1,7 @@
 import RoutsList from './base/enums/routsList';
+import { isDayOfWeek } from './base/helpers';
 import Popup from './components/popup';
+import DayPage from './pages/dayPage/dayPage';
 import HomePage from './pages/homePage/homePage';
 import LoginPage from './pages/loginPage/loginPage';
 import NotFoundPage from './pages/notFoundPage/notFoundPage';
@@ -13,27 +15,18 @@ class Router {
 
   static planPage: PlanPage;
 
+  static dayPage: DayPage;
+
   static notFoundPage: NotFoundPage;
 
   static loginPage: LoginPage;
-
-  // static accountPage: Page;
-
-  // static mondayPage: Page;
-
-  // static tuesdayPage: Page;
-
-  // static fridayPage: Page;
-
-  // static saturdayPage: Page;
-
-  // static sundayPage: Page;
 
   constructor(popup: Popup) {
     this.editor = new PlanEditor(popup, this.goTo);
     Router.homePage = new HomePage(this.goTo, this.editor);
     Router.planPage = new PlanPage(this.goTo, popup, this.editor);
     Router.loginPage = new LoginPage(this.goTo, this.editor);
+    Router.dayPage = new DayPage(this.goTo, popup, this.editor);
     Router.notFoundPage = new NotFoundPage(this.goTo, this.editor);
   }
 
@@ -49,7 +42,12 @@ class Router {
         await Router.homePage.draw();
         break;
       default:
-        Router.notFoundPage.draw();
+        if (isDayOfWeek(pathname)) {
+          Router.dayPage.draw(isDayOfWeek(pathname));
+        } else {
+          Router.notFoundPage.draw();
+        }
+
         break;
     }
   }

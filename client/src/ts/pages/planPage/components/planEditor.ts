@@ -3,7 +3,7 @@
 import { GetAttribute, SetAttribute } from '../../../base/enums/attributes';
 import { ClassList } from '../../../base/enums/classList';
 import ErrorsList from '../../../base/enums/errorsList';
-import { buttonOff, getExistentElementByClass, getExistentInputElement, makeElement } from '../../../base/helpers';
+import { buttonOff, createNewElement, getExistentElementByClass, getExistentInputElement } from '../../../base/helpers';
 import { Plan } from '../../../base/interface';
 import colorsAndFonts from '../../../components/colorsAndFonts';
 import Popup from '../../../components/popup';
@@ -116,7 +116,7 @@ class PlanEditor {
     const secColor = colorsAndFonts.get(this.plan.color);
     if (!secColor) throw new Error(ErrorsList.notStandardColor);
     const container = this.makeContainer(secColor);
-    const tools = makeElement(ClassList.editorTools);
+    const tools = createNewElement('div', ClassList.editorTools);
 
     tools.append(this.makeAcceptButton(secColor), this.colorPicker(), this.makeColorBox(), this.slider.draw());
     container.append(tools, this.makeTitle(), this.makeText());
@@ -124,7 +124,7 @@ class PlanEditor {
   }
 
   private makeContainer(secColor: string) {
-    const editor = makeElement(ClassList.editor);
+    const editor = createNewElement('div', ClassList.editor);
     editor.style.backgroundColor = this.plan.color;
     editor.style.color = secColor;
     return editor;
@@ -191,14 +191,14 @@ class PlanEditor {
   }
 
   private colorPicker() {
-    const container = makeElement(ClassList.editorColorPicker);
+    const container = createNewElement('div', ClassList.editorColorPicker);
 
     container.addEventListener('click', () => this.toggleColorBox());
     return container;
   }
 
   private makeColorBox() {
-    const box = makeElement(ClassList.editorColorBox);
+    const box = createNewElement('div', ClassList.editorColorBox);
 
     colorsAndFonts.forEach((_value, color) => {
       box.append(this.makeColorRound(color));
@@ -208,7 +208,7 @@ class PlanEditor {
   }
 
   private makeColorRound(color: string) {
-    const round = makeElement(ClassList.editorColorRound);
+    const round = createNewElement('div', ClassList.editorColorRound);
     round.style.backgroundColor = color;
     round.setAttribute(SetAttribute.pickerColor, color);
 
