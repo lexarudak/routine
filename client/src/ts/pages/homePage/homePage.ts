@@ -56,6 +56,13 @@ class HomePage extends Page {
     canvas.width = client.width;
     canvas.height = client.height;
 
+    if (ctx) {
+      ctx.beginPath();
+      ctx.arc(200, 200, 30, 0, 2 * Math.PI, false);
+      ctx.fillStyle = '#999999';
+      ctx.fill();
+      ctx.closePath();
+    }
     const thoughtsArray: FlyingThought[] = [];
 
     // for (let i = 0; i < 50; i += 1) { //test
@@ -77,6 +84,13 @@ class HomePage extends Page {
           thoughtsArray[i].draw(ctx);
           thoughtsArray[i].thoughtCollision(thoughtsArray);
         }
+        const planBorder = new FlyingThought('planCircle', client.planPosWidth, client.planPosHeight, 1, 1, 100);
+        if (ctx) planBorder.drawCircles(ctx);
+
+        const clockCircle = new FlyingThought('clockCircle', client.clockPosWidth, client.clockPosHeight, 1, 1, 330);
+        if (ctx) clockCircle.drawCircles(ctx);
+        planBorder.thoughtCollision([...thoughtsArray, planBorder, clockCircle]);
+        clockCircle.thoughtCollision([...thoughtsArray, planBorder, clockCircle]);
       };
       animate();
     }
@@ -135,12 +149,12 @@ class HomePage extends Page {
     minutes.append(min);
 
     const chart = createElement('div', HomePageClassList.chart);
-    this.chartInst.createChart(chart, chartData, { strokeWidth: 14, radius: 320 });
+    this.chartInst.createChart(chart, chartData, { strokeWidth: 14, radius: 285 });
     chart.append(hour, minutes);
 
     const toDo = createElement('div', HomePageClassList.toDo);
-    const toDoList = this.toDoInst.draw(0);
-    toDo.append(toDoList);
+    const toDoWrap = this.toDoInst.draw(0);
+    toDo.append(toDoWrap);
     chart.append(toDo);
     clock.append(chart);
 

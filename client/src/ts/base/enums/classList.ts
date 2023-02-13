@@ -91,6 +91,7 @@ const enum HomePageClassList {
   signIn = 'sign-in',
   chart = 'chart',
   toDo = 'to-do',
+  toDoWrap = 'to-do__wrapper',
   toDoTitle = 'to-do__title',
   toDoTextarea = 'to-do__textarea',
   clock = 'clock',
