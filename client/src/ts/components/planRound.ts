@@ -2,7 +2,7 @@
 import { SetAttribute } from '../base/enums/attributes';
 import ButtonClasses from '../base/enums/buttonClasses';
 import { ClassList } from '../base/enums/classList';
-import { makeElement, minToHour } from '../base/helpers';
+import { makeColorTransparent, makeElement, minToHour } from '../base/helpers';
 import { Plan } from '../base/interface';
 import colorsAndFonts from './colorsAndFonts';
 import PlanRoundConfig from './planRoundConfig';
@@ -58,7 +58,10 @@ class PlanRound {
     round.style.alignSelf = `${alignValues[val % alignValues.length]}`;
     blur.style.height = this.getBlurHeight(width, freeTime);
     const fontColor = colorsAndFonts.get(this.planInfo.color);
-    if (fontColor) round.style.color = fontColor;
+    if (fontColor) {
+      round.style.color = fontColor;
+      time.style.color = makeColorTransparent(fontColor, 50);
+    }
 
     round.append(name, time, blur);
     return round;
