@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -7,12 +8,75 @@
   <link rel="icon" href="./assets/routine-favicon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet">
   <title>Routine</title>
 </head>
+
 <body>
   <main class="main">
     <div class="main__container">
+      <section class="profile">
+        <button class="nav-button">Home</button>
+
+        <div class="user-data">
+          <div class="greeting">
+            <div class="greeting__hello">Hello, Darya!</div>
+            <div class="greeting__info">This is your 5 day in this app</div>
+          </div>
+          <div class="settings">
+            <button class="settings__confirm-day">Yesterday</button>
+            <input class="settings__confirm-time" type="time"></input>
+            <button class="settings__logout">Log out</button>
+          </div>
+        </div>
+
+        <div class="statistics">
+          <div class="statistics-tank">
+            <div class="statistics-tank__name">Fulfilled</div>
+            <div class="statistics-tank__content">
+              <div class="statistics-plan">
+                <div class="statistics-plan__name">English</div>
+                <div class="statistics-plan__deviation">-5 min/d</div>
+              </div>
+              <div class="statistics-plan">
+                <div class="statistics-plan__name">Personal time</div>
+                <div class="statistics-plan__deviation">+5 min/d</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="statistics-tank">
+            <div class="statistics-tank__name">Underfulfilled</div>
+            <div class="statistics-tank__content">
+              <div class="statistics-plan">
+                <div class="statistics-plan__name">English</div>
+                <div class="statistics-plan__deviation">-5 min/d</div>
+              </div>
+              <div class="statistics-plan">
+                <div class="statistics-plan__name">Personal time</div>
+                <div class="statistics-plan__deviation">+5 min/d</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="statistics-tank">
+            <div class="statistics-tank__name">Overfulfilled</div>
+            <div class="statistics-tank__content">
+              <div class="statistics-plan">
+                <div class="statistics-plan__name">English</div>
+                <div class="statistics-plan__deviation">-5 min/d</div>
+              </div>
+              <div class="statistics-plan">
+                <div class="statistics-plan__name">Personal time</div>
+                <div class="statistics-plan__deviation">+5 min/d</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </section>
     </div>
   </main>
   <footer class="footer">
@@ -20,10 +84,12 @@
       <a class="footer__item" href="https://github.com/YuMentsel" target="_blank">Yuliya Mentsel</a>
       <a class="footer__item" href="https://github.com/lexarudak" target="_blank">Aliaksei Rudak</a>
       <a class="footer__item" href="https://github.com/Mikalai-Kazlou" target="_blank">Mikalai Kazlou</a>
-      <a  class="footer__item" href="https://rs.school/js/" target="_blank"><img alt="RS School logo" src="./assets/svg/rs_school.svg" width="30"></a>
+      <a class="footer__item" href="https://rs.school/js/" target="_blank"><img alt="RS School logo"
+          src="./assets/svg/rs_school.svg" width="30"></a>
       <span class="footer__item">2023 ©</span>
     </div>
   </footer>
   <div class="popup"></div>
 </body>
+
 </html>

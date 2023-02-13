@@ -5,7 +5,8 @@ import PlanEditor from '../planPage/components/planEditor';
 
 import PagesList from '../../base/enums/pageList';
 import { GoToFn } from '../../base/types';
-import { ClassList, ProfilePageClassList } from '../../base/enums/classList';
+// import { ClassList, ProfilePageClassList } from '../../base/enums/classList';
+import { ProfilePageClassList } from '../../base/enums/classList';
 import * as helpers from '../../base/helpers';
 
 class ProfilePage extends Page {
@@ -26,8 +27,8 @@ class ProfilePage extends Page {
 
   public async draw() {
     try {
-      const container = helpers.getExistentElementByClass(ClassList.mainContainer);
-      await this.animatedFilledPageAppend(container);
+      // const container = helpers.getExistentElementByClass(ClassList.mainContainer);
+      // await this.animatedFilledPageAppend(container);
     } catch (error) {
       helpers.loginRedirect(error, this.goTo);
     }
