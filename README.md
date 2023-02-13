@@ -11,6 +11,7 @@
 - [design](https://www.figma.com/file/5rzJMlMCJgY34kijNJSvOm/Routine?node-id=0%3A1&t=DSyZZc0JgU8DWcgq-0)
 - [svg](https://www.svgrepo.com/collection/lucide-line-icons/2)
 - [canvas rounds](https://www.youtube.com/watch?v=KEQsm2yL6Lg&t=778s)
+- [day confirm. elastic divs](http://jsfiddle.net/Us37Y/3/)
 
 ## Backend
 
