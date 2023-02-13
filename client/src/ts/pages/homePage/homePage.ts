@@ -50,21 +50,30 @@ class HomePage extends Page {
     toDo.append(toDoList);
   }
 
-  private createFlyingThought() {
+  private updateHeight() {
+    const documentHeight = document.documentElement.clientHeight;
+    client.height = documentHeight;
+    client.planPosHeight = documentHeight / 2 - 15;
+    client.clockPosHeight = documentHeight / 2 - 15;
+  }
+
+  private checkResize(canvas: HTMLCanvasElement) {
+    canvas.height = client.height;
+    this.createFlyingThought(canvas);
+  }
+
+  private createCanvas() {
     const canvas = createNewElement<HTMLCanvasElement>('canvas', HomePageClassList.canvas);
-    const ctx = canvas.getContext('2d');
     canvas.width = client.width;
     canvas.height = client.height;
+    window.addEventListener(`resize`, () => this.checkResize(canvas));
+    this.createFlyingThought(canvas);
+    return canvas;
+  }
 
-    if (ctx) {
-      ctx.beginPath();
-      ctx.arc(200, 200, 30, 0, 2 * Math.PI, false);
-      ctx.fillStyle = '#999999';
-      ctx.fill();
-      ctx.closePath();
-    }
+  private createFlyingThought(canvas: HTMLCanvasElement) {
+    const ctx = canvas.getContext('2d');
     const thoughtsArray: FlyingThought[] = [];
-
     // for (let i = 0; i < 50; i += 1) { //test
     thoughtData.forEach((thought) => {
       const radius = 20;
@@ -84,6 +93,7 @@ class HomePage extends Page {
           thoughtsArray[i].draw(ctx);
           thoughtsArray[i].thoughtCollision(thoughtsArray);
         }
+        this.updateHeight();
         const planBorder = new FlyingThought('planCircle', client.planPosWidth, client.planPosHeight, 1, 1, 100);
         if (ctx) planBorder.drawCircles(ctx);
 
@@ -94,8 +104,6 @@ class HomePage extends Page {
       };
       animate();
     }
-    // canvas.addEventListener('click', () => console.log(client.width, client.height));
-    return canvas;
   }
 
   createThoughtsList(thoughtContainer: HTMLElement) {
@@ -166,9 +174,8 @@ class HomePage extends Page {
 
   protected async getFilledPage(): Promise<HTMLElement> {
     const page = document.createElement(HomePageClassList.section);
-    const flyingThought = this.createFlyingThought();
+    const flyingThought = this.createCanvas();
     const thought = this.createThought();
-
     const plan = createElement('div', HomePageClassList.plan);
     plan.textContent = 'Plan';
     plan.addEventListener('click', () => this.goTo(RoutsList.planPage));

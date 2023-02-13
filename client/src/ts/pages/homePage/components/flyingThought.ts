@@ -39,7 +39,7 @@ class FlyingThought {
   drawCircles(ctx: CanvasRenderingContext2D) {
     ctx.beginPath();
     ctx.arc(Math.round(this.x), Math.round(this.y), this.radius, 0, 2 * Math.PI);
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = '#afafaf';
     ctx.fill();
     ctx.closePath();
   }
