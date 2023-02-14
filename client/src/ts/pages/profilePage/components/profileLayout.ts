@@ -52,7 +52,9 @@ class PlanLayout {
       <span class="settings__label">Confirm time</span>
       <input class="button settings__input" type="time" value="${confirmationTime}"></input>
     </div>
-    <button class="button settings__button">Log out</button>`;
+    <div class="settings__log-out">
+      <button class="button settings__button">Log out</button>
+    </div>`;
 
     return container;
   }

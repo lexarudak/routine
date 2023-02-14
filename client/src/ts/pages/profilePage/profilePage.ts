@@ -26,6 +26,27 @@ class ProfilePage extends Page {
     [this.profile, this.statistics] = await Promise.all([Api.getUserProfile(), Api.getStatistics()]);
   }
 
+  private setEventLiseners() {
+    const uiConfirmDay = helpers.getExistentElement<HTMLButtonElement>('.settings__confirm-day>.button');
+    uiConfirmDay.addEventListener('click', () => {
+      uiConfirmDay.textContent = this.toggleConfirmDay(uiConfirmDay.textContent || '');
+    });
+
+    const uiLogOut = helpers.getExistentElement<HTMLButtonElement>('.settings__log-out>.button');
+    uiLogOut.addEventListener('click', () => {
+      this.logOut();
+    });
+  }
+
+  private toggleConfirmDay(day: string) {
+    return day === 'today' ? 'yesterday' : 'today';
+  }
+
+  private logOut() {
+    document.cookie = '';
+    helpers.loginRedirect(new Error('401'), this.goTo);
+  }
+
   protected async getFilledPage(): Promise<HTMLElement> {
     await this.setProfileInfo();
     console.log(this.profile, this.statistics);
@@ -45,6 +66,7 @@ class ProfilePage extends Page {
     try {
       const container = helpers.getExistentElementByClass(ClassList.mainContainer);
       await this.animatedFilledPageAppend(container);
+      this.setEventLiseners();
     } catch (error) {
       helpers.loginRedirect(error, this.goTo);
     }
