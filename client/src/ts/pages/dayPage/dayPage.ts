@@ -97,7 +97,7 @@ class DayPage extends Page {
   private setRoundClick(roundDiv: HTMLElement, round: PlanRound) {
     const allPlanDur = this.allWeekPlans.filter((plan) => plan._id === round.planInfo._id)[0].duration;
     const minTime = this.getPlanDistTime(round);
-    const maxTime = Math.min(allPlanDur, Values.allDayMinutes - this.getDayDistTime());
+    const maxTime = round.planInfo.duration + Math.min(allPlanDur, Values.allDayMinutes - this.getDayDistTime());
     roundDiv.addEventListener('click', () =>
       this.editor.open(minTime, maxTime, EditorMode.day, round.planInfo, this.dayId)
     );
