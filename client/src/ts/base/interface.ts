@@ -25,7 +25,7 @@ export interface PlanData {
   title: string;
   text: string;
   color: string;
-  duration: number;
+  duration?: number;
 }
 
 export interface PlanToDay {

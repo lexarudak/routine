@@ -20,6 +20,7 @@ import savePlanIcon from './components/savePlanIcon';
 import RoutsList from '../../base/enums/routsList';
 import ButtonNames from '../../base/enums/buttonNames';
 import InnerText from '../../base/enums/innerText';
+import EditorMode from '../../base/enums/editorMode';
 
 class PlanPage extends Page {
   layout: PlanLayout;
@@ -175,7 +176,7 @@ class PlanPage extends Page {
   private setAddButton() {
     getExistentElementByClass(ClassList.planAddButton).addEventListener('click', () => {
       if (this.isFreeTimeInWeek()) {
-        this.editor.open(Values.minPlanDuration, Values.allWeekMinutes - this.fillWeekTime);
+        this.editor.open(Values.minPlanDuration, Values.allWeekMinutes - this.fillWeekTime, EditorMode.newPlan);
       } else {
         this.popup.open(this.layout.makeBanner(ErrorsList.freeYourTime));
       }
@@ -235,19 +236,22 @@ class PlanPage extends Page {
       if (width < PlanRoundConfig.minRoundSize) width = PlanRoundConfig.minRoundSize;
       if (width > maxRoundSize) width = maxRoundSize;
 
-      const roundDiv = this.addRoundListener(round, width);
+      round.setWidth(width);
+      const roundDiv = this.addRoundListener(round);
 
       (ind % 2 === 0 ? bigZone : smallZone).append(roundDiv);
     });
   }
 
-  private addRoundListener(round: PlanRound, width: number) {
-    const freeTime = round.planInfo.duration - (this.allPlansDist[round.planInfo._id] || 0);
-    const roundDiv = round.draw(width, freeTime);
+  private addRoundListener(round: PlanRound) {
+    const distTime = this.allPlansDist[round.planInfo._id] || 0;
+    const roundDiv = round.draw();
+    round.paintRound(distTime);
     roundDiv.addEventListener('click', () => {
       this.editor.open(
-        round.planInfo.duration - freeTime,
+        distTime,
         round.planInfo.duration + Values.allWeekMinutes - this.fillWeekTime,
+        EditorMode.editPlan,
         round.planInfo
       );
     });

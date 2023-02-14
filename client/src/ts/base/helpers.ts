@@ -93,6 +93,7 @@ function makeColorTransparent(color: string, transPercent: number) {
 }
 
 function loginRedirect(error: unknown, goTo: GoToFn) {
+  console.log(error instanceof Error);
   if (error instanceof Error) {
     if (error.message === ErrorsList.needLogin) {
       goTo(RoutsList.loginPage);

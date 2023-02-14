@@ -1,5 +1,7 @@
+/* eslint-disable no-underscore-dangle */
 import Api from '../../api';
 import { ClassList } from '../../base/enums/classList';
+import EditorMode from '../../base/enums/editorMode';
 import InnerText from '../../base/enums/innerText';
 import PageList from '../../base/enums/pageList';
 import RoutsList from '../../base/enums/routsList';
@@ -24,6 +26,8 @@ class DayPage extends Page {
 
   allDayPlans: Plan[];
 
+  allWeekPlans: Plan[];
+
   layout: PlanLayout;
 
   timeLine: Timeline;
@@ -38,6 +42,7 @@ class DayPage extends Page {
     this.distPlans = [];
     this.notDistPlans = [];
     this.allDayPlans = [];
+    this.allWeekPlans = [];
     this.planRounds = [];
   }
 
@@ -62,10 +67,14 @@ class DayPage extends Page {
     }, 0);
   }
 
-  private fillTextInfo() {
-    const distTime = this.allDayPlans.reduce((acc, val) => {
+  private getDayDistTime() {
+    return this.allDayPlans.reduce((acc, val) => {
       return acc + val.duration;
     }, 0);
+  }
+
+  private fillTextInfo() {
+    const distTime = this.getDayDistTime();
     getExistentElementByClass(ClassList.infoTextValue).innerText = minToHour(distTime);
     getExistentElementByClass(ClassList.planAddButtonValue).innerText = minToHour(Values.allDayMinutes - distTime);
   }
@@ -75,19 +84,39 @@ class DayPage extends Page {
     const maxRoundSize = planZone.clientWidth * PlanRoundConfigDay.maxSizeK;
 
     this.planRounds.forEach((round) => {
-      const timePer = round.planInfo.duration / (PlanRoundConfigDay.maxProcDur - PlanRoundConfigDay.minProcDur);
-      let width = (maxRoundSize - PlanRoundConfigDay.minRoundSize) * timePer + PlanRoundConfigDay.minRoundSize;
-      if (width < PlanRoundConfigDay.minRoundSize) width = PlanRoundConfigDay.minRoundSize;
-      if (width > maxRoundSize) width = maxRoundSize;
+      round.setWidth(maxRoundSize);
+      const roundDiv = round.draw();
+      const distTime = this.getPlanDistTime(round);
+      round.paintRound(distTime);
+      this.setRoundClick(roundDiv, round);
 
-      planZone.append(round.draw(width, width));
+      planZone.append(roundDiv);
     });
   }
 
+  private setRoundClick(roundDiv: HTMLElement, round: PlanRound) {
+    const allPlanDur = this.allWeekPlans.filter((plan) => plan._id === round.planInfo._id)[0].duration;
+    const minTime = this.getPlanDistTime(round);
+    const maxTime = Math.min(allPlanDur, Values.allDayMinutes - this.getDayDistTime());
+    roundDiv.addEventListener('click', () =>
+      this.editor.open(minTime, maxTime, EditorMode.day, round.planInfo, this.dayId)
+    );
+  }
+
+  private getPlanDistTime(round: PlanRound) {
+    return round.planInfo.duration - this.notDistPlans.filter((plan) => plan._id === round.planInfo._id)[0].duration;
+  }
+
   private async setDayInfo() {
-    const dayInfo = await Promise.all([Api.getDayDistribution(this.dayId), Api.getWeekDistribution()]);
-    const { distributedPlans, notDistributedPlans } = dayInfo[0];
-    this.allDayPlans = sortAllPlans(dayInfo[1][Number(this.dayId)]);
+    const dayInfo = await Promise.all([
+      Api.getDayDistribution(this.dayId),
+      Api.getWeekDistribution(),
+      Api.getAllPlans(),
+    ]);
+    const [dayDist, weekDist, allPlans] = dayInfo;
+    const { distributedPlans, notDistributedPlans } = dayDist;
+    this.allDayPlans = sortAllPlans(weekDist[Number(this.dayId)]);
+    this.allWeekPlans = allPlans;
     this.distPlans = distributedPlans;
     this.notDistPlans = notDistributedPlans;
   }
