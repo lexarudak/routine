@@ -2,6 +2,7 @@
 import Api from '../../api';
 import { ClassList } from '../../base/enums/classList';
 import EditorMode from '../../base/enums/editorMode';
+import ErrorsList from '../../base/enums/errorsList';
 import InnerText from '../../base/enums/innerText';
 import PageList from '../../base/enums/pageList';
 import RoutsList from '../../base/enums/routsList';
@@ -72,6 +73,38 @@ class DayPage extends Page {
     }, 0);
   }
 
+  private setAddButton() {
+    getExistentElementByClass(ClassList.planAddButton).addEventListener('click', () => {
+      this.popup.editorMode();
+
+      const freeDayTime = Values.allDayMinutes - this.getDayDistTime();
+      if (freeDayTime < Values.minPlanDuration) {
+        this.popup.open(this.layout.makeBanner(ErrorsList.freeYourDayTime));
+        return;
+      }
+
+      const freeWeekTime = Values.allWeekMinutes - this.getFilledWeekTime();
+      if (freeWeekTime < Values.minPlanDuration) {
+        this.popup.open(this.layout.makeBanner(ErrorsList.freeYourWeekTime));
+        return;
+      }
+
+      this.editor.open(
+        Values.minPlanDuration,
+        Math.min(freeWeekTime, freeDayTime),
+        EditorMode.newPlanDay,
+        undefined,
+        this.dayId
+      );
+    });
+  }
+
+  private getFilledWeekTime() {
+    return this.allWeekPlans.reduce((acc, plan) => {
+      return acc + plan.duration;
+    }, 0);
+  }
+
   private fillTextInfo() {
     const distTime = this.getDayDistTime();
     getExistentElementByClass(ClassList.infoTextValue).innerText = minToHour(distTime);
@@ -85,17 +118,17 @@ class DayPage extends Page {
     this.planRounds.forEach((round) => {
       round.setWidth(maxRoundSize);
       const roundDiv = round.draw();
-      const distTime = this.getPlanDistTime(round);
+      const distTime = this.getDayPlanDistTime(round);
       round.paintRound(distTime);
-      this.setRoundClick(roundDiv, round);
+      this.setRoundClick(roundDiv, distTime, round);
 
       planZone.append(roundDiv);
     });
   }
 
-  private setRoundClick(roundDiv: HTMLElement, round: PlanRound) {
+  private setRoundClick(roundDiv: HTMLElement, distTime: number, round: PlanRound) {
     const allPlanDur = this.allWeekPlans.filter((plan) => plan._id === round.planInfo._id)[0].duration;
-    const minTime = this.getPlanDistTime(round);
+    const minTime = distTime;
     const maxTime =
       round.planInfo.duration +
       Math.min(allPlanDur - this.allPlansDist[round.planInfo._id], Values.allDayMinutes - this.getDayDistTime());
@@ -116,7 +149,7 @@ class DayPage extends Page {
     }, <PlanDis>{});
   }
 
-  private getPlanDistTime(round: PlanRound) {
+  private getDayPlanDistTime(round: PlanRound) {
     return round.planInfo.duration - this.notDistPlans.filter((plan) => plan._id === round.planInfo._id)[0].duration;
   }
 
@@ -160,6 +193,7 @@ class DayPage extends Page {
 
       this.fillTextInfo();
       this.fillPlansZone();
+      this.setAddButton();
       this.showElements();
     } catch (error) {
       this.goTo(RoutsList.loginPage);

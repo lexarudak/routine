@@ -75,6 +75,12 @@ class PlanEditor {
         this.loadToLocalStorage();
         break;
 
+      case EditorMode.newPlanDay:
+        if (dayId) this.dayId = dayId;
+        this.popup.editorMode(this.saveToLocalStorage);
+        this.loadToLocalStorage();
+        break;
+
       default:
         break;
     }
@@ -82,7 +88,7 @@ class PlanEditor {
   }
 
   private loadToLocalStorage() {
-    const savedNewPlan = localStorage.getItem(Values.newPlanSave);
+    const savedNewPlan = localStorage.getItem(`${Values.newPlanSave}/${this.dayId}`);
     if (savedNewPlan) {
       this.plan = JSON.parse(savedNewPlan);
     } else {
@@ -98,7 +104,7 @@ class PlanEditor {
     switch (this.mode) {
       case EditorMode.newPlan:
         await Api.createNewPlan({ title, text, color, duration });
-        localStorage.removeItem(Values.newPlanSave);
+        localStorage.removeItem(`${Values.newPlanSave}/${this.dayId}`);
         break;
 
       case EditorMode.editPlan:
@@ -110,6 +116,17 @@ class PlanEditor {
         await Api.pushPlanToDay(dayOpt);
         break;
 
+      case EditorMode.newPlanDay:
+        // eslint-disable-next-line no-case-declarations
+        const newPlan = await Api.createNewPlan({ title, text, color, duration });
+        await Api.pushPlanToDay({
+          dayOfWeek: Number(this.dayId),
+          planId: newPlan._id,
+          duration: newPlan.duration,
+        });
+        localStorage.removeItem(`${Values.newPlanSave}/${this.dayId}`);
+        break;
+
       default:
         break;
     }
@@ -117,7 +134,7 @@ class PlanEditor {
 
   private saveToLocalStorage() {
     this.setPlan();
-    localStorage.setItem(Values.newPlanSave, JSON.stringify(this.plan));
+    localStorage.setItem(`${Values.newPlanSave}/${this.dayId}`, JSON.stringify(this.plan));
   }
 
   private setPlan() {

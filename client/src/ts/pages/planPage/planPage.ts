@@ -164,7 +164,7 @@ class PlanPage extends Page {
 
       this.popup.editorMode();
       if (!this.ifFreeTimeInDay(freeDayMinutes)) {
-        this.popup.open(this.layout.makeBanner(ErrorsList.freeYourTime));
+        this.popup.open(this.layout.makeBanner(ErrorsList.freeYourWeekTime));
       } else if (!this.ifFreeTimeInPlan(freePlanMinutes)) {
         this.popup.open(this.layout.makeBanner(ErrorsList.thisPlanIsDist));
       } else {
@@ -178,7 +178,8 @@ class PlanPage extends Page {
       if (this.isFreeTimeInWeek()) {
         this.editor.open(Values.minPlanDuration, Values.allWeekMinutes - this.fillWeekTime, EditorMode.newPlan);
       } else {
-        this.popup.open(this.layout.makeBanner(ErrorsList.freeYourTime));
+        this.popup.editorMode();
+        this.popup.open(this.layout.makeBanner(ErrorsList.freeYourWeekTime));
       }
     });
   }

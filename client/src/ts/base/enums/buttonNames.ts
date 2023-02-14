@@ -1,6 +1,6 @@
 const enum ButtonNames {
   home = 'Home',
-  plan = 'Plan',
+  plan = 'Week',
   planAddButton = '+',
 }
 
