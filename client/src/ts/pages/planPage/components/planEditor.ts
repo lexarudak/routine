@@ -54,6 +54,7 @@ class PlanEditor {
 
   public open(minTime: number, maxTime: number, mode: EditorMode, plan?: Plan, dayId?: string) {
     this.mode = mode;
+    this.dayId = '';
     this.slider.setTimer(minTime, maxTime, plan?.duration);
 
     switch (this.mode) {

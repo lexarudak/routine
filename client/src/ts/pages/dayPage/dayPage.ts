@@ -8,7 +8,7 @@ import RoutsList from '../../base/enums/routsList';
 import Values from '../../base/enums/values';
 import { createNewElement, getExistentElementByClass, minToHour, sortAllPlans } from '../../base/helpers';
 import { DistDayPlan, Plan } from '../../base/interface';
-import { GoToFn } from '../../base/types';
+import { GoToFn, PlanDis } from '../../base/types';
 import PlanRound from '../../components/planRound';
 import PlanRoundConfigDay from '../../components/planRoundConfigDay';
 import Popup from '../../components/popup';
@@ -20,30 +20,29 @@ import Timeline from './components/timeLine';
 class DayPage extends Page {
   popup: Popup;
 
-  distPlans: DistDayPlan[];
+  distPlans: DistDayPlan[] = [];
 
-  notDistPlans: Plan[];
+  notDistPlans: Plan[] = [];
 
-  allDayPlans: Plan[];
+  allDayPlans: Plan[] = [];
 
-  allWeekPlans: Plan[];
+  allWeekPlans: Plan[] = [];
+
+  weekDistribution: Plan[][] = [];
+
+  allPlansDist: PlanDis = {};
 
   layout: PlanLayout;
 
   timeLine: Timeline;
 
-  planRounds: PlanRound[];
+  planRounds: PlanRound[] = [];
 
   constructor(goTo: GoToFn, popup: Popup, editor: PlanEditor) {
     super(PageList.dayPage, goTo, editor);
     this.popup = popup;
     this.layout = new PlanLayout(goTo);
     this.timeLine = new Timeline();
-    this.distPlans = [];
-    this.notDistPlans = [];
-    this.allDayPlans = [];
-    this.allWeekPlans = [];
-    this.planRounds = [];
   }
 
   private makePlans() {
@@ -97,10 +96,24 @@ class DayPage extends Page {
   private setRoundClick(roundDiv: HTMLElement, round: PlanRound) {
     const allPlanDur = this.allWeekPlans.filter((plan) => plan._id === round.planInfo._id)[0].duration;
     const minTime = this.getPlanDistTime(round);
-    const maxTime = round.planInfo.duration + Math.min(allPlanDur, Values.allDayMinutes - this.getDayDistTime());
+    const maxTime =
+      round.planInfo.duration +
+      Math.min(allPlanDur - this.allPlansDist[round.planInfo._id], Values.allDayMinutes - this.getDayDistTime());
     roundDiv.addEventListener('click', () =>
       this.editor.open(minTime, maxTime, EditorMode.day, round.planInfo, this.dayId)
     );
+  }
+
+  private setPlanDistTime() {
+    const flatArr = this.weekDistribution.flat();
+    this.allPlansDist = flatArr.reduce((acc, plan) => {
+      if (acc[plan._id]) {
+        acc[plan._id] += plan.duration;
+      } else {
+        acc[plan._id] = plan.duration;
+      }
+      return acc;
+    }, <PlanDis>{});
   }
 
   private getPlanDistTime(round: PlanRound) {
@@ -116,6 +129,7 @@ class DayPage extends Page {
     const [dayDist, weekDist, allPlans] = dayInfo;
     const { distributedPlans, notDistributedPlans } = dayDist;
     this.allDayPlans = sortAllPlans(weekDist[Number(this.dayId)]);
+    this.weekDistribution = weekDist;
     this.allWeekPlans = allPlans;
     this.distPlans = distributedPlans;
     this.notDistPlans = notDistributedPlans;
@@ -123,6 +137,7 @@ class DayPage extends Page {
 
   protected async getFilledPage(): Promise<HTMLElement> {
     await this.setDayInfo();
+    this.setPlanDistTime();
 
     this.makePlans();
     const container = createNewElement('div', ClassList.dayPageContainer);
