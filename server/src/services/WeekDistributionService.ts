@@ -57,7 +57,7 @@ class WeekDistributionService extends Service<Type.TWeekDistribution> {
     const id = distribution._id;
 
     if (duration) {
-      this.checkDuration(item.duration);
+      this.checkDuration(duration);
       const itemForUpdate: Partial<Type.TDBWeekDistribution> = { duration: duration };
       return (await this.model.findByIdAndUpdate(id, itemForUpdate, { new: true }).where({ userId: userId })) as Type.TWeekDistribution;
     } else {
