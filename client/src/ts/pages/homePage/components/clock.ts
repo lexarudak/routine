@@ -3,6 +3,15 @@ import { HomePageClassList } from '../../../base/enums/classList';
 import Links from '../../../base/enums/links';
 
 class Clock {
+  hours: number;
+
+  dayOfWeek: number;
+
+  constructor() {
+    this.hours = 0;
+    this.dayOfWeek = 0;
+  }
+
   getIcon(date: Date) {
     const hours = date.getHours();
     getExistentElement('.chart');
@@ -40,6 +49,7 @@ class Clock {
     const dayIcon = createElement('div', HomePageClassList.dayIcon);
 
     setInterval(() => {
+      if (!(window.location.pathname === '/')) return;
       const date = new Date();
       const hours = date.getHours() * hourDeg;
       const minutes = date.getMinutes() * deg;

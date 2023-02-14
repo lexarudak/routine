@@ -1,53 +1,22 @@
 import PageList from '../../base/enums/pageList';
 import { HomePageClassList } from '../../base/enums/classList';
 import { GoToFn } from '../../base/types';
-// import { ThoughtData } from '../../base/interfaces';
 import Page from '../page';
 import { createElement, createNewElement, getExistentElement, client } from '../../base/helpers';
-import Chart from './components/chart';
-import ToDo from './components/toDo';
-import chartData from './data/chartData';
 import thoughtData from './data/thoughtData';
-import Clock from './components/clock';
+import ClockChart from './components/clockChart';
 import FlyingThought from './components/flyingThought';
 import Thought from './components/thought';
 import ThoughtBuilder from './components/thoughtBuilder';
 import RoutsList from '../../base/enums/routsList';
 import PlanEditor from '../planPage/components/planEditor';
-import { Attributes } from '../../base/enums/attributes';
 
 class HomePage extends Page {
-  toDoInst: ToDo;
-
-  clockInst: Clock;
-
-  chartInst: Chart;
+  clockChartInst: ClockChart;
 
   constructor(goTo: GoToFn, editor: PlanEditor) {
     super(PageList.homePage, goTo, editor);
-    this.toDoInst = new ToDo();
-    this.clockInst = new Clock();
-    this.chartInst = new Chart();
-  }
-
-  private showToDo(e: Event) {
-    if (!(e.target instanceof SVGCircleElement) || !e.target.id) return;
-    const toDo = getExistentElement('.to-do');
-    const color = e.target.getAttribute(Attributes.stroke);
-    if (color) toDo.style.backgroundColor = color;
-    toDo.innerHTML = '';
-    const toDoList = this.toDoInst.draw(+e.target.id - 1);
-    toDo.append(toDoList);
-  }
-
-  private showCurrToDo(e: Event) {
-    if (!(e.target instanceof SVGCircleElement) || !e.target.id) return;
-
-    const toDo = getExistentElement('.to-do');
-    toDo.style.backgroundColor = '';
-    toDo.innerHTML = '';
-    const toDoList = this.toDoInst.draw(0);
-    toDo.append(toDoList);
+    this.clockChartInst = new ClockChart();
   }
 
   private updateHeight() {
@@ -147,34 +116,10 @@ class HomePage extends Page {
     return thought;
   }
 
-  private createClockChart() {
-    const clock = createElement('div', HomePageClassList.clock);
-    const hour = createElement('div', HomePageClassList.hour);
-    const hr = createElement('div', HomePageClassList.hourCircle);
-    const minutes = createElement('div', HomePageClassList.minutes);
-    const min = createElement('div', HomePageClassList.minutesCircle);
-    hour.append(hr);
-    minutes.append(min);
-
-    const chart = createElement('div', HomePageClassList.chart);
-    this.chartInst.createChart(chart, chartData, { strokeWidth: 14, radius: 285 });
-    chart.append(hour, minutes);
-
-    const toDo = createElement('div', HomePageClassList.toDo);
-    const toDoWrap = this.toDoInst.draw(0);
-    toDo.append(toDoWrap);
-    chart.append(toDo);
-    clock.append(chart);
-
-    chart.addEventListener('mouseover', (e) => this.showToDo(e));
-    chart.addEventListener('mouseout', (e) => this.showCurrToDo(e));
-
-    return clock;
-  }
-
   protected async getFilledPage(): Promise<HTMLElement> {
     const page = document.createElement(HomePageClassList.section);
     const flyingThought = this.createCanvas();
+    // console.log(flyingThought);
     const thought = this.createThought();
     const plan = createElement('div', HomePageClassList.plan);
     plan.textContent = 'Plan';
@@ -183,11 +128,10 @@ class HomePage extends Page {
     const signIn = createElement('div', HomePageClassList.signIn);
     signIn.textContent = 'User';
 
-    const clock = this.createClockChart();
-
+    const clock = await this.clockChartInst.draw();
     page.append(flyingThought, thought, signIn, plan, clock);
+    setTimeout(() => this.clockChartInst.getTime());
 
-    setTimeout(() => this.clockInst.getTime());
     return page;
   }
 }
