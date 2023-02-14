@@ -3,6 +3,7 @@ import { LoginData, NewPlanData, PlanData, PlanToDay, RegistrationData } from '.
 
 class Api {
   public static async registration(registrationData: RegistrationData) {
+    console.log(this.name);
     return this.post(registrationData, Path.registration);
   }
 
@@ -11,7 +12,7 @@ class Api {
   }
 
   public static async getWeekDistribution() {
-    return this.get(Path.weekDistribution, Path.get);
+    return this.get(false, Path.weekDistribution, Path.get);
   }
 
   public static async deletePlan(id: string) {
@@ -19,7 +20,7 @@ class Api {
   }
 
   public static async getAllPlans() {
-    return this.get(Path.plans);
+    return this.get(false, Path.plans);
   }
 
   public static async createNewPlan(userData: NewPlanData) {
@@ -27,16 +28,22 @@ class Api {
   }
 
   public static async editPlan(userData: PlanData) {
-    console.log('edit', userData);
     return this.post(userData, Path.plans, Path.update);
   }
 
   public static async pushPlanToDay(userData: PlanToDay) {
+    console.log(userData);
     return this.post(userData, Path.weekDistribution, Path.adjustPlan);
   }
 
-  private static async get(...path: Path[]) {
-    const response = await fetch(`${Path.origin}${path.join('')}`, {
+  public static async getDayDistribution(id: string) {
+    return this.get(id, Path.dayDistribution, Path.get);
+  }
+
+  private static async get(id: string | false, ...path: Path[]) {
+    let url = `${Path.origin}${path.join('')}`;
+    if (id) url = `${url}/${id}`;
+    const response = await fetch(url, {
       method: 'GET',
       credentials: 'include',
     });
@@ -65,6 +72,7 @@ class Api {
     const response = await fetch(`${Path.origin}${path.join('')}`, options);
     const data = await response.json();
 
+    console.log(response.ok);
     if (!response.ok) {
       throw new Error(response.status.toString());
     }

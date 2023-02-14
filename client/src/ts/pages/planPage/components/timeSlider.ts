@@ -1,7 +1,7 @@
 import { ClassList } from '../../../base/enums/classList';
 import InnerText from '../../../base/enums/innerText';
 import Values from '../../../base/enums/values';
-import { getHours, getMinutes, makeElement } from '../../../base/helpers';
+import { createNewElement, getHours, getMinutes } from '../../../base/helpers';
 
 class TimeSlider {
   minTime;
@@ -23,8 +23,7 @@ class TimeSlider {
   }
 
   private makeSlider() {
-    const slider = document.createElement('input');
-    slider.classList.add(ClassList.timeContainerSlider);
+    const slider: HTMLInputElement = createNewElement('input', ClassList.timeContainerSlider);
     slider.type = 'range';
     slider.id = Values.timeSliderId;
     slider.min = this.minTime.toString();
@@ -34,9 +33,8 @@ class TimeSlider {
   }
 
   private makeHoursInput(id: string) {
-    const input = document.createElement('input');
+    const input: HTMLInputElement = createNewElement('input', ClassList.timeContainerTimeInput);
     input.id = id;
-    input.classList.add(ClassList.timeContainerTimeInput);
     input.type = 'number';
     return input;
   }
@@ -68,7 +66,6 @@ class TimeSlider {
     hours.addEventListener('input', () => {
       hours.value = hours.value.replace(/\D+/g, '');
       if (hours.value.length > 1 && hours.value[0] === '0') hours.value = hours.value.substring(1);
-      this.setCorrectTimeInterval(hours, minutes);
       this.setSlider(slider, hours, minutes);
     });
 
@@ -80,6 +77,7 @@ class TimeSlider {
     });
 
     hours.addEventListener('blur', () => {
+      this.setCorrectTimeInterval(hours, minutes);
       if (hours.value === '') hours.value = '0';
     });
 
@@ -91,15 +89,14 @@ class TimeSlider {
   }
 
   private makeLabel(name: string, id: string) {
-    const label = document.createElement('label');
-    label.classList.add(ClassList.timeContainerTimeLabel);
+    const label: HTMLLabelElement = createNewElement('label', ClassList.timeContainerTimeLabel);
     label.htmlFor = id;
     label.innerText = name;
     return label;
   }
 
   public draw() {
-    const container = makeElement(ClassList.timeContainer);
+    const container = createNewElement('div', ClassList.timeContainer);
     const { hours, minutes, slider } = this.addListeners(
       this.makeHoursInput(InnerText.hoursText),
       this.makeHoursInput(InnerText.minutesText),

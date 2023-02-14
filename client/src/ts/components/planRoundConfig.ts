@@ -7,6 +7,7 @@ const enum PlanRoundConfig {
   fontSizeK = 5.5,
   timeSizeK = 20,
   timeSizeK2 = 2.5,
+  // day config
 }
 
 export default PlanRoundConfig;

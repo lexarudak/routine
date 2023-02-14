@@ -17,7 +17,7 @@ const enum ErrorsList {
   notStandardColor = 'This color is not standard',
   cantBeEmpty = "Can't be empty!",
   wrongElementName = 'Wrong element name',
-  freeYourTime = 'Free up your time before adding a plan',
+  freeYourTime = 'Less than 15 minutes left. Free up your time before adding a plan',
   thisPlanIsDist = 'This plan is fully distributed',
   noLogin = 'no login',
   noId = 'no id',

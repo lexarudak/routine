@@ -3,7 +3,13 @@
 import { GetAttribute, SetAttribute } from '../../../base/enums/attributes';
 import { ClassList } from '../../../base/enums/classList';
 import ErrorsList from '../../../base/enums/errorsList';
-import { buttonOff, getExistentElementByClass, getExistentInputElement, makeElement } from '../../../base/helpers';
+import {
+  buttonOff,
+  createNewElement,
+  getExistentElementByClass,
+  getExistentInputElement,
+  loginRedirect,
+} from '../../../base/helpers';
 import { Plan } from '../../../base/interface';
 import colorsAndFonts from '../../../components/colorsAndFonts';
 import Popup from '../../../components/popup';
@@ -16,6 +22,7 @@ import Api from '../../../api';
 import { GoToFn } from '../../../base/types';
 import RoutsList from '../../../base/enums/routsList';
 import InnerText from '../../../base/enums/innerText';
+import Days from '../../../base/enums/days';
 
 class PlanEditor {
   goTo: GoToFn;
@@ -30,6 +37,10 @@ class PlanEditor {
 
   mode: EditorMode;
 
+  dayId = '';
+
+  oldDur = 0;
+
   constructor(popup: Popup, goTo: GoToFn) {
     this.goTo = goTo;
     this.mode = EditorMode.newPlan;
@@ -41,48 +52,62 @@ class PlanEditor {
     this.sendPlan = this.sendPlan.bind(this);
   }
 
-  public open(minTime: number, maxTime: number, plan?: Plan) {
+  public open(minTime: number, maxTime: number, mode: EditorMode, plan?: Plan, dayId?: string) {
+    this.mode = mode;
+    this.dayId = '';
     this.slider.setTimer(minTime, maxTime, plan?.duration);
-    if (plan) {
-      this.mode = EditorMode.editPlan;
-      this.plan = { ...plan };
-      this.popup.editorMode();
-      this.loadToLocalStorage();
-    } else {
-      this.mode = EditorMode.newPlan;
-      this.popup.editorMode(this.saveToLocalStorage);
-      this.loadToLocalStorage();
+
+    switch (this.mode) {
+      case EditorMode.editPlan:
+        if (plan) this.plan = { ...plan };
+        this.popup.editorMode();
+        break;
+
+      case EditorMode.day:
+        if (plan) this.plan = { ...plan };
+        if (plan) this.oldDur = { ...plan }.duration;
+        if (dayId) this.dayId = dayId;
+        this.popup.editorMode();
+        break;
+
+      case EditorMode.newPlan:
+        this.popup.editorMode(this.saveToLocalStorage);
+        this.loadToLocalStorage();
+        break;
+
+      default:
+        break;
     }
     this.drawEditor();
   }
 
   private loadToLocalStorage() {
     const savedNewPlan = localStorage.getItem(Values.newPlanSave);
-    const savedExistPlan = localStorage.getItem(this.plan._id);
-    switch (this.mode) {
-      case EditorMode.newPlan:
-        this.plan = savedNewPlan ? JSON.parse(savedNewPlan) : { ...defaultPlan };
-        break;
-      case EditorMode.editPlan:
-        this.plan = savedExistPlan ? JSON.parse(savedExistPlan) : this.plan;
-        localStorage.removeItem(this.plan._id);
-        break;
-
-      default:
-        break;
+    if (savedNewPlan) {
+      this.plan = JSON.parse(savedNewPlan);
+    } else {
+      this.plan = { ...defaultPlan };
+      this.plan.color = this.getRandomColor();
     }
   }
 
   private async sendPlan() {
     this.setPlan();
     const { _id, title, text, color, duration } = this.plan;
+    const dayOpt = { dayOfWeek: Number(this.dayId), planId: this.plan._id, duration: this.plan.duration - this.oldDur };
     switch (this.mode) {
       case EditorMode.newPlan:
         await Api.createNewPlan({ title, text, color, duration });
         localStorage.removeItem(Values.newPlanSave);
         break;
+
       case EditorMode.editPlan:
         await Api.editPlan({ _id, title, text, color, duration });
+        break;
+
+      case EditorMode.day:
+        await Api.editPlan({ _id, title, text, color });
+        await Api.pushPlanToDay(dayOpt);
         break;
 
       default:
@@ -92,17 +117,7 @@ class PlanEditor {
 
   private saveToLocalStorage() {
     this.setPlan();
-    switch (this.mode) {
-      case EditorMode.newPlan:
-        localStorage.setItem(Values.newPlanSave, JSON.stringify(this.plan));
-        break;
-      case EditorMode.editPlan:
-        localStorage.setItem(this.plan._id, JSON.stringify(this.plan));
-        break;
-
-      default:
-        break;
-    }
+    localStorage.setItem(Values.newPlanSave, JSON.stringify(this.plan));
   }
 
   private setPlan() {
@@ -112,11 +127,21 @@ class PlanEditor {
     if (textArea instanceof HTMLTextAreaElement) this.plan.text = textArea.value;
   }
 
+  private getRandomColor() {
+    const maxVal = colorsAndFonts.size;
+    const num = Math.floor(Math.random() * maxVal);
+    const arr: string[] = [];
+    colorsAndFonts.forEach((_font, color) => {
+      arr.push(color);
+    });
+    return arr[num];
+  }
+
   private drawEditor() {
     const secColor = colorsAndFonts.get(this.plan.color);
     if (!secColor) throw new Error(ErrorsList.notStandardColor);
     const container = this.makeContainer(secColor);
-    const tools = makeElement(ClassList.editorTools);
+    const tools = createNewElement('div', ClassList.editorTools);
 
     tools.append(this.makeAcceptButton(secColor), this.colorPicker(), this.makeColorBox(), this.slider.draw());
     container.append(tools, this.makeTitle(), this.makeText());
@@ -124,7 +149,7 @@ class PlanEditor {
   }
 
   private makeContainer(secColor: string) {
-    const editor = makeElement(ClassList.editor);
+    const editor = createNewElement('div', ClassList.editor);
     editor.style.backgroundColor = this.plan.color;
     editor.style.color = secColor;
     return editor;
@@ -175,14 +200,10 @@ class PlanEditor {
 
       try {
         await this.sendPlan();
-        this.goTo(RoutsList.planPage);
+        this.goTo(!this.dayId ? RoutsList.planPage : `/${Days[Number(this.dayId)]}`);
       } catch (error) {
-        if (error instanceof Error) {
-          this.saveToLocalStorage();
-          if (error.message === ErrorsList.needLogin) {
-            this.goTo(RoutsList.loginPage);
-          }
-        }
+        console.log(error);
+        loginRedirect(error, this.goTo);
       } finally {
         this.popup.easyClose();
       }
@@ -191,14 +212,14 @@ class PlanEditor {
   }
 
   private colorPicker() {
-    const container = makeElement(ClassList.editorColorPicker);
+    const container = createNewElement('div', ClassList.editorColorPicker);
 
     container.addEventListener('click', () => this.toggleColorBox());
     return container;
   }
 
   private makeColorBox() {
-    const box = makeElement(ClassList.editorColorBox);
+    const box = createNewElement('div', ClassList.editorColorBox);
 
     colorsAndFonts.forEach((_value, color) => {
       box.append(this.makeColorRound(color));
@@ -208,7 +229,7 @@ class PlanEditor {
   }
 
   private makeColorRound(color: string) {
-    const round = makeElement(ClassList.editorColorRound);
+    const round = createNewElement('div', ClassList.editorColorRound);
     round.style.backgroundColor = color;
     round.setAttribute(SetAttribute.pickerColor, color);
 
