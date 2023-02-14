@@ -1,5 +1,5 @@
 const enum Path {
-  origin = 'http://localhost:5100/api',
+  origin = 'https://warm-bayou-30321.herokuapp.com/api',
   registration = '/users/registration',
   login = '/users/login',
   plans = '/plans',
