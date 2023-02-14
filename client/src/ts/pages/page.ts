@@ -11,10 +11,13 @@ abstract class Page {
 
   protected editor: PlanEditor;
 
+  protected dayId: string;
+
   constructor(name: PagesList, goTo: GoToFn, editor: PlanEditor) {
     this.name = name;
     this.goTo = goTo;
     this.editor = editor;
+    this.dayId = '';
   }
 
   protected async getFilledPage(): Promise<HTMLElement> {
@@ -31,7 +34,8 @@ abstract class Page {
     container.append(page);
   }
 
-  public async draw() {
+  public async draw(id?: string) {
+    if (id) this.dayId = id;
     const container = getExistentElementByClass(ClassList.mainContainer);
     await this.animatedFilledPageAppend(container);
   }

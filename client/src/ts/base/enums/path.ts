@@ -7,6 +7,7 @@ const enum Path {
   get = '/get',
   weekDistribution = '/weekDistribution',
   adjustPlan = '/adjustPlan',
+  dayDistribution = '/dayDistribution',
 }
 
 export default Path;
