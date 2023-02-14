@@ -35,7 +35,7 @@ class ProfilePage extends Page {
 
     const wrapper = document.createElement('div');
     wrapper.classList.add('profile-wrapper');
-    wrapper.append(this.layout.makeUserData(), this.layout.makeStatistics());
+    wrapper.append(this.layout.makeUserData(this.profile), this.layout.makeStatistics(this.statistics));
 
     container.append(this.layout.makeHomeButton(this.goTo), wrapper);
     return container;

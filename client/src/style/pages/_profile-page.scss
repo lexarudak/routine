@@ -1,3 +1,12 @@
+@mixin buttonable {
+  width: 130px;
+
+  margin: 0 0 10px 0;
+  padding: 5px 25px;
+
+  border-radius: 15px;
+}
+
 .profile {
   @include flexbox();
   flex-direction: column;
@@ -43,17 +52,16 @@
     padding: 0 1.5rem;
   }
 
-  &__button,
-  &__input {
-    width: 130px;
+  &__button {
+    @include buttonable();
 
-    margin: 0 0 10px 0;
-    padding: 5px 25px;
-
-    border-radius: 15px;
+    &_capitalized {
+      text-transform: capitalize;
+    }
   }
 
   &__input {
+    @include buttonable();
     padding: 3px 25px;
   }
 }
