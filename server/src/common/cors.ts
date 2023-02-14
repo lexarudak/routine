@@ -7,7 +7,7 @@ function cors(req: Request, res: Response, next: NextFunction) {
   if (config.get('allowedOrigins').includes(origin)) {
     res.header('Access-Control-Allow-Origin', origin);
     res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Methods', 'POST,DELETE');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,DELETE');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
   }
 
