@@ -72,7 +72,7 @@ class UserController extends Controller {
 
   private setJwtToken(res: Response, token: string, remember = false) {
     const maxAge = remember ? config.get('tokenExpiresInLong') : config.get('tokenExpiresInShort');
-    res.cookie(Enum.Constants.tokenDescription, token, { maxAge: maxAge, httpOnly: true });
+    res.cookie(Enum.Constants.tokenDescription, token, { maxAge: maxAge, httpOnly: true, sameSite: 'none' });
   }
 }
 
