@@ -8,6 +8,8 @@ const enum Path {
   weekDistribution = '/weekDistribution',
   adjustPlan = '/adjustPlan',
   dayDistribution = '/dayDistribution',
+  users = '/users',
+  profile = '/profile',
 }
 
 export default Path;

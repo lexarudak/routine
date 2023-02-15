@@ -42,3 +42,12 @@ export interface DistDayPlan {
   from: number;
   to: number;
 }
+
+export interface User {
+  _id: string;
+  name: string;
+  email: string;
+  confirmationDay: string;
+  confirmationTime: number;
+  createdAt: Date;
+}

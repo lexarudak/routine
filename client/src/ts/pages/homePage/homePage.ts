@@ -2,6 +2,7 @@ import PageList from '../../base/enums/pageList';
 import { HomePageClassList } from '../../base/enums/classList';
 import { GoToFn } from '../../base/types';
 import Page from '../page';
+// import Api from '../../api';
 import { createElement, createNewElement, getExistentElement, client } from '../../base/helpers';
 import thoughtData from './data/thoughtData';
 import ClockChart from './components/clockChart';
@@ -116,6 +117,11 @@ class HomePage extends Page {
     return thought;
   }
 
+  // private async getUserName() {
+  //   const user = await Api.getUserProfile();
+  //   return user.name;
+  // }
+
   protected async getFilledPage(): Promise<HTMLElement> {
     const page = document.createElement(HomePageClassList.section);
     const flyingThought = this.createCanvas();
@@ -126,7 +132,10 @@ class HomePage extends Page {
     plan.addEventListener('click', () => this.goTo(RoutsList.planPage));
 
     const signIn = createElement('div', HomePageClassList.signIn);
-    signIn.textContent = 'User';
+    signIn.addEventListener('click', () => this.goTo(RoutsList.profilePage));
+    // const userName = await this.getUserName();
+    // console.log(userName);
+    signIn.textContent = 'userName';
 
     const clock = await this.clockChartInst.draw();
     page.append(thought, signIn, plan, clock);
