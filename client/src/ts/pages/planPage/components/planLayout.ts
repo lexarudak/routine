@@ -1,14 +1,16 @@
+/* eslint-disable no-underscore-dangle */
 import ButtonClasses from '../../../base/enums/buttonClasses';
 import ButtonNames from '../../../base/enums/buttonNames';
 import { ClassList } from '../../../base/enums/classList';
 import { GetAttribute, SetAttribute } from '../../../base/enums/attributes';
 import Days from '../../../base/enums/days';
-import InnerText from '../../../base/enums/innerText';
 import RoutsList from '../../../base/enums/routsList';
 import Values from '../../../base/enums/values';
 import { GoToFn } from '../../../base/types';
-import { getExistentElementByClass, loginRedirect } from '../../../base/helpers';
+import { createNewElement, getExistentElementByClass, loginRedirect, minToHour } from '../../../base/helpers';
 import Api from '../../../api';
+import { Plan } from '../../../base/interface';
+import ErrorsList from '../../../base/enums/errorsList';
 
 class PlanLayout {
   goTo: GoToFn;
@@ -17,11 +19,10 @@ class PlanLayout {
     this.goTo = goTo;
   }
 
-  public makeHomeButton(callback: GoToFn) {
-    const btn = document.createElement('button');
-    btn.innerText = ButtonNames.home;
-    btn.classList.add(ButtonClasses.navButton);
-    btn.addEventListener('click', () => callback(RoutsList.homePage));
+  public makeNavButton(name: string, routPath: RoutsList, callback: GoToFn) {
+    const btn: HTMLButtonElement = createNewElement('button', ButtonClasses.navButton);
+    btn.innerText = name;
+    btn.addEventListener('click', () => callback(routPath));
     return btn;
   }
 
@@ -31,15 +32,13 @@ class PlanLayout {
     return weekLine;
   }
 
-  public makeWeekText() {
-    const weekTextContainer = document.createElement('div');
-    weekTextContainer.classList.add(ClassList.weekTextContainer);
-    const weekTextValue = document.createElement('div');
-    weekTextValue.classList.add(ClassList.weekTextValue);
-    const weekText = document.createElement('div');
-    weekText.innerText = InnerText.allWeekHours;
-    weekTextContainer.append(weekTextValue, weekText);
-    return weekTextContainer;
+  public makeInfoText(maxVal: string) {
+    const infoTextContainer = createNewElement('div', ClassList.infoTextContainer);
+    const infoTextValue = createNewElement('div', ClassList.infoTextValue);
+    const infoText = createNewElement('div', ClassList.infoTextValue);
+    infoText.innerText = maxVal;
+    infoTextContainer.append(infoTextValue, infoText);
+    return infoTextContainer;
   }
 
   private createDay(dayNum: number) {
@@ -85,9 +84,49 @@ class PlanLayout {
     return btn;
   }
 
+  private makeReturnToWeekZone(dayId: string, allDayPlans: Plan[]) {
+    const zone = createNewElement('div', ClassList.dayPageReturn);
+    const icon = document.createElement('div');
+    icon.style.backgroundImage = Values.returnImg;
+    zone.append(icon);
+    this.addReturnListeners(zone, dayId, allDayPlans);
+    return zone;
+  }
+
+  private addReturnListeners(zone: HTMLElement, dayId: string, allDayPlans: Plan[]) {
+    zone.addEventListener('dragover', function enter(e) {
+      e.preventDefault();
+      this.classList.add(ClassList.dayPageReturnOver);
+    });
+    zone.addEventListener('dragleave', function leave() {
+      this.classList.remove(ClassList.dayPageReturnOver);
+    });
+    zone.addEventListener('drop', async (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const { currentTarget } = e;
+      if (currentTarget instanceof HTMLElement) currentTarget.classList.remove(ClassList.dayPageReturnOver);
+      const roundDiv = getExistentElementByClass(ClassList.planRoundDrag);
+      const id = roundDiv.dataset[GetAttribute.planId];
+      if (!id) throw new Error(ErrorsList.noId);
+
+      const planDur = allDayPlans.filter((plan) => plan._id === id)[0].duration;
+      const opt = { dayOfWeek: Number(dayId), planId: id, duration: -planDur };
+      if (id) {
+        try {
+          roundDiv.style.visibility = 'hidden';
+          getExistentElementByClass(ClassList.mainContainer).classList.add(ClassList.mainContainerHide);
+          await Api.pushPlanToDay(opt);
+          this.goTo(`/${Days[Number(dayId)]}`);
+        } catch (error) {
+          loginRedirect(error, this.goTo);
+        }
+      }
+    });
+  }
+
   private makeRemoveZone() {
-    const remove = document.createElement('div');
-    remove.classList.add(ClassList.planRemoveZone);
+    const remove = createNewElement('div', ClassList.planRemoveZone);
     const bin = document.createElement('div');
     bin.style.backgroundImage = Values.binImg;
     remove.append(bin);
@@ -104,9 +143,12 @@ class PlanLayout {
       e.preventDefault();
       const { currentTarget } = e;
       if (currentTarget instanceof HTMLElement) currentTarget.classList.remove(ClassList.planRemoveZoneOver);
-      const id = getExistentElementByClass(ClassList.planRoundDrag).dataset[GetAttribute.planId];
+      const roundDiv = getExistentElementByClass(ClassList.planRoundDrag);
+      const id = roundDiv.dataset[GetAttribute.planId];
       if (id) {
         try {
+          roundDiv.style.display = 'none';
+          getExistentElementByClass(ClassList.mainContainer).classList.add(ClassList.mainContainerHide);
           await Api.deletePlan(id);
           this.goTo(RoutsList.planPage);
         } catch (error) {
@@ -155,6 +197,57 @@ class PlanLayout {
     planField.append(buttons, weekendFields);
     planBody.append(planDaysContainer, planField);
     return planBody;
+  }
+
+  public makeButtonsBlock() {
+    const container = createNewElement('div', ClassList.dayPageNavButtons);
+    container.append(
+      this.makeNavButton(ButtonNames.home, RoutsList.homePage, this.goTo),
+      this.makeNavButton(ButtonNames.plan, RoutsList.planPage, this.goTo)
+    );
+    return container;
+  }
+
+  private createPlanListItem(plan: Plan) {
+    const li: HTMLLIElement = createNewElement('li', ClassList.planListItem);
+    const color = createNewElement('div', ClassList.planListColor);
+    color.style.backgroundColor = plan.color;
+    color.style.width = `${
+      ((Values.maxDayPlanWidth * plan.duration) / Values.allDayMinutes) * Values.planListWidthK
+    }px`;
+    const name = createNewElement('span', ClassList.planListName);
+    name.innerText = plan.title;
+    const dur = createNewElement('span', ClassList.planListDur);
+    dur.innerText = `( ${minToHour(plan.duration)} )`;
+
+    li.append(color, name, dur);
+    return li;
+  }
+
+  public fillPlanList(planList: HTMLUListElement, plans: Plan[]) {
+    const filledList = planList;
+    plans.forEach((plan) => {
+      filledList.append(this.createPlanListItem(plan));
+    });
+    return filledList;
+  }
+
+  public makeDayBody(dayId: string, allDayPlans: Plan[]) {
+    const container = createNewElement('div', ClassList.dayPageBody);
+    const info = createNewElement('div', ClassList.dayPageInfo);
+    const field = createNewElement('div', ClassList.dayPageField);
+    const tools = createNewElement('div', ClassList.dayPageTools);
+    const plansZone = createNewElement('div', ClassList.dayPagePlansZone);
+    const name = createNewElement('h2', ClassList.dayPageName);
+    name.innerText = Days[Number(dayId)].toUpperCase();
+    const planList: HTMLUListElement = createNewElement('ul', ClassList.planList);
+    this.fillPlanList(planList, allDayPlans);
+
+    tools.append(this.makeReturnToWeekZone(dayId, allDayPlans), this.makeAddButton());
+    field.append(tools, plansZone);
+    info.append(name, planList);
+    container.append(info, field);
+    return container;
   }
 }
 

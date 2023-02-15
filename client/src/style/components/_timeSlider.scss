@@ -4,6 +4,7 @@
   flex-grow: 1;
   align-items: center;
   background-color: inherit;
+  font-family: 'Inconsolata', monospace;
 
   &__slider {
     color: inherit;
@@ -44,7 +45,15 @@
     margin-right: 5px;
   }
 
-  &__time-label {
+  &__time-label,
+  &__per {
     margin-right: 15px;
+  }
+
+  &__per-val {
+    display: inline-flex;
+    justify-content: flex-end;
+    text-align: end;
+    width: 60px;
   }
 }

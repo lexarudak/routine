@@ -32,7 +32,6 @@ class UserService extends Service<Type.TUser> {
     if (candidate) {
       throw new ClientError(`User with email ${item.email} already exist`);
     }
-
     const hashPassword = await bcrypt.hash(item.password, 10);
 
     const itemForCreate = Object.assign({}, item);

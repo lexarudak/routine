@@ -25,7 +25,7 @@ export interface PlanData {
   title: string;
   text: string;
   color: string;
-  duration: number;
+  duration?: number;
 }
 
 export interface PlanToDay {
@@ -48,4 +48,13 @@ export interface Statistics {
   text: string;
   color: string;
   deviation: number;
+}
+
+export interface DistDayPlan {
+  _id: string;
+  title: string;
+  text: string;
+  color: string;
+  from: number;
+  to: number;
 }

@@ -13,19 +13,26 @@ class DayDistributionService extends Service<Type.TDayDistribution> {
   async get(userId: Types.ObjectId, dayOfWeek: number) {
     const result: Type.TDayDistributionData = { distributedPlans: [], notDistributedPlans: [] };
 
-    const dayDistributions = await this.getByParameters({ userId, dayOfWeek });
-    const weekDistributions = await WeekDistributionService.getByParameters({ userId, dayOfWeek });
+    let dayDistributions: Type.TDBDayDistribution[];
+    let weekDistributions: Type.TDBWeekDistribution[];
+    let plans;
+
+    [dayDistributions, weekDistributions, plans] = await Promise.all([
+      this.getByParameters({ userId, dayOfWeek }),
+      WeekDistributionService.getByParameters({ userId, dayOfWeek }),
+      PlanService.get(userId),
+    ]);
+
+    plans = plans.map((item) => item.toObject());
 
     for (let i = 0; i < dayDistributions.length; i++) {
       const dayDistribution = dayDistributions[i];
-      await this.addDistributedPlan(dayDistribution, result);
+      this.addDistributedPlan(dayDistribution, plans, result);
       this.subtractDistributedTimeFromWeekDistribution(weekDistributions, dayDistribution);
     }
-
     for (let i = 0; i < weekDistributions.length; i++) {
-      await this.addNotDistributedPlan(weekDistributions[i], result);
+      this.addNotDistributedPlan(weekDistributions[i], plans, result);
     }
-
     return result;
   }
 
@@ -36,23 +43,23 @@ class DayDistributionService extends Service<Type.TDayDistribution> {
     }
   }
 
-  private async addDistributedPlan(dayDistribution: Type.TDBDayDistribution, result: Type.TDayDistributionData) {
-    const plan = await PlanService.getById(dayDistribution.userId, dayDistribution.planId);
+  private addDistributedPlan(dayDistribution: Type.TDBDayDistribution, plans: Type.TDBPlan[], result: Type.TDayDistributionData) {
+    const plan = plans.find((item) => item._id.toString() === dayDistribution.planId.toString());
     if (plan) {
       const period: Type.TPeriod = { from: dayDistribution.from, to: dayDistribution.to };
 
-      const distributedPlan: Type.TDistributedPlan & Partial<Type.TDuration> = Object.assign(plan, period);
+      const distributedPlan: Type.TDistributedPlan & Partial<Type.TDuration> = Object.assign({}, plan, period);
       delete distributedPlan.duration;
 
       result.distributedPlans.push(distributedPlan);
     }
   }
 
-  private async addNotDistributedPlan(weekDistribution: Type.TDBWeekDistribution, result: Type.TDayDistributionData) {
+  private addNotDistributedPlan(weekDistribution: Type.TDBWeekDistribution, plans: Type.TDBPlan[], result: Type.TDayDistributionData) {
     if (weekDistribution.duration) {
-      const plan = await PlanService.getById(weekDistribution.userId, weekDistribution.planId);
+      const plan = plans.find((item) => item._id.toString() === weekDistribution.planId.toString());
       if (plan) {
-        const notDistributedPlan: Type.TNotDistributedPlan = Object.assign(plan, { duration: weekDistribution.duration });
+        const notDistributedPlan: Type.TNotDistributedPlan = Object.assign({}, plan, { duration: weekDistribution.duration });
         result.notDistributedPlans.push(notDistributedPlan);
       }
     }
@@ -62,23 +69,20 @@ class DayDistributionService extends Service<Type.TDayDistribution> {
     this.checkDayOfWeek(item.dayOfWeek);
     this.checkPeriod(item.from, item.to);
 
-    const itemForCreate = Object.assign({}, item, { userId: userId });
+    const itemForCreate = Object.assign({}, item, { userId });
     return await this.model.create(itemForCreate);
   }
 
   async adjustPlan(userId: Types.ObjectId, item: Type.TDayDistributionAdjastPlan) {
     const distributions = item.dayDistribution;
-    const result: Type.TDayDistribution[] = [];
-
     await this.deleteByParameters({ userId, dayOfWeek: item.dayOfWeek });
 
-    for (let i = 0; i < distributions.length; i++) {
-      const distribution = distributions[i];
-      distribution.dayOfWeek = item.dayOfWeek;
-      result.push(await this.create(userId, distribution));
-    }
-
-    return result;
+    return await Promise.all(
+      distributions.map((distribution) => {
+        distribution.dayOfWeek = item.dayOfWeek;
+        return this.create(userId, distribution);
+      })
+    );
   }
 }
 

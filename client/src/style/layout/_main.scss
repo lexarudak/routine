@@ -14,10 +14,14 @@
     justify-content: center;
     position: relative;
     opacity: 1;
-    transition: .2s;
+    transition: .5s;
+    visibility: visible;
+    transform: translateY(0%);
 
     &_hide {
+      transform: translateY(-50%);
       opacity: 0;
+      visibility: hidden;
     }
   }
 }

@@ -10,6 +10,7 @@ const enum Path {
   users = '/users',
   profile = '/profile',
   statistics = '/statistics',
+  dayDistribution = '/dayDistribution',
 }
 
 export default Path;

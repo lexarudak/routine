@@ -1,7 +1,8 @@
 import { ClassList } from '../../../base/enums/classList';
+import EditorMode from '../../../base/enums/editorMode';
 import InnerText from '../../../base/enums/innerText';
 import Values from '../../../base/enums/values';
-import { getHours, getMinutes, makeElement } from '../../../base/helpers';
+import { createNewElement, getHours, getMinutes, minToHour } from '../../../base/helpers';
 
 class TimeSlider {
   minTime;
@@ -23,8 +24,7 @@ class TimeSlider {
   }
 
   private makeSlider() {
-    const slider = document.createElement('input');
-    slider.classList.add(ClassList.timeContainerSlider);
+    const slider: HTMLInputElement = createNewElement('input', ClassList.timeContainerSlider);
     slider.type = 'range';
     slider.id = Values.timeSliderId;
     slider.min = this.minTime.toString();
@@ -34,9 +34,8 @@ class TimeSlider {
   }
 
   private makeHoursInput(id: string) {
-    const input = document.createElement('input');
+    const input: HTMLInputElement = createNewElement('input', ClassList.timeContainerTimeInput);
     input.id = id;
-    input.classList.add(ClassList.timeContainerTimeInput);
     input.type = 'number';
     return input;
   }
@@ -68,7 +67,6 @@ class TimeSlider {
     hours.addEventListener('input', () => {
       hours.value = hours.value.replace(/\D+/g, '');
       if (hours.value.length > 1 && hours.value[0] === '0') hours.value = hours.value.substring(1);
-      this.setCorrectTimeInterval(hours, minutes);
       this.setSlider(slider, hours, minutes);
     });
 
@@ -80,6 +78,7 @@ class TimeSlider {
     });
 
     hours.addEventListener('blur', () => {
+      this.setCorrectTimeInterval(hours, minutes);
       if (hours.value === '') hours.value = '0';
     });
 
@@ -91,15 +90,46 @@ class TimeSlider {
   }
 
   private makeLabel(name: string, id: string) {
-    const label = document.createElement('label');
-    label.classList.add(ClassList.timeContainerTimeLabel);
+    const label: HTMLLabelElement = createNewElement('label', ClassList.timeContainerTimeLabel);
     label.htmlFor = id;
     label.innerText = name;
     return label;
   }
 
-  public draw() {
-    const container = makeElement(ClassList.timeContainer);
+  private weekHoursToDay() {
+    return minToHour(Math.floor(this.currentTime / 7));
+  }
+
+  private makePerSection(
+    hours: HTMLInputElement,
+    minutes: HTMLInputElement,
+    slider: HTMLInputElement,
+    mode?: EditorMode
+  ) {
+    const perContainer = createNewElement('span', ClassList.timeContainerPer);
+
+    if (mode === EditorMode.newPlan || mode === EditorMode.editPlan) {
+      const perVal = createNewElement('span', ClassList.timeContainerPerVal);
+
+      minutes.addEventListener('blur', () => {
+        perVal.innerHTML = this.weekHoursToDay();
+      });
+      hours.addEventListener('blur', () => {
+        perVal.innerHTML = this.weekHoursToDay();
+      });
+      slider.addEventListener('input', () => {
+        perVal.innerHTML = this.weekHoursToDay();
+      });
+
+      perVal.innerHTML = this.weekHoursToDay();
+      perContainer.append('( ~ ', perVal, '/day)');
+    }
+    if (mode === EditorMode.newPlanDay || mode === EditorMode.day) perContainer.innerHTML = InnerText.perDay;
+    return perContainer;
+  }
+
+  public draw(mode?: EditorMode) {
+    const container = createNewElement('div', ClassList.timeContainer);
     const { hours, minutes, slider } = this.addListeners(
       this.makeHoursInput(InnerText.hoursText),
       this.makeHoursInput(InnerText.minutesText),
@@ -111,6 +141,7 @@ class TimeSlider {
       this.makeLabel(InnerText.hoursText, Values.hoursInputId),
       minutes,
       this.makeLabel(InnerText.minutesText, Values.minutesInputId),
+      this.makePerSection(hours, minutes, slider, mode),
       slider
     );
     return container;

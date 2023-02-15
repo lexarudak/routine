@@ -13,14 +13,17 @@ class WeekDistributionService extends Service<Type.TWeekDistribution> {
   async get(userId: Types.ObjectId) {
     const result: Type.TDBPlan[][] = [[], [], [], [], [], [], []];
 
-    const distributions = (await this.model.find({ userId: userId })) as Type.TDBWeekDistribution[];
+    let distributions: Type.TWeekDistribution[];
+    let plans;
+
+    [distributions, plans] = await Promise.all([this.model.find({ userId }), PlanService.get(userId)]);
+
     for (let i = 0; i < distributions.length; i++) {
       const distribution = distributions[i];
-
-      const plan = (await PlanService.getById(userId, distribution.planId)) as Type.TDBPlan;
+      const plan = plans.find((item) => item._id.toString() === distribution.planId.toString());
       if (plan) {
-        plan.duration = distribution.duration;
-        result[distribution.dayOfWeek].push(plan);
+        const clone = Object.assign({}, plan.toObject(), { duration: distribution.duration });
+        result[distribution.dayOfWeek].push(clone);
       }
     }
     return result;
@@ -30,17 +33,20 @@ class WeekDistributionService extends Service<Type.TWeekDistribution> {
     this.checkDayOfWeek(item.dayOfWeek);
     this.checkDuration(item.duration);
 
-    const itemForCreate = Object.assign({}, item, { userId: userId });
+    const itemForCreate = Object.assign({}, item, { userId });
     return (await this.model.create(itemForCreate)) as Type.TWeekDistribution;
   }
 
   async adjustPlan(userId: Types.ObjectId, item: Type.TDBWeekDistribution) {
-    const plan = (await PlanService.getById(userId, item.planId)) as Type.TDBPlan;
+    let distributions: Type.TDBWeekDistribution[];
+    let plan: Type.TDBPlan | null;
+
+    [distributions, plan] = await Promise.all([this.model.find({ userId, planId: item.planId }), PlanService.getById(userId, item.planId)]);
+
     if (!plan) {
       throw new ClientError(`The user has no plan with ID ${item.planId}`);
     }
 
-    const distributions = (await this.model.find({ userId: userId, planId: item.planId })) as Type.TDBWeekDistribution[];
     const OldDistributedDuration = distributions.reduce((sum, distribution) => sum + distribution.duration, 0);
     const NewDistributedDuration = OldDistributedDuration + item.duration;
 
@@ -58,10 +64,10 @@ class WeekDistributionService extends Service<Type.TWeekDistribution> {
 
     if (duration) {
       this.checkDuration(duration);
-      const itemForUpdate: Partial<Type.TDBWeekDistribution> = { duration: duration };
-      return (await this.model.findByIdAndUpdate(id, itemForUpdate, { new: true }).where({ userId: userId })) as Type.TWeekDistribution;
+      const itemForUpdate: Partial<Type.TDBWeekDistribution> = { duration };
+      return (await this.model.findByIdAndUpdate(id, itemForUpdate, { new: true }).where({ userId })) as Type.TWeekDistribution;
     } else {
-      return (await this.model.findByIdAndDelete(id).where({ userId: userId })) as Type.TWeekDistribution;
+      return (await this.model.findByIdAndDelete(id).where({ userId })) as Type.TWeekDistribution;
     }
   }
 }

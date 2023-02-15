@@ -6,10 +6,13 @@ const enum InnerText {
   newAccount = 'I need a new account',
   iHaveAccount = 'I already have an account',
   allWeekHours = ' / 168 h',
+  allDayHours = ' / 24 h',
   defaultPlanText = '- Make some awesome things',
   defaultPlanName = 'Plan for ...',
   hoursText = 'Hours',
   minutesText = 'Minutes',
+  perWeek = '(per week)',
+  perDay = 'per day',
 }
 
 export default InnerText;

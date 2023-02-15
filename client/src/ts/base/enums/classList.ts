@@ -31,8 +31,8 @@ const enum ClassList {
   // Plans
   planContainer = 'plan',
   weekLine = 'plan__week-line',
-  weekTextContainer = 'plan__text-container',
-  weekTextValue = 'plan__text-value',
+  infoTextContainer = 'plan__text-container',
+  infoTextValue = 'plan__text-value',
   planBody = 'plan__body',
   planTools = 'plan__tools',
   planButtons = 'plan__buttons',
@@ -73,8 +73,29 @@ const enum ClassList {
   timeContainerSlider = 'time-container__slider',
   timeContainerTimeInput = 'time-container__time-input',
   timeContainerTimeLabel = 'time-container__time-label',
+  timeContainerPer = 'time-container__per',
+  timeContainerPerVal = 'time-container__per-val',
   // slider popup
   sliderPopup = 'slider-popup',
+  // day page
+  dayPageContainer = 'day-page__container',
+  dayPageNavButtons = 'day-page__nav-buttons',
+  dayPageBody = 'day-page__body',
+  dayPageInfo = 'day-page__info',
+  dayPageName = 'day-page__name',
+  dayPageField = 'day-page__field',
+  dayPageTools = 'day-page__tools',
+  dayPageReturn = 'day-page__return',
+  dayPageReturnOver = 'day-page__return_over',
+  dayPagePlansZone = 'day-page__plans-zone',
+  // timeline
+  timeline = 'timeline',
+  //
+  planList = 'plan-list',
+  planListItem = 'plan-list__item',
+  planListColor = 'plan-list__color',
+  planListName = 'plan-list__name',
+  planListDur = 'plan-list__dur',
 }
 
 const enum HomePageClassList {

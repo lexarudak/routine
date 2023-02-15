@@ -18,6 +18,7 @@
 
 // 5. Components
 @import 'style/components/button',
+'style/components/timeline',
 'style/components/slider-popup',
 'style/components/timeSlider',
 'style/components/plan-round',
@@ -27,6 +28,7 @@
 
 // 6. Page-specific styles
 @import 'style/pages/home-page',
+'style/pages/day-page',
 'style/pages/login-page',
 'style/pages/not-found-page',
 'style/pages/plan-page',

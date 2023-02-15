@@ -4,6 +4,7 @@ const enum RoutsList {
   profilePage = '/profile',
   accountPage = '/account',
   loginPage = '/login',
+  monday = '/monday',
 }
 
 export default RoutsList;

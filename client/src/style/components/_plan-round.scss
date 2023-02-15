@@ -6,10 +6,11 @@
   justify-content: center;
   border-radius: 100%;
   border: none;
-  padding: 17px;
+  padding: 14px;
   transition: 0.2s;
   transform: scale(0);
   opacity: 1;
+  border: 2px solid transparent;
 
   &_drag {
     opacity: 0.3;
@@ -17,6 +18,7 @@
 
 
   & > span {
+    // z-index: 2;
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -30,9 +32,10 @@
   }
 
   &__blur {
+    transition: .2s;
     position: absolute;
-    bottom: 0;
+    top: 0;
     width: 100%;
-    backdrop-filter: grayscale(75%);
+    background-color: rgba(67, 67, 67, 0.599);
   }
 }
