@@ -13,7 +13,7 @@ class ClockChart extends Clock {
 
   chartInst: Chart;
 
-  chartData: ChartData[][];
+  chartData: ChartData[];
 
   constructor() {
     super();
@@ -48,9 +48,21 @@ class ClockChart extends Clock {
       }
     });
 
-    this.chartData = [AMData, PMData];
+    const hours = this.checkDayHours();
+    console.log(hours);
+    // const currData = hours >= 12 ? AMData : PMData;
+    const currData = AMData;
+    this.chartData = currData;
 
-    return [AMData, PMData];
+    return currData;
+  }
+
+  checkDayHours() {
+    const date = new Date();
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    console.log(hours * 60 + minutes);
+    return date.getHours();
   }
 
   transformData() {
@@ -62,6 +74,8 @@ class ClockChart extends Clock {
           const plan: ChartData = {
             id: counter,
             hours: (chartData[i].from - 0) / 60,
+            from: 0,
+            to: chartData[i].from,
             color: '#afafaf',
             title: 'Empty',
             text: 'Empty',
@@ -74,6 +88,8 @@ class ClockChart extends Clock {
         const plan2: ChartData = {
           id: counter,
           hours: (chartData[i].to - chartData[i].from) / 60,
+          from: chartData[i].from,
+          to: chartData[i].to,
           color: chartData[i].color,
           title: chartData[i].title,
           text: chartData[i].text,
@@ -84,6 +100,8 @@ class ClockChart extends Clock {
           const plan3: ChartData = {
             id: counter,
             hours: (chartData[i + 1].from - chartData[i].to) / 60,
+            from: chartData[i].to,
+            to: chartData[i + 1].from,
             color: '#afafaf',
             title: 'Empty',
             text: 'Empty',
@@ -95,6 +113,8 @@ class ClockChart extends Clock {
         const plan4: ChartData = {
           id: counter,
           hours: (chartData[i].to - chartData[i].from) / 60,
+          from: chartData[i].from,
+          to: chartData[i].to,
           color: chartData[i].color,
           title: chartData[i].title,
           text: chartData[i].text,
@@ -105,6 +125,8 @@ class ClockChart extends Clock {
           const plan5: ChartData = {
             id: counter,
             hours: (1440 - chartData[i].to) / 60,
+            from: chartData[i].to,
+            to: 1440,
             color: '#afafaf',
             title: 'Empty',
             text: 'Empty',
@@ -114,23 +136,18 @@ class ClockChart extends Clock {
         }
       }
     });
-
-    // data.forEach((_, i) => {
-    //   data[i].id = i;
-    // });
-
+    console.log(data);
     return this.splitData(data);
   }
 
   private showToDo(e: Event) {
-    console.log('!');
     if (!(e.target instanceof SVGCircleElement) || !e.target.id) return;
     const toDo = getExistentElement('.to-do');
     const color = e.target.getAttribute(Attributes.stroke);
     if (color) toDo.style.backgroundColor = color;
     toDo.innerHTML = '';
 
-    const toDoList = this.toDoInst.draw(+e.target.id, this.chartData[0]);
+    const toDoList = this.toDoInst.draw(+e.target.id, this.chartData);
     toDo.append(toDoList);
   }
 
@@ -140,7 +157,7 @@ class ClockChart extends Clock {
     const toDo = getExistentElement('.to-do');
     toDo.style.backgroundColor = '';
     toDo.innerHTML = '';
-    const toDoList = this.toDoInst.draw(1, this.chartData[0]);
+    const toDoList = this.toDoInst.draw(this.chartData[1].id, this.chartData);
     toDo.append(toDoList);
   }
 
@@ -153,15 +170,15 @@ class ClockChart extends Clock {
     hour.append(hr);
     minutes.append(min);
 
-    const ChartDataArr: ChartData[][] = this.transformData();
+    const ChartDataArr: ChartData[] = this.transformData();
     // await this.setDayInfo();
 
     const chart = createNewElement('div', HomePageClassList.chart);
-    this.chartInst.createChart(chart, ChartDataArr[0], { strokeWidth: 14, radius: 285 });
+    this.chartInst.createChart(chart, ChartDataArr, { strokeWidth: 14, radius: 285 });
     chart.append(hour, minutes);
 
     const toDo = createNewElement('div', HomePageClassList.toDo);
-    const toDoWrap = this.toDoInst.draw(1, ChartDataArr[0]);
+    const toDoWrap = this.toDoInst.draw(1, ChartDataArr);
     toDo.append(toDoWrap);
     chart.append(toDo);
     clock.append(chart);

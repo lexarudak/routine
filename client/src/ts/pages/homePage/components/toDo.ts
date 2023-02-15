@@ -7,7 +7,6 @@ class ToDo {
     const toDoWrap = createElement('div', HomePageClassList.toDoWrap);
     const toDoTitle = createElement('h2', HomePageClassList.toDoTitle);
     const toDoTextarea = createElement('textarea', HomePageClassList.toDoTextarea);
-    // console.log(data);
     toDoTitle.textContent = data[currSector].title;
     toDoTextarea.textContent = data[currSector].text;
     toDoWrap.append(toDoTitle, toDoTextarea);
