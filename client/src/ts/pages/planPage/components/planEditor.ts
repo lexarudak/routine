@@ -216,13 +216,12 @@ class PlanEditor {
       buttonOff(currentTarget);
 
       try {
+        this.popup.easyClose();
+        getExistentElementByClass(ClassList.mainContainer).classList.add(ClassList.mainContainerHide);
         await this.sendPlan();
         this.goTo(!this.dayId ? RoutsList.planPage : `/${Days[Number(this.dayId)]}`);
       } catch (error) {
-        console.log(error);
         loginRedirect(error, this.goTo);
-      } finally {
-        this.popup.easyClose();
       }
     });
     return container;
