@@ -73,6 +73,8 @@ const enum ClassList {
   timeContainerSlider = 'time-container__slider',
   timeContainerTimeInput = 'time-container__time-input',
   timeContainerTimeLabel = 'time-container__time-label',
+  timeContainerPer = 'time-container__per',
+  timeContainerPerVal = 'time-container__per-val',
   // slider popup
   sliderPopup = 'slider-popup',
   // day page

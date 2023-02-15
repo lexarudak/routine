@@ -11,6 +11,8 @@ const enum InnerText {
   defaultPlanName = 'Plan for ...',
   hoursText = 'Hours',
   minutesText = 'Minutes',
+  perWeek = '(per week)',
+  perDay = '(per day)',
 }
 
 export default InnerText;
