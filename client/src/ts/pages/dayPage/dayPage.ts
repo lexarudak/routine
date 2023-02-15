@@ -121,8 +121,25 @@ class DayPage extends Page {
       const distTime = this.getDayPlanDistTime(round);
       round.paintRound(distTime);
       this.setRoundClick(roundDiv, distTime, round);
+      this.setRoundMove(roundDiv);
 
       planZone.append(roundDiv);
+    });
+  }
+
+  private setRoundMove(roundDiv: HTMLElement) {
+    const returnZone = getExistentElementByClass(ClassList.dayPageReturn);
+    roundDiv.addEventListener('dragstart', function dragstart() {
+      setTimeout(() => {
+        this.classList.add(ClassList.planRoundDrag);
+        returnZone.classList.add(ClassList.planRemoveZoneDrag);
+        returnZone.style.transform = Values.scaleBig;
+      }, 50);
+    });
+    roundDiv.addEventListener('dragend', function dragend() {
+      this.classList.remove(ClassList.planRoundDrag);
+      returnZone.classList.remove(ClassList.planRemoveZoneDrag);
+      returnZone.style.transform = Values.scaleNormal;
     });
   }
 

@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import ButtonClasses from '../../../base/enums/buttonClasses';
 import ButtonNames from '../../../base/enums/buttonNames';
 import { ClassList } from '../../../base/enums/classList';
@@ -9,6 +10,7 @@ import { GoToFn } from '../../../base/types';
 import { createNewElement, getExistentElementByClass, loginRedirect, minToHour } from '../../../base/helpers';
 import Api from '../../../api';
 import { Plan } from '../../../base/interface';
+import ErrorsList from '../../../base/enums/errorsList';
 
 class PlanLayout {
   goTo: GoToFn;
@@ -82,12 +84,42 @@ class PlanLayout {
     return btn;
   }
 
-  private makeReturnToWeekZone() {
+  private makeReturnToWeekZone(dayId: string, allDayPlans: Plan[]) {
     const zone = createNewElement('div', ClassList.dayPageReturn);
     const icon = document.createElement('div');
     icon.style.backgroundImage = Values.returnImg;
     zone.append(icon);
+    this.addReturnListeners(zone, dayId, allDayPlans);
     return zone;
+  }
+
+  private addReturnListeners(zone: HTMLElement, dayId: string, allDayPlans: Plan[]) {
+    zone.addEventListener('dragover', function enter(e) {
+      e.preventDefault();
+      this.classList.add(ClassList.dayPageReturnOver);
+    });
+    zone.addEventListener('dragleave', function leave() {
+      this.classList.remove(ClassList.dayPageReturnOver);
+    });
+    zone.addEventListener('drop', async (e) => {
+      e.stopPropagation();
+      e.preventDefault();
+      const { currentTarget } = e;
+      if (currentTarget instanceof HTMLElement) currentTarget.classList.remove(ClassList.dayPageReturnOver);
+      const id = getExistentElementByClass(ClassList.planRoundDrag).dataset[GetAttribute.planId];
+      if (!id) throw new Error(ErrorsList.noId);
+
+      const planDur = allDayPlans.filter((plan) => plan._id === id)[0].duration;
+      const opt = { dayOfWeek: Number(dayId), planId: id, duration: -planDur };
+      if (id) {
+        try {
+          await Api.pushPlanToDay(opt);
+          this.goTo(`/${Days[Number(dayId)]}`);
+        } catch (error) {
+          loginRedirect(error, this.goTo);
+        }
+      }
+    });
   }
 
   private makeRemoveZone() {
@@ -205,7 +237,7 @@ class PlanLayout {
     const planList: HTMLUListElement = createNewElement('ul', ClassList.planList);
     this.fillPlanList(planList, allDayPlans);
 
-    tools.append(this.makeReturnToWeekZone(), this.makeAddButton());
+    tools.append(this.makeReturnToWeekZone(dayId, allDayPlans), this.makeAddButton());
     field.append(tools, plansZone);
     info.append(name, planList);
     container.append(info, field);

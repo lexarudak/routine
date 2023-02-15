@@ -12,7 +12,7 @@ const enum InnerText {
   hoursText = 'Hours',
   minutesText = 'Minutes',
   perWeek = '(per week)',
-  perDay = '(per day)',
+  perDay = 'per day',
 }
 
 export default InnerText;
