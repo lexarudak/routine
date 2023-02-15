@@ -35,7 +35,7 @@ class Chart {
 
     sectors.forEach((sector) => {
       const circle = this.createSvgElement('circle', {
-        // id: sector.id,
+        id: sector.id,
         cx: svgRadius + strokeWidth / 2,
         cy: svgRadius + strokeWidth / 2,
         r: svgRadius,

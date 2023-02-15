@@ -1,8 +1,9 @@
 interface ChartData {
+  id: number;
   hours: number;
   color: string;
-  title?: string;
-  text?: string;
+  title: string;
+  text: string;
 }
 
 interface ThoughtData {
@@ -15,6 +16,7 @@ interface ChartConfig {
 }
 
 interface ChartSector {
+  id: number;
   hours: number;
   color: string;
   width: number;
