@@ -122,4 +122,8 @@ const enum HomePageClassList {
   none = 'none',
 }
 
-export { ClassList, HomePageClassList };
+const enum ProfilePageClassList {
+  profile = 'profile',
+}
+
+export { ClassList, HomePageClassList, ProfilePageClassList };

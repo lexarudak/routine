@@ -51,3 +51,10 @@ export interface User {
   confirmationTime: number;
   createdAt: Date;
 }
+
+export interface Statistics {
+  title: string;
+  text: string;
+  color: string;
+  deviation: number;
+}

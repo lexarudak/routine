@@ -2,7 +2,7 @@ import PageList from '../../base/enums/pageList';
 import { HomePageClassList } from '../../base/enums/classList';
 import { GoToFn } from '../../base/types';
 import Page from '../page';
-// import Api from '../../api';
+import Api from '../../api';
 import { createElement, createNewElement, getExistentElement, client } from '../../base/helpers';
 import thoughtData from './data/thoughtData';
 import ClockChart from './components/clockChart';
@@ -117,15 +117,15 @@ class HomePage extends Page {
     return thought;
   }
 
-  // private async getUserName() {
-  //   const user = await Api.getUserProfile();
-  //   return user.name;
-  // }
+  private async getUserName() {
+    const user = await Api.getUserProfile();
+    return user.name;
+  }
 
   protected async getFilledPage(): Promise<HTMLElement> {
     const page = document.createElement(HomePageClassList.section);
     const flyingThought = this.createCanvas();
-    console.log(flyingThought);
+    // console.log(flyingThought);
     const thought = this.createThought();
     const plan = createElement('div', HomePageClassList.plan);
     plan.textContent = 'Plan';
@@ -133,13 +133,12 @@ class HomePage extends Page {
 
     const signIn = createElement('div', HomePageClassList.signIn);
     signIn.addEventListener('click', () => this.goTo(RoutsList.profilePage));
-    // const userName = await this.getUserName();
-    // console.log(userName);
-    signIn.textContent = 'userName';
+    const userName = await this.getUserName();
+    signIn.textContent = userName;
 
     const clock = await this.clockChartInst.draw();
-    page.append(thought, signIn, plan, clock);
-    // page.append(flyingThought, thought, signIn, plan, clock);
+    // page.append(thought, signIn, plan, clock);
+    page.append(flyingThought, thought, signIn, plan, clock);
     setTimeout(() => this.clockChartInst.getTime());
 
     return page;

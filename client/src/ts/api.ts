@@ -1,14 +1,18 @@
 import Path from './base/enums/path';
-import { LoginData, NewPlanData, PlanData, PlanToDay, RegistrationData, User } from './base/interface';
+import { LoginData, NewPlanData, PlanData, PlanToDay, RegistrationData, User, Statistics } from './base/interface';
 
 class Api {
   public static async registration(registrationData: RegistrationData) {
     console.log(this.name);
-    return this.post(registrationData, Path.registration);
+    return this.post(registrationData, Path.users, Path.registration);
   }
 
   public static async login(loginData: LoginData) {
-    return this.post(loginData, Path.login);
+    return this.post(loginData, Path.users, Path.login);
+  }
+
+  public static async logout() {
+    return this.post(null, Path.logout);
   }
 
   public static async getWeekDistribution() {
@@ -37,7 +41,11 @@ class Api {
   }
 
   public static async getUserProfile(): Promise<User> {
-    return this.get(Path.users, Path.profile);
+    return this.get(false, Path.users, Path.profile);
+  }
+
+  public static async getStatistics(): Promise<Statistics[]> {
+    return this.get(false, Path.statistics, Path.get);
   }
 
   public static async getDayDistribution(id: string) {
@@ -61,7 +69,7 @@ class Api {
   }
 
   private static async post(
-    userData: RegistrationData | LoginData | NewPlanData | PlanData | PlanToDay,
+    userData: RegistrationData | LoginData | NewPlanData | PlanData | PlanToDay | null,
     ...path: Path[]
   ) {
     const options: RequestInit = {
