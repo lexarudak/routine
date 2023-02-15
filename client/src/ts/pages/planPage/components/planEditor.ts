@@ -160,7 +160,7 @@ class PlanEditor {
     const container = this.makeContainer(secColor);
     const tools = createNewElement('div', ClassList.editorTools);
 
-    tools.append(this.makeAcceptButton(secColor), this.colorPicker(), this.makeColorBox(), this.slider.draw());
+    tools.append(this.makeAcceptButton(secColor), this.colorPicker(), this.makeColorBox(), this.slider.draw(this.mode));
     container.append(tools, this.makeTitle(), this.makeText());
     this.popup.open(container);
   }

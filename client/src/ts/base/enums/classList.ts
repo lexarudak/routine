@@ -73,6 +73,8 @@ const enum ClassList {
   timeContainerSlider = 'time-container__slider',
   timeContainerTimeInput = 'time-container__time-input',
   timeContainerTimeLabel = 'time-container__time-label',
+  timeContainerPer = 'time-container__per',
+  timeContainerPerVal = 'time-container__per-val',
   // slider popup
   sliderPopup = 'slider-popup',
   // day page
@@ -84,6 +86,7 @@ const enum ClassList {
   dayPageField = 'day-page__field',
   dayPageTools = 'day-page__tools',
   dayPageReturn = 'day-page__return',
+  dayPageReturnOver = 'day-page__return_over',
   dayPagePlansZone = 'day-page__plans-zone',
   // timeline
   timeline = 'timeline',
