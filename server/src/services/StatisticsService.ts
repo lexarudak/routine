@@ -14,14 +14,18 @@ class StatisticsService extends Service<Type.TStatistics> {
     const result: Type.TStatisticsData = [];
     const processedPlanIDs: string[] = [];
 
-    const statistics = await this.model.find({ userId: userId });
+    let statistics: Type.TStatistics[];
+    let plans;
+
+    [statistics, plans] = await Promise.all([this.model.find({ userId }), PlanService.get(userId)]);
+    plans = plans.map((item) => item.toObject());
 
     for (let i = 0; i < statistics.length; i++) {
       const planId = statistics[i].planId.toString();
 
       if (!processedPlanIDs.includes(planId)) {
         const statisticsByPlan = statistics.filter((statistic) => statistic.planId.toString() === planId);
-        await this.addAverageStatistics(statistics[i], statisticsByPlan, result);
+        this.addAverageStatistics(statistics[i], statisticsByPlan, plans, result);
         processedPlanIDs.push(planId);
       }
     }
@@ -29,14 +33,19 @@ class StatisticsService extends Service<Type.TStatistics> {
     return result;
   }
 
-  private async addAverageStatistics(statistic: Type.TStatistics, statisticsByPlan: Type.TStatistics[], result: Type.TStatisticsData) {
-    const plan = await PlanService.getById(statistic.userId, statistic.planId);
+  private addAverageStatistics(
+    statistic: Type.TStatistics,
+    statisticsByPlan: Type.TStatistics[],
+    plans: Type.TDBPlan[],
+    result: Type.TStatisticsData
+  ) {
+    const plan = plans.find((item) => item._id.toString() === statistic.planId.toString());
     if (plan) {
       const numberOfConfirmedDays = statisticsByPlan.length;
       const entireDeviation = statisticsByPlan.reduce((deviation, statistic) => deviation + statistic.deviation, 0);
       const averageDeviation = Math.round(entireDeviation / numberOfConfirmedDays);
 
-      const averageStatistic: Type.TStatisticsDataItem & Partial<Type.TDuration> = Object.assign(plan, { deviation: averageDeviation });
+      const averageStatistic: Type.TStatisticsDataItem & Partial<Type.TDuration> = Object.assign({}, plan, { deviation: averageDeviation });
       delete averageStatistic.duration;
 
       result.push(averageStatistic);
@@ -80,9 +89,7 @@ class StatisticsService extends Service<Type.TStatistics> {
     distributionsFact.forEach((distribution) => plans.add(distribution.planId.toString()));
     const PlanIDs = Array.from(plans.values());
 
-    for (let i = 0; i < PlanIDs.length; i++) {
-      const planId = PlanIDs[i];
-
+    return await Promise.all(PlanIDs.map((planId) => {
       const distributionPlan = distributionsPlan.find((distribution) => String(distribution.planId) === planId);
       const distributionFact = distributionsFact.find((distribution) => String(distribution.planId) === planId);
 
@@ -92,11 +99,8 @@ class StatisticsService extends Service<Type.TStatistics> {
         deviation: this.getCalculatedDeviation(distributionPlan, distributionFact),
       };
 
-      const createdItem = await this.create(userId, statistics);
-      result.push(createdItem);
-    }
-
-    return result;
+      return this.create(userId, statistics);
+    }));
   }
 }
 
