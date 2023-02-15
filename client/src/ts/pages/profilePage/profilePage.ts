@@ -42,8 +42,8 @@ class ProfilePage extends Page {
     return day === 'today' ? 'yesterday' : 'today';
   }
 
-  private logOut() {
-    document.cookie = '';
+  private async logOut() {
+    await Api.logout();
     helpers.loginRedirect(new Error('401'), this.goTo);
   }
 
