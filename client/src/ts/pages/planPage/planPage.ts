@@ -101,6 +101,8 @@ class PlanPage extends Page {
     this.popup.editorModeOff();
 
     try {
+      this.popup.easyClose();
+      getExistentElementByClass(ClassList.mainContainer).classList.add(ClassList.mainContainerHide);
       await Api.pushPlanToDay(userData);
       this.goTo(RoutsList.planPage);
     } catch (error) {
@@ -109,8 +111,6 @@ class PlanPage extends Page {
           this.goTo(RoutsList.loginPage);
         }
       }
-    } finally {
-      this.popup.easyClose();
     }
   }
 

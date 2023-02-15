@@ -106,13 +106,16 @@ class PlanLayout {
       e.preventDefault();
       const { currentTarget } = e;
       if (currentTarget instanceof HTMLElement) currentTarget.classList.remove(ClassList.dayPageReturnOver);
-      const id = getExistentElementByClass(ClassList.planRoundDrag).dataset[GetAttribute.planId];
+      const roundDiv = getExistentElementByClass(ClassList.planRoundDrag);
+      const id = roundDiv.dataset[GetAttribute.planId];
       if (!id) throw new Error(ErrorsList.noId);
 
       const planDur = allDayPlans.filter((plan) => plan._id === id)[0].duration;
       const opt = { dayOfWeek: Number(dayId), planId: id, duration: -planDur };
       if (id) {
         try {
+          roundDiv.style.visibility = 'hidden';
+          getExistentElementByClass(ClassList.mainContainer).classList.add(ClassList.mainContainerHide);
           await Api.pushPlanToDay(opt);
           this.goTo(`/${Days[Number(dayId)]}`);
         } catch (error) {
@@ -140,9 +143,12 @@ class PlanLayout {
       e.preventDefault();
       const { currentTarget } = e;
       if (currentTarget instanceof HTMLElement) currentTarget.classList.remove(ClassList.planRemoveZoneOver);
-      const id = getExistentElementByClass(ClassList.planRoundDrag).dataset[GetAttribute.planId];
+      const roundDiv = getExistentElementByClass(ClassList.planRoundDrag);
+      const id = roundDiv.dataset[GetAttribute.planId];
       if (id) {
         try {
+          roundDiv.style.display = 'none';
+          getExistentElementByClass(ClassList.mainContainer).classList.add(ClassList.mainContainerHide);
           await Api.deletePlan(id);
           this.goTo(RoutsList.planPage);
         } catch (error) {
