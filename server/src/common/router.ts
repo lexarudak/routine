@@ -21,6 +21,7 @@ router.delete('/users/:id', UserController.delete.bind(UserController));
 router.get('/users/profile', UserController.profile.bind(UserController));
 router.post('/users/registration', validationParameters, UserController.create.bind(UserController));
 router.post('/users/login', UserController.login.bind(UserController));
+router.post('/users/logout', UserController.logout.bind(UserController));
 router.post('/users/update', UserController.update.bind(UserController));
 
 router.get('/thoughts', ThoughtController.get.bind(ThoughtController));
