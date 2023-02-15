@@ -119,7 +119,7 @@ class HomePage extends Page {
   protected async getFilledPage(): Promise<HTMLElement> {
     const page = document.createElement(HomePageClassList.section);
     const flyingThought = this.createCanvas();
-    // console.log(flyingThought);
+    console.log(flyingThought);
     const thought = this.createThought();
     const plan = createElement('div', HomePageClassList.plan);
     plan.textContent = 'Plan';
@@ -129,7 +129,8 @@ class HomePage extends Page {
     signIn.textContent = 'User';
 
     const clock = await this.clockChartInst.draw();
-    page.append(flyingThought, thought, signIn, plan, clock);
+    page.append(thought, signIn, plan, clock);
+    // page.append(flyingThought, thought, signIn, plan, clock);
     setTimeout(() => this.clockChartInst.getTime());
 
     return page;
