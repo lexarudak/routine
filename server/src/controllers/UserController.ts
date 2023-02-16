@@ -53,8 +53,19 @@ class UserController extends Controller {
   async login(req: Request, res: Response) {
     try {
       const userData = await UserService.login(req.body);
-      this.setJwtToken(res, userData.token, req.body?.remember);
+      const maxAge = req.body?.remember ? config.get('tokenExpiresInLong') : config.get('tokenExpiresInShort');
+
+      this.setJwtToken(res, userData.token, maxAge);
       res.json(userData);
+    } catch (error) {
+      this.error(res, error);
+    }
+  }
+
+  async logout(req: Request, res: Response) {
+    try {
+      this.setJwtToken(res, '', -1);
+      res.json(null);
     } catch (error) {
       this.error(res, error);
     }
@@ -70,9 +81,8 @@ class UserController extends Controller {
     this.handleWithAuthorization<Type.TDBUser>(req, res, process);
   }
 
-  private setJwtToken(res: Response, token: string, remember = false) {
-    const maxAge = remember ? config.get('tokenExpiresInLong') : config.get('tokenExpiresInShort');
-    res.cookie(Enum.Constants.tokenDescription, token, { maxAge: maxAge, httpOnly: true, secure: true, sameSite: 'none' });
+  private setJwtToken(res: Response, token: string, maxAge: number) {
+    res.cookie(Enum.Constants.tokenDescription, token, { maxAge, httpOnly: true, secure: true, sameSite: 'none' });
   }
 }
 
