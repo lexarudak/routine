@@ -2,6 +2,7 @@ const enum ClassList {
   mainContainer = 'main__container',
   mainContainerHide = 'main__container_hide',
   banner = 'banner',
+  imgContainer = 'img-container',
   scaleNormal = 'scale-normal',
   // 404
   page404 = 'page-404',

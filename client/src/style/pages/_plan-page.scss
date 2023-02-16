@@ -140,11 +140,9 @@
     color: $font-medium;
     transition: .2s;
     transform: scale(0);
-    transform-origin: right top;
 
     &.plan__button-add_drag {
-        transform: scale(.3) translateY(30%);
-    
+        transform: translateY(30%);
       }
   }
 

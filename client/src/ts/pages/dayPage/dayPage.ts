@@ -7,7 +7,13 @@ import InnerText from '../../base/enums/innerText';
 import PageList from '../../base/enums/pageList';
 import RoutsList from '../../base/enums/routsList';
 import Values from '../../base/enums/values';
-import { createNewElement, getExistentElementByClass, minToHour, sortAllPlans } from '../../base/helpers';
+import {
+  createNewElement,
+  getExistentElementByClass,
+  makeRoundIcon,
+  minToHour,
+  sortAllPlans,
+} from '../../base/helpers';
 import { DistDayPlan, Plan } from '../../base/interface';
 import { GoToFn, PlanDis } from '../../base/types';
 import PlanRound from '../../components/planRound';
@@ -130,7 +136,9 @@ class DayPage extends Page {
     const returnZone = getExistentElementByClass(ClassList.dayPageReturn);
     const timeline = getExistentElementByClass(ClassList.timeline);
     const planAddButton = getExistentElementByClass(ClassList.planAddButton);
-    roundDiv.addEventListener('dragstart', function dragstart() {
+    roundDiv.addEventListener('dragstart', function dragstart(e) {
+      const { icon, center } = makeRoundIcon(this);
+      if (e.dataTransfer) e.dataTransfer.setDragImage(icon, center, center);
       this.classList.add(ClassList.planRoundDrag);
       returnZone.classList.add(ClassList.planRemoveZoneDrag);
       planAddButton.classList.add(ClassList.planAddButtonDarg);

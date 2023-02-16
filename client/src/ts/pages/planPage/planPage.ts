@@ -3,7 +3,14 @@ import { ClassList } from '../../base/enums/classList';
 import PagesList from '../../base/enums/pageList';
 import PlanRoundConfig from '../../components/planRoundConfig';
 import Values from '../../base/enums/values';
-import { buttonOff, createNewElement, getExistentElementByClass, minToHour, sortAllPlans } from '../../base/helpers';
+import {
+  buttonOff,
+  createNewElement,
+  getExistentElementByClass,
+  makeRoundIcon,
+  minToHour,
+  sortAllPlans,
+} from '../../base/helpers';
 import { Plan } from '../../base/interface';
 import { GoToFn, PlanDis, WeekInfo } from '../../base/types';
 import PlanRound from '../../components/planRound';
@@ -257,12 +264,12 @@ class PlanPage extends Page {
     });
     const days = getExistentElementByClass(ClassList.planDaysContainer);
     const bin = getExistentElementByClass(ClassList.planRemoveZone);
-    roundDiv.addEventListener('dragstart', function dragstart() {
-      setTimeout(() => {
-        this.classList.add(ClassList.planRoundDrag);
-        bin.classList.add(ClassList.planRemoveZoneDrag);
-        days.classList.add(ClassList.planDaysContainerDrag);
-      }, 50);
+    roundDiv.addEventListener('dragstart', function dragstart(e) {
+      const { icon, center } = makeRoundIcon(this);
+      if (e.dataTransfer) e.dataTransfer.setDragImage(icon, center, center);
+      this.classList.add(ClassList.planRoundDrag);
+      bin.classList.add(ClassList.planRemoveZoneDrag);
+      days.classList.add(ClassList.planDaysContainerDrag);
     });
     roundDiv.addEventListener('dragend', function dragend() {
       this.classList.remove(ClassList.planRoundDrag);

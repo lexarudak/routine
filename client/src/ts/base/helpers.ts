@@ -1,6 +1,9 @@
+import PlanRoundConfig from '../components/planRoundConfig';
+import { ClassList } from './enums/classList';
 import Days from './enums/days';
 import ErrorsList from './enums/errorsList';
 import RoutsList from './enums/routsList';
+import Values from './enums/values';
 import { Plan } from './interface';
 import { GoToFn } from './types';
 
@@ -109,6 +112,30 @@ function isDayOfWeek(path: string) {
   return '';
 }
 
+function makeRoundIcon(round: HTMLElement) {
+  const width = round.clientWidth;
+  const icon = round.cloneNode(true);
+  let center = 0;
+  if (icon instanceof HTMLElement) {
+    getExistentElementByClass(ClassList.imgContainer).append(icon);
+    icon.style.transform = Values.scaleNormal;
+    icon.style.boxShadow = 'none';
+    center = width / 2;
+    const newBlur = icon.childNodes.item(1);
+    if (newBlur instanceof HTMLElement) newBlur.style.display = `none`;
+    if (width > 100) {
+      icon.style.width = `${PlanRoundConfig.iconRoundSize}px`;
+      icon.style.height = icon.style.width;
+      if (icon.firstChild instanceof HTMLElement) icon.firstChild.style.fontSize = '14px';
+      center = PlanRoundConfig.iconRoundSize / 2;
+    }
+    if (icon.lastChild instanceof HTMLElement) icon.lastChild.style.display = 'none';
+  }
+  if (!(icon instanceof HTMLElement)) throw new Error(ErrorsList.elementNotFound);
+  console.log(icon);
+  return { icon, center };
+}
+
 export {
   isHTMLElement,
   getExistentElement,
@@ -127,4 +154,5 @@ export {
   client,
   isDayOfWeek,
   sortAllPlans,
+  makeRoundIcon,
 };
