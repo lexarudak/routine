@@ -12,7 +12,8 @@ class Api {
   }
 
   public static async logout() {
-    return this.post(null, Path.logout);
+    const empty: Record<string, never> = {};
+    return this.post(empty, Path.users, Path.logout);
   }
 
   public static async getWeekDistribution() {
@@ -70,7 +71,7 @@ class Api {
   }
 
   private static async post(
-    userData: RegistrationData | LoginData | NewPlanData | PlanData | PlanToDay | null,
+    userData: RegistrationData | LoginData | NewPlanData | PlanData | PlanToDay | Record<string, never>,
     ...path: Path[]
   ) {
     const options: RequestInit = {
