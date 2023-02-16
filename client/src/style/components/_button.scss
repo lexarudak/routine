@@ -7,7 +7,7 @@
   transition: .3s;
   cursor: pointer;
 
-  &:disabled:hover{
+  &:disabled:hover {
     box-shadow: $shadow;
     transform: scale(1);
   }
@@ -40,18 +40,19 @@
         border-color: $font-light-trans;
         color: $font-light-trans;
 
-        & > * {
-            color: $font-light-trans;
-            ;
-          }
+        &>* {
+          color: $font-light-trans;
+          ;
+        }
       }
     }
 
     &:hover {
       border-color: $sign-in-active;
 
-      & > * {
-        color: $sign-in-active;;
+      &>* {
+        color: $sign-in-active;
+        ;
       }
     }
   }
@@ -69,5 +70,72 @@
   &:hover {
     color: $success;
     transform: scale(.95);
+  }
+}
+
+.save-button {
+  position: absolute;
+  right: 70px;
+  top: 20px;
+
+  width: auto;
+  padding: 5px 10px;
+
+  border: none;
+  border-radius: 14px;
+  box-shadow: $shadow;
+
+  color: $background-color;
+  background-color: $success;
+  font-size: 16px;
+
+  animation: blink 2s infinite;
+
+  cursor: pointer;
+  transition: .3s;
+
+  &_visible {
+    animation: show 1s;
+  }
+
+  &_hidden {
+    animation: hide 1s;
+  }
+
+  @keyframes show {
+    0% {
+      opacity: 0;
+    }
+
+    100% {
+      opacity: 1;
+    }
+  }
+
+  @keyframes hide {
+    0% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
+
+  @keyframes blink {
+    0% {
+      color: $background-color;
+      transform: scale(1);
+    }
+
+    50% {
+      color: $font-light;
+      transform: scale(.95);
+    }
+
+    100% {
+      color: $background-color;
+      transform: scale(1);
+    }
   }
 }
