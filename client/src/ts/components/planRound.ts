@@ -80,7 +80,7 @@ class PlanRound {
       time.style.color = makeColorTransparent(fontColor, 50);
     }
 
-    round.append(name, time, this.blur);
+    round.append(name, this.blur, time);
     return round;
   }
 }

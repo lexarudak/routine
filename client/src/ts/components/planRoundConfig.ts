@@ -3,11 +3,11 @@ const enum PlanRoundConfig {
   minProcDur = 90,
   maxProcDur = 4200,
   minRoundSize = 70,
+  iconRoundSize = 100,
 
   fontSizeK = 5.5,
   timeSizeK = 20,
   timeSizeK2 = 2.5,
-  // day config
 }
 
 export default PlanRoundConfig;

@@ -58,7 +58,7 @@
     align-items: center;
     justify-content: center;
     transition: .2s;
-    transform: scale(0);
+    transform: scale(0) translateY(0%);
     background-color: rgba(255, 255, 255, 0.46);
 
     & > div {
@@ -69,12 +69,13 @@
       background-size: contain;
     }
 
-    &_drag {
-      border-width: 2px;
+    &.plan__remove_drag {
+      transform: scale(1.3) translateY(20%);
+
     }
 
     &_over {
-      background-color: $success-trans;
+      background-color: $color-background-2-trans;
     }
   }
 

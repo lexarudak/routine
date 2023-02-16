@@ -12,7 +12,11 @@
   opacity: 1;
   border: 2px solid transparent;
 
-  &_drag {
+  .plan-round:-webkit-drag {
+      border-radius: 2px;
+    }
+
+  &.plan-round_drag {
     opacity: 0.3;
   }
 
