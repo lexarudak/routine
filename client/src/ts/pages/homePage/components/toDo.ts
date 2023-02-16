@@ -4,12 +4,23 @@ import { ChartData } from '../../../base/interfaces';
 
 class ToDo {
   draw(currSector: number, data: ChartData[]) {
+    console.log('sector', data, currSector);
+    const sector = data.findIndex((el) => el.id === currSector);
+
     const toDoWrap = createElement('div', HomePageClassList.toDoWrap);
     const toDoTitle = createElement('h2', HomePageClassList.toDoTitle);
-    const toDoTextarea = createElement('textarea', HomePageClassList.toDoTextarea);
-    toDoTitle.textContent = data[currSector].title;
-    toDoTextarea.textContent = data[currSector].text;
-    toDoWrap.append(toDoTitle, toDoTextarea);
+    toDoTitle.textContent = data[sector].title;
+
+    toDoWrap.append(toDoTitle);
+    if (data[sector].text) {
+      const toDoTextarea = createElement('textarea', HomePageClassList.toDoTextarea);
+      toDoTextarea.textContent = data[sector].text;
+      toDoWrap.append(toDoTextarea);
+    } else {
+      const toDoText = createElement('div', HomePageClassList.toDoText);
+      toDoText.textContent = 'Text';
+      toDoWrap.append(toDoText);
+    }
 
     return toDoWrap;
   }

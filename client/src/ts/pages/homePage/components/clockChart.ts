@@ -6,7 +6,7 @@ import Api from '../../../api';
 import Clock from './clock';
 import Chart from './chart';
 import ToDo from './toDo';
-import { chartData } from '../data/chartData';
+import { chartData, emptyData } from '../data/chartData';
 
 class ClockChart extends Clock {
   toDoInst: ToDo;
@@ -15,11 +15,20 @@ class ClockChart extends Clock {
 
   chartData: ChartData[];
 
+  minutes: number;
+
+  currPlanNum: number;
+
+  currColor: string;
+
   constructor() {
     super();
     this.toDoInst = new ToDo();
     this.chartInst = new Chart();
-    this.chartData = [];
+    this.chartData = emptyData;
+    this.minutes = 0;
+    this.currPlanNum = 0;
+    this.currColor = this.chartData[0].color;
   }
 
   async getDayInfo() {
@@ -48,21 +57,26 @@ class ClockChart extends Clock {
       }
     });
 
-    const hours = this.checkDayHours();
-    console.log(hours);
-    // const currData = hours >= 12 ? AMData : PMData;
-    const currData = AMData;
+    const [hours] = this.getTime();
+    const currData = hours < 12 ? AMData : PMData;
     this.chartData = currData;
 
     return currData;
   }
 
-  checkDayHours() {
+  getTime() {
     const date = new Date();
     const hours = date.getHours();
-    const minutes = date.getMinutes();
-    console.log(hours * 60 + minutes);
-    return date.getHours();
+    const minutes = hours * 60 + date.getMinutes();
+    this.minutes = minutes;
+    return [hours, minutes];
+  }
+
+  updateDataByTime() {
+    const currPlan = this.chartData.filter((el) => this.minutes >= el.from && this.minutes <= el.to);
+    this.currPlanNum = currPlan[0].id;
+    this.currColor = currPlan[0].color;
+    return currPlan;
   }
 
   transformData() {
@@ -78,7 +92,7 @@ class ClockChart extends Clock {
             to: chartData[i].from,
             color: '#afafaf',
             title: 'Empty',
-            text: 'Empty',
+            text: '',
           };
           data.push(plan);
           counter += 1;
@@ -104,7 +118,7 @@ class ClockChart extends Clock {
             to: chartData[i + 1].from,
             color: '#afafaf',
             title: 'Empty',
-            text: 'Empty',
+            text: '',
           };
           data.push(plan3);
           counter += 1;
@@ -129,14 +143,13 @@ class ClockChart extends Clock {
             to: 1440,
             color: '#afafaf',
             title: 'Empty',
-            text: 'Empty',
+            text: '',
           };
           data.push(plan5);
           counter += 1;
         }
       }
     });
-    console.log(data);
     return this.splitData(data);
   }
 
@@ -155,13 +168,16 @@ class ClockChart extends Clock {
     if (!(e.target instanceof SVGCircleElement) || !e.target.id) return;
 
     const toDo = getExistentElement('.to-do');
-    toDo.style.backgroundColor = '';
+    toDo.style.backgroundColor = this.currColor;
     toDo.innerHTML = '';
-    const toDoList = this.toDoInst.draw(this.chartData[1].id, this.chartData);
+    const toDoList = this.toDoInst.draw(this.currPlanNum, this.chartData);
     toDo.append(toDoList);
   }
 
   async draw() {
+    const ChartDataArr: ChartData[] = this.transformData();
+    this.getTime();
+    this.updateDataByTime();
     const clock = createNewElement('div', HomePageClassList.clock);
     const hour = createNewElement('div', HomePageClassList.hour);
     const hr = createNewElement('div', HomePageClassList.hourCircle);
@@ -170,7 +186,6 @@ class ClockChart extends Clock {
     hour.append(hr);
     minutes.append(min);
 
-    const ChartDataArr: ChartData[] = this.transformData();
     // await this.setDayInfo();
 
     const chart = createNewElement('div', HomePageClassList.chart);
@@ -178,7 +193,8 @@ class ClockChart extends Clock {
     chart.append(hour, minutes);
 
     const toDo = createNewElement('div', HomePageClassList.toDo);
-    const toDoWrap = this.toDoInst.draw(1, ChartDataArr);
+    toDo.style.backgroundColor = this.currColor;
+    const toDoWrap = this.toDoInst.draw(this.currPlanNum, ChartDataArr);
     toDo.append(toDoWrap);
     chart.append(toDo);
     clock.append(chart);

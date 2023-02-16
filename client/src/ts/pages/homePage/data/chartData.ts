@@ -1,31 +1,3 @@
-const chartDataOld = [
-  {
-    // id: '1',
-    hours: 6,
-    color: '#9F5454',
-  },
-  {
-    // id: '2',
-    hours: 1.5,
-    color: '#549F7B',
-  },
-  {
-    // id: '3',
-    hours: 2,
-    color: '#9F5481',
-  },
-  {
-    // id: '4',
-    hours: 1.5,
-    color: '#54729F',
-  },
-  {
-    // id: '5',
-    hours: 1,
-    color: '#9b9b9b',
-  },
-];
-
 const chartData = [
   {
     _id: '63e15e1027cf884cc5d1ef88',
@@ -89,4 +61,16 @@ const chartData = [
   },
 ];
 
-export { chartDataOld, chartData };
+const emptyData = [
+  {
+    id: 0,
+    hours: 24,
+    from: 0,
+    to: 1440,
+    color: '#afafaf',
+    title: 'Empty',
+    text: '',
+  },
+];
+
+export { emptyData, chartData };

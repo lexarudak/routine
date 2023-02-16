@@ -112,6 +112,7 @@ const enum HomePageClassList {
   toDoWrap = 'to-do__wrapper',
   toDoTitle = 'to-do__title',
   toDoTextarea = 'to-do__textarea',
+  toDoText = 'to-do__text',
   clock = 'clock',
   hour = 'hour',
   hourCircle = 'hour__circle',
