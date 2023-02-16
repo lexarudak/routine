@@ -95,6 +95,13 @@ const enum ClassList {
   timeline = 'timeline',
   timelineDrag = 'timeline_drag',
   timelineHeader = 'timeline-header',
+  timelineDiv = 'timeline-div',
+  timelineDivFake = 'timeline-div_fake',
+  timelineDivFrom = 'timeline-div__from',
+  timelineDivTo = 'timeline-div__to',
+  timelineDivLeft = 'timeline-div__left',
+  timelineDivRight = 'timeline-div__right',
+  timelineDivName = 'timeline-div__name',
   //
   planList = 'plan-list',
   planListItem = 'plan-list__item',

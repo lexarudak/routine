@@ -23,6 +23,7 @@ import Page from '../page';
 import PlanEditor from '../planPage/components/planEditor';
 import PlanLayout from '../planPage/components/planLayout';
 import Timeline from './components/timeLine';
+import TimelineMode from './components/timelineMode';
 
 class DayPage extends Page {
   popup: Popup;
@@ -136,6 +137,10 @@ class DayPage extends Page {
     const returnZone = getExistentElementByClass(ClassList.dayPageReturn);
     const timeline = getExistentElementByClass(ClassList.timeline);
     const planAddButton = getExistentElementByClass(ClassList.planAddButton);
+    roundDiv.addEventListener('dragstart', (e) => {
+      if (e.target instanceof HTMLDivElement) this.timeLine.getPlanFromDiv(e.target);
+      this.timeLine.mode = TimelineMode.addMode;
+    });
     roundDiv.addEventListener('dragstart', function dragstart(e) {
       const { icon, center } = makeRoundIcon(this);
       if (e.dataTransfer) e.dataTransfer.setDragImage(icon, center, center);
@@ -143,6 +148,9 @@ class DayPage extends Page {
       returnZone.classList.add(ClassList.planRemoveZoneDrag);
       planAddButton.classList.add(ClassList.planAddButtonDarg);
       timeline.classList.add(ClassList.timelineDrag);
+    });
+    roundDiv.addEventListener('dragend', () => {
+      this.timeLine.mode = TimelineMode.noMode;
     });
     roundDiv.addEventListener('dragend', function dragend() {
       this.classList.remove(ClassList.planRoundDrag);
@@ -222,6 +230,7 @@ class DayPage extends Page {
       this.fillPlansZone();
       this.setAddButton();
       this.showElements();
+      this.timeLine.setTimeline(this.notDistPlans);
     } catch (error) {
       this.goTo(RoutsList.loginPage);
     }

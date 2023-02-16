@@ -76,6 +76,15 @@ function minToHour(min: number) {
   throw new Error(ErrorsList.minToHourError);
 }
 
+function minToHourTimeline(min: number) {
+  if (min >= 0) {
+    return `${Math.floor(min / 60)
+      .toString()
+      .padStart(2, '0')}:${(min % 60).toString().padStart(2, '0')}`;
+  }
+  throw new Error(ErrorsList.minToHourError);
+}
+
 function getHours(min: number) {
   return Math.floor(min / 60);
 }
@@ -132,7 +141,6 @@ function makeRoundIcon(round: HTMLElement) {
     if (icon.lastChild instanceof HTMLElement) icon.lastChild.style.display = 'none';
   }
   if (!(icon instanceof HTMLElement)) throw new Error(ErrorsList.elementNotFound);
-  console.log(icon);
   return { icon, center };
 }
 
@@ -155,4 +163,5 @@ export {
   isDayOfWeek,
   sortAllPlans,
   makeRoundIcon,
+  minToHourTimeline,
 };
