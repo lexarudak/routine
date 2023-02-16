@@ -35,3 +35,13 @@ a {
     text-decoration: underline;
   }
 }
+
+.main__container .scale-normal {
+  transform: scale(1);
+}
+
+.img-container {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+}

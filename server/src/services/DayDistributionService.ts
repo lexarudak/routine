@@ -33,6 +33,8 @@ class DayDistributionService extends Service<Type.TDayDistribution> {
     for (let i = 0; i < weekDistributions.length; i++) {
       this.addNotDistributedPlan(weekDistributions[i], plans, result);
     }
+
+    result.distributedPlans.sort((a, b) => a.from - b.from);
     return result;
   }
 
