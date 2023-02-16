@@ -1,6 +1,9 @@
 import { createNewElement, getExistentElement } from '../../../base/helpers';
 import { HomePageClassList } from '../../../base/enums/classList';
 import { Attributes } from '../../../base/enums/attributes';
+import Values from '../../../base/enums/values';
+import Colors from '../../../base/enums/colors';
+import InnerText from '../../../base/enums/innerText';
 import { ChartData } from '../../../base/interfaces';
 import Api from '../../../api';
 import Clock from './clock';
@@ -42,7 +45,7 @@ class ClockChart extends Clock {
 
     data.forEach((el) => {
       const sum = AMData.reduce((acc, dataEl) => acc + dataEl.hours, 0);
-      const space = 12 - sum;
+      const space = Values.clockHours - sum;
       if (el.hours <= space) {
         AMData.push(el);
       } else if (space !== 0) {
@@ -57,14 +60,14 @@ class ClockChart extends Clock {
       }
     });
 
-    const [hours] = this.getTime();
-    const currData = hours < 12 ? AMData : PMData;
+    const [hours] = this.getCurrTime();
+    const currData = hours < Values.clockHours ? AMData : PMData;
     this.chartData = currData;
 
     return currData;
   }
 
-  getTime() {
+  getCurrTime() {
     const date = new Date();
     const hours = date.getHours();
     const minutes = hours * 60 + date.getMinutes();
@@ -79,6 +82,18 @@ class ClockChart extends Clock {
     return currPlan;
   }
 
+  returnDataObj(counter: number, i: number) {
+    return {
+      id: counter,
+      hours: (chartData[i].to - chartData[i].from) / 60,
+      from: chartData[i].from,
+      to: chartData[i].to,
+      color: chartData[i].color,
+      title: chartData[i].title,
+      text: chartData[i].text,
+    };
+  }
+
   transformData() {
     const data: ChartData[] = [];
     let counter = 0;
@@ -90,8 +105,8 @@ class ClockChart extends Clock {
             hours: (chartData[i].from - 0) / 60,
             from: 0,
             to: chartData[i].from,
-            color: '#afafaf',
-            title: 'Empty',
+            color: Colors.mediumGrey,
+            title: InnerText.emptyText,
             text: '',
           };
           data.push(plan);
@@ -99,15 +114,7 @@ class ClockChart extends Clock {
         }
       }
       if (i !== chartData.length - 1) {
-        const plan2: ChartData = {
-          id: counter,
-          hours: (chartData[i].to - chartData[i].from) / 60,
-          from: chartData[i].from,
-          to: chartData[i].to,
-          color: chartData[i].color,
-          title: chartData[i].title,
-          text: chartData[i].text,
-        };
+        const plan2: ChartData = this.returnDataObj(counter, i);
         data.push(plan2);
         counter += 1;
         if (chartData[i].to !== chartData[i + 1].from) {
@@ -116,33 +123,25 @@ class ClockChart extends Clock {
             hours: (chartData[i + 1].from - chartData[i].to) / 60,
             from: chartData[i].to,
             to: chartData[i + 1].from,
-            color: '#afafaf',
-            title: 'Empty',
+            color: Colors.mediumGrey,
+            title: InnerText.emptyText,
             text: '',
           };
           data.push(plan3);
           counter += 1;
         }
       } else {
-        const plan4: ChartData = {
-          id: counter,
-          hours: (chartData[i].to - chartData[i].from) / 60,
-          from: chartData[i].from,
-          to: chartData[i].to,
-          color: chartData[i].color,
-          title: chartData[i].title,
-          text: chartData[i].text,
-        };
+        const plan4: ChartData = this.returnDataObj(counter, i);
         data.push(plan4);
         counter += 1;
-        if (chartData[chartData.length - 1].to !== 1440) {
+        if (chartData[chartData.length - 1].to !== Values.allDayMinutes) {
           const plan5: ChartData = {
             id: counter,
-            hours: (1440 - chartData[i].to) / 60,
+            hours: (Values.allDayMinutes - chartData[i].to) / 60,
             from: chartData[i].to,
-            to: 1440,
-            color: '#afafaf',
-            title: 'Empty',
+            to: +Values.allDayMinutes,
+            color: Colors.mediumGrey,
+            title: InnerText.emptyText,
             text: '',
           };
           data.push(plan5);
@@ -155,7 +154,7 @@ class ClockChart extends Clock {
 
   private showToDo(e: Event) {
     if (!(e.target instanceof SVGCircleElement) || !e.target.id) return;
-    const toDo = getExistentElement('.to-do');
+    const toDo = getExistentElement(`.${HomePageClassList.toDo}`);
     const color = e.target.getAttribute(Attributes.stroke);
     if (color) toDo.style.backgroundColor = color;
     toDo.innerHTML = '';
@@ -167,7 +166,7 @@ class ClockChart extends Clock {
   private showCurrToDo(e: Event) {
     if (!(e.target instanceof SVGCircleElement) || !e.target.id) return;
 
-    const toDo = getExistentElement('.to-do');
+    const toDo = getExistentElement(`.${HomePageClassList.toDo}`);
     toDo.style.backgroundColor = this.currColor;
     toDo.innerHTML = '';
     const toDoList = this.toDoInst.draw(this.currPlanNum, this.chartData);
@@ -176,7 +175,7 @@ class ClockChart extends Clock {
 
   async draw() {
     const ChartDataArr: ChartData[] = this.transformData();
-    this.getTime();
+    this.getCurrTime();
     this.updateDataByTime();
     const clock = createNewElement('div', HomePageClassList.clock);
     const hour = createNewElement('div', HomePageClassList.hour);

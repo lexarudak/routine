@@ -1,4 +1,5 @@
 import { client } from '../../../base/helpers';
+import Colors from '../../../base/enums/colors';
 
 class FlyingThought {
   id: string;
@@ -30,7 +31,7 @@ class FlyingThought {
     ctx.beginPath();
     ctx.arc(Math.round(this.x), Math.round(this.y), this.radius, 0, 2 * Math.PI);
     // ctx.fillStyle = this.color;
-    ctx.fillStyle = '#afafaf';
+    ctx.fillStyle = Colors.mediumGrey;
     ctx.fill();
     ctx.closePath();
     this.updateThoughtPos();
@@ -39,7 +40,7 @@ class FlyingThought {
   drawCircles(ctx: CanvasRenderingContext2D) {
     ctx.beginPath();
     ctx.arc(Math.round(this.x), Math.round(this.y), this.radius, 0, 2 * Math.PI);
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = Colors.white;
     ctx.fill();
     ctx.closePath();
   }

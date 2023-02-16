@@ -12,6 +12,7 @@ const enum Path {
   profile = '/profile',
   statistics = '/statistics',
   dayDistribution = '/dayDistribution',
+  home = '/',
 }
 
 export default Path;

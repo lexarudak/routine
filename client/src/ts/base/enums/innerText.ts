@@ -11,6 +11,9 @@ const enum InnerText {
   defaultPlanName = 'Plan for ...',
   hoursText = 'Hours',
   minutesText = 'Minutes',
+  thoughtText = 'Thought',
+  planText = 'Plan',
+  emptyText = 'Empty',
 }
 
 export default InnerText;

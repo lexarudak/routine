@@ -10,6 +10,7 @@ import FlyingThought from './components/flyingThought';
 import Thought from './components/thought';
 import ThoughtBuilder from './components/thoughtBuilder';
 import RoutsList from '../../base/enums/routsList';
+import InnerText from '../../base/enums/innerText';
 import PlanEditor from '../planPage/components/planEditor';
 
 class HomePage extends Page {
@@ -90,28 +91,28 @@ class HomePage extends Page {
 
   private createThought() {
     const thought = createElement('div', HomePageClassList.thought);
-    const thoughtContainer = createElement('div', 'thought__container');
+    const thoughtContainer = createElement('div', HomePageClassList.thoughtContainer);
     const thoughtTitle = createElement('h3', HomePageClassList.thoughtTitle);
-    thoughtTitle.textContent = 'Thought';
+    thoughtTitle.textContent = InnerText.thoughtText;
 
     const thoughtAddInst = new ThoughtBuilder('');
     const thoughtAdd = thoughtAddInst.draw(HomePageClassList.thoughtAdd);
-    thoughtAdd.classList.remove('none');
+    thoughtAdd.classList.remove(HomePageClassList.none);
     thought.append(thoughtTitle, thoughtAdd, thoughtContainer);
 
     this.createThoughtsList(thoughtContainer);
 
-    const popup = createNewElement('div', 'blur');
-    popup.classList.add('none');
+    const popup = createNewElement('div', HomePageClassList.blur);
+    popup.classList.add(HomePageClassList.none);
     document.body.append(popup);
 
     thoughtTitle.addEventListener('click', () => {
-      getExistentElement('.canvas').classList.toggle('none');
-      thoughtAdd.classList.toggle('none');
+      getExistentElement(`.${HomePageClassList.canvas}`).classList.toggle(HomePageClassList.none);
+      thoughtAdd.classList.toggle(HomePageClassList.none);
       popup.classList.toggle(HomePageClassList.none);
-      document.querySelectorAll('.thought__item').forEach((el) => {
-        el.classList.toggle('open');
-        el.classList.toggle('none');
+      document.querySelectorAll(`.${HomePageClassList.thoughtItem}`).forEach((el) => {
+        el.classList.toggle(HomePageClassList.open);
+        el.classList.toggle(HomePageClassList.none);
       });
     });
     return thought;
@@ -128,7 +129,7 @@ class HomePage extends Page {
     // console.log(flyingThought);
     const thought = this.createThought();
     const plan = createElement('div', HomePageClassList.plan);
-    plan.textContent = 'Plan';
+    plan.textContent = InnerText.planText;
     plan.addEventListener('click', () => this.goTo(RoutsList.planPage));
 
     const signIn = createElement('div', HomePageClassList.signIn);

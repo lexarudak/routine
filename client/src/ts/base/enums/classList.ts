@@ -100,6 +100,7 @@ const enum HomePageClassList {
   canvas = 'canvas',
   thought = 'thought',
   thoughtTitle = 'thought__title',
+  thoughtContainer = 'thought__container',
   thoughtAdd = 'thought__add',
   thoughtItem = 'thought__item',
   thoughtAddBtn = 'thought__add-btn',
@@ -121,6 +122,8 @@ const enum HomePageClassList {
   dayInfo = 'day-info',
   dayIcon = 'day-info__icon',
   none = 'none',
+  open = 'open',
+  blur = 'blur',
 }
 
 const enum ProfilePageClassList {

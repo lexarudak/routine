@@ -14,17 +14,17 @@ class Thought {
 
   openCloseThought(e: Event, thoughtAdd: HTMLElement) {
     if (!isHTMLElement(e.target)) return;
-    if (e.target.closest('.open')) {
-      thoughtAdd.classList.remove('open');
+    if (e.target.closest(`.${HomePageClassList.open}`)) {
+      thoughtAdd.classList.remove(HomePageClassList.open);
     } else {
-      thoughtAdd.classList.add('open');
+      thoughtAdd.classList.add(HomePageClassList.open);
     }
   }
 
   draw(elClass: string) {
     const thoughtAdd = createElement('div', elClass);
     const thoughtAddBtn = createElement('div', HomePageClassList.thoughtAddBtn);
-    thoughtAdd.classList.add('none');
+    thoughtAdd.classList.add(HomePageClassList.none);
 
     const thoughtInput = createNewElement<HTMLInputElement>('input', HomePageClassList.thoughtInput);
     thoughtInput.value = this.thoughtText;
