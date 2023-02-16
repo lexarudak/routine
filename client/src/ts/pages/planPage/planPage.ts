@@ -204,22 +204,21 @@ class PlanPage extends Page {
   }
 
   private showElements() {
-    const scale = Values.scaleNormal;
     setTimeout(() => {
-      getExistentElementByClass(ClassList.planAddButton).style.transform = scale;
-      getExistentElementByClass(ClassList.planRemoveZone).style.transform = scale;
+      getExistentElementByClass(ClassList.planAddButton).classList.add(ClassList.scaleNormal);
+      getExistentElementByClass(ClassList.planRemoveZone).classList.add(ClassList.scaleNormal);
       getExistentElementByClass(ClassList.weekLine).childNodes.forEach((val) => {
-        if (val instanceof HTMLDivElement) val.style.transform = scale;
+        if (val instanceof HTMLDivElement) val.classList.add(ClassList.scaleNormal);
       });
       const rounds = document.querySelectorAll(`.${ClassList.planRound}`);
       rounds.forEach((val) => {
-        if (val instanceof HTMLDivElement) val.style.transform = scale;
+        if (val instanceof HTMLDivElement) val.classList.add(ClassList.scaleNormal);
       });
       const days = document.querySelectorAll(`.${ClassList.planDayLine}`);
       days.forEach((day) => {
         if (day instanceof HTMLDivElement) {
           day.childNodes.forEach((val) => {
-            if (val instanceof HTMLDivElement) val.style.transform = scale;
+            if (val instanceof HTMLDivElement) val.classList.add(ClassList.scaleNormal);
           });
         }
       });
@@ -263,14 +262,12 @@ class PlanPage extends Page {
         this.classList.add(ClassList.planRoundDrag);
         bin.classList.add(ClassList.planRemoveZoneDrag);
         days.classList.add(ClassList.planDaysContainerDrag);
-        bin.style.transform = Values.scaleBig;
       }, 50);
     });
     roundDiv.addEventListener('dragend', function dragend() {
       this.classList.remove(ClassList.planRoundDrag);
       bin.classList.remove(ClassList.planRemoveZoneDrag);
       days.classList.remove(ClassList.planDaysContainerDrag);
-      bin.style.transform = Values.scaleNormal;
     });
     return roundDiv;
   }
@@ -347,6 +344,7 @@ class PlanPage extends Page {
       this.setAddButton();
       this.addListenersToAllDays(this.addDayListener);
     } catch (error) {
+      console.log(error);
       this.goTo(RoutsList.loginPage);
     }
   }

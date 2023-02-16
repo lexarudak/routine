@@ -52,17 +52,16 @@ class DayPage extends Page {
   }
 
   private showElements() {
-    const scale = Values.scaleNormal;
     setTimeout(() => {
-      getExistentElementByClass(ClassList.planAddButton).style.transform = scale;
-      getExistentElementByClass(ClassList.dayPageReturn).style.transform = scale;
+      getExistentElementByClass(ClassList.planAddButton).classList.add(ClassList.scaleNormal);
+      getExistentElementByClass(ClassList.dayPageReturn).classList.add(ClassList.scaleNormal);
       const lines = document.querySelectorAll(`.${ClassList.planListColor}`);
       lines.forEach((val) => {
-        if (val instanceof HTMLDivElement) val.style.transform = scale;
+        if (val instanceof HTMLDivElement) val.classList.add(ClassList.scaleNormal);
       });
       const rounds = document.querySelectorAll(`.${ClassList.planRound}`);
       rounds.forEach((val) => {
-        if (val instanceof HTMLDivElement) val.style.transform = scale;
+        if (val instanceof HTMLDivElement) val.classList.add(ClassList.scaleNormal);
       });
     }, 0);
   }
@@ -129,17 +128,19 @@ class DayPage extends Page {
 
   private setRoundMove(roundDiv: HTMLElement) {
     const returnZone = getExistentElementByClass(ClassList.dayPageReturn);
+    const timeline = getExistentElementByClass(ClassList.timeline);
+    const planAddButton = getExistentElementByClass(ClassList.planAddButton);
     roundDiv.addEventListener('dragstart', function dragstart() {
-      setTimeout(() => {
-        this.classList.add(ClassList.planRoundDrag);
-        returnZone.classList.add(ClassList.planRemoveZoneDrag);
-        returnZone.style.transform = Values.scaleBig;
-      }, 50);
+      this.classList.add(ClassList.planRoundDrag);
+      returnZone.classList.add(ClassList.planRemoveZoneDrag);
+      planAddButton.classList.add(ClassList.planAddButtonDarg);
+      timeline.classList.add(ClassList.timelineDrag);
     });
     roundDiv.addEventListener('dragend', function dragend() {
       this.classList.remove(ClassList.planRoundDrag);
       returnZone.classList.remove(ClassList.planRemoveZoneDrag);
-      returnZone.style.transform = Values.scaleNormal;
+      planAddButton.classList.remove(ClassList.planAddButtonDarg);
+      timeline.classList.remove(ClassList.timelineDrag);
     });
   }
 
@@ -195,6 +196,7 @@ class DayPage extends Page {
     container.append(
       this.layout.makeButtonsBlock(),
       this.layout.makeInfoText(InnerText.allDayHours),
+      createNewElement('div', ClassList.timelineHeader),
       this.timeLine.draw(),
       this.layout.makeDayBody(this.dayId, this.allDayPlans)
     );

@@ -2,6 +2,7 @@ const enum ClassList {
   mainContainer = 'main__container',
   mainContainerHide = 'main__container_hide',
   banner = 'banner',
+  scaleNormal = 'scale-normal',
   // 404
   page404 = 'page-404',
   page404text = 'page-404__text',
@@ -37,6 +38,7 @@ const enum ClassList {
   planTools = 'plan__tools',
   planButtons = 'plan__buttons',
   planAddButton = 'plan__button-add',
+  planAddButtonDarg = 'plan__button-add_drag',
   planAddButtonValue = 'plan__button-add-value',
   planRemoveZone = 'plan__remove',
   planRemoveZoneDrag = 'plan__remove_drag',
@@ -90,6 +92,8 @@ const enum ClassList {
   dayPagePlansZone = 'day-page__plans-zone',
   // timeline
   timeline = 'timeline',
+  timelineDrag = 'timeline_drag',
+  timelineHeader = 'timeline-header',
   //
   planList = 'plan-list',
   planListItem = 'plan-list__item',
