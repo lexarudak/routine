@@ -16,7 +16,7 @@ class Layout {
     if (!document.querySelector(`.${ButtonClasses.saveButton}`)) {
       const btn: HTMLButtonElement = createNewElement('button', ButtonClasses.saveButton);
       btn.innerText = 'Save';
-      btn.addEventListener('click', () => save());
+      btn.addEventListener('click', save);
 
       btn.classList.add('save-button_visible');
       btn.addEventListener('animationend', () => btn.classList.remove('save-button_visible'), { once: true });
@@ -24,6 +24,11 @@ class Layout {
       const uiMain = getExistentElementByClass('main__container');
       uiMain.append(btn);
     }
+  }
+
+  public disableSaveButton() {
+    const btn = getExistentElementByClass<HTMLButtonElement>(ButtonClasses.saveButton);
+    btn.disabled = true;
   }
 
   public removeSaveButton() {

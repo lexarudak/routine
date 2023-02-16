@@ -39,9 +39,7 @@ class ProfilePage extends Page {
     uiConfirmTime.addEventListener('change', () => this.activateSaveButton());
 
     const uiLogOut = helpers.getExistentElement<HTMLButtonElement>('.settings__log-out>.button');
-    uiLogOut.addEventListener('click', () => {
-      this.logOut();
-    });
+    uiLogOut.addEventListener('click', () => this.logOut());
   }
 
   private toggleConfirmDay(day: string) {
@@ -57,14 +55,17 @@ class ProfilePage extends Page {
     this.layout.makeSaveButton(this.save.bind(this));
   }
 
-  private save() {
-    console.log('Saved!');
+  private async save() {
+    this.layout.disableSaveButton();
+
+    const settings = this.layout.getUserSettings();
+    await Api.saveUserSettings(settings);
+
     this.layout.removeSaveButton();
   }
 
   protected async getFilledPage(): Promise<HTMLElement> {
     await this.setProfileInfo();
-    console.log(this.profile, this.statistics);
 
     const container = document.createElement('section');
     container.classList.add(ProfilePageClassList.profile);

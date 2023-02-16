@@ -1,5 +1,6 @@
 import Path from './base/enums/path';
 import { LoginData, NewPlanData, PlanData, PlanToDay, RegistrationData, User, Statistics } from './base/interface';
+import { UserSettings } from './base/types';
 
 class Api {
   public static async registration(registrationData: RegistrationData) {
@@ -45,6 +46,10 @@ class Api {
     return this.get(false, Path.users, Path.profile);
   }
 
+  public static async saveUserSettings(settings: UserSettings): Promise<User> {
+    return this.post(settings, Path.users, Path.update);
+  }
+
   public static async getStatistics(): Promise<Statistics[]> {
     return this.get(false, Path.statistics, Path.get);
   }
@@ -71,7 +76,7 @@ class Api {
   }
 
   private static async post(
-    userData: RegistrationData | LoginData | NewPlanData | PlanData | PlanToDay | Record<string, never>,
+    userData: RegistrationData | LoginData | NewPlanData | PlanData | PlanToDay | UserSettings | Record<string, never>,
     ...path: Path[]
   ) {
     const options: RequestInit = {

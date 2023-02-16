@@ -1,7 +1,9 @@
 import Layout from '../../layout';
 
 import { User, Statistics } from '../../../base/interface';
-import { getHours, getMinutes } from '../../../base/helpers';
+import { getHours, getMinutes, timeToMin } from '../../../base/helpers';
+import { UserSettings } from '../../../base/types';
+import * as helpers from '../../../base/helpers';
 
 class ProfileLayout extends Layout {
   public makeUserData(profile: User) {
@@ -12,6 +14,31 @@ class ProfileLayout extends Layout {
     container.append(this.makeUserSettings(profile));
 
     return container;
+  }
+
+  public makeStatistics(statistics: Statistics[]) {
+    const container = document.createElement('div');
+    container.classList.add('statistics');
+
+    const tanks = this.getStatisticsTanks(statistics);
+
+    container.append(this.makeStatisticsTank('Fulfilled', tanks[0]));
+    container.append(this.makeStatisticsTank('Underfulfilled', tanks[1]));
+    container.append(this.makeStatisticsTank('Overfulfilled', tanks[2]));
+
+    return container;
+  }
+
+  public getUserSettings() {
+    const uiConfirmationDay = helpers.getExistentElementByClass('settings__confirm-day>.button');
+    const uiConfirmationTime = helpers.getExistentElementByClass<HTMLInputElement>('settings__confirm-time>.button');
+
+    const settings: UserSettings = {
+      confirmationDay: uiConfirmationDay.textContent || 'today',
+      confirmationTime: timeToMin(uiConfirmationTime.value),
+    };
+
+    return settings;
   }
 
   private makeUserGreeting(profile: User) {
@@ -45,19 +72,6 @@ class ProfileLayout extends Layout {
     <div class="settings__log-out">
       <button class="button settings__button">Log out</button>
     </div>`;
-
-    return container;
-  }
-
-  public makeStatistics(statistics: Statistics[]) {
-    const container = document.createElement('div');
-    container.classList.add('statistics');
-
-    const tanks = this.getStatisticsTanks(statistics);
-
-    container.append(this.makeStatisticsTank('Fulfilled', tanks[0]));
-    container.append(this.makeStatisticsTank('Underfulfilled', tanks[1]));
-    container.append(this.makeStatisticsTank('Overfulfilled', tanks[2]));
 
     return container;
   }
@@ -116,7 +130,7 @@ class ProfileLayout extends Layout {
   }
 
   private getFormattedTime(time: number) {
-    return `${getHours(time)}:${getMinutes(time)}`;
+    return `${getHours(time).toString().padStart(2, '0')}:${getMinutes(time)}`;
   }
 }
 
