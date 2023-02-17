@@ -137,7 +137,6 @@ const enum HomePageClassList {
 }
 
 const enum ProfilePageClassList {
-  section = 'section',
   profile = 'profile',
   profileWrapper = 'profile-wrapper',
   button = 'button',
@@ -161,4 +160,9 @@ const enum ProfilePageClassList {
   planSquareDeviation = 'plan-square__deviation',
 }
 
-export { ClassList, HomePageClassList, ProfilePageClassList };
+const enum ConfirmPageClassList {
+  confirm = 'confirm',
+  confirmWrapper = 'confirm-wrapper',
+}
+
+export { ClassList, HomePageClassList, ProfilePageClassList, ConfirmPageClassList };
