@@ -136,26 +136,30 @@ class DayPage extends Page {
   private setRoundMove(roundDiv: HTMLElement) {
     const returnZone = getExistentElementByClass(ClassList.dayPageReturn);
     const timeline = getExistentElementByClass(ClassList.timeline);
-    const planAddButton = getExistentElementByClass(ClassList.planAddButton);
+
     roundDiv.addEventListener('dragstart', (e) => {
-      if (e.target instanceof HTMLDivElement) this.timeLine.getPlanFromDiv(e.target);
+      if (e.target instanceof HTMLDivElement) {
+        this.timeLine.getPlanFromDiv(e.target);
+        this.timeLine.round = e.target;
+      }
       this.timeLine.mode = TimelineMode.addMode;
     });
+
     roundDiv.addEventListener('dragstart', function dragstart(e) {
       const { icon, center } = makeRoundIcon(this);
       if (e.dataTransfer) e.dataTransfer.setDragImage(icon, center, center);
       this.classList.add(ClassList.planRoundDrag);
       returnZone.classList.add(ClassList.planRemoveZoneDrag);
-      planAddButton.classList.add(ClassList.planAddButtonDarg);
       timeline.classList.add(ClassList.timelineDrag);
     });
+
     roundDiv.addEventListener('dragend', () => {
       this.timeLine.mode = TimelineMode.noMode;
     });
+
     roundDiv.addEventListener('dragend', function dragend() {
       this.classList.remove(ClassList.planRoundDrag);
       returnZone.classList.remove(ClassList.planRemoveZoneDrag);
-      planAddButton.classList.remove(ClassList.planAddButtonDarg);
       timeline.classList.remove(ClassList.timelineDrag);
     });
   }
@@ -230,7 +234,7 @@ class DayPage extends Page {
       this.fillPlansZone();
       this.setAddButton();
       this.showElements();
-      this.timeLine.setTimeline(this.notDistPlans);
+      this.timeLine.setTimeline(this.notDistPlans, this.distPlans, this.allDayPlans);
     } catch (error) {
       this.goTo(RoutsList.loginPage);
     }

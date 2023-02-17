@@ -91,6 +91,7 @@ const enum ClassList {
   dayPageReturn = 'day-page__return',
   dayPageReturnOver = 'day-page__return_over',
   dayPagePlansZone = 'day-page__plans-zone',
+  dayPagePlansZoneDrag = 'day-page__plans-zone_drag',
   // timeline
   timeline = 'timeline',
   timelineDrag = 'timeline_drag',

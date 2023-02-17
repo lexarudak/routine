@@ -15,12 +15,6 @@ class TimelineDiv {
 
   name: HTMLDivElement;
 
-  _start = 0;
-
-  _finish = 0;
-
-  color = '';
-
   constructor(plan: Plan) {
     this.plan = plan;
     this.from = createNewElement('div', ClassList.timelineDivFrom);
@@ -59,7 +53,6 @@ class TimelineDiv {
       this.to.style.display = 'none';
       this.name.innerText = '';
     }
-    console.log(from);
   }
 
   public draw() {
