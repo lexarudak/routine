@@ -6,7 +6,7 @@ const chartData = [
     text: 'Lorem ipsum dolor, sit amet consectetur adipisicing elit. Dolorum ipsum dolorem consequatur, impedit iusto aut adipisci excepturi nemo quam laborum earum ratione iure explicabo, sapiente sint minus exercitationem iste placeat.',
     color: '#9F5454',
     from: 15,
-    to: 360,
+    to: 420,
     __v: 0,
   },
   {
@@ -32,7 +32,7 @@ const chartData = [
   {
     _id: '63e158255010e434534cfae5',
     userId: '63df879ff7a5081606fb4fb8',
-    title: 'Plan 1',
+    title: 'Reading',
     text: 'Sit amet consectetur adipisicing elit. Dolorum ipsum dolorem consequatur, impedit iusto aut adipisci excepturi nemo quam laborum earum ratione iure explicabo, sapiente sint minus exercitationem iste placeat.',
     color: '#ffc800',
     from: 660,
@@ -42,17 +42,17 @@ const chartData = [
   {
     _id: '63e15e1027cf884cc5d1ef99',
     userId: '63df879ff7a5081606fb4fb8',
-    title: 'Plan 2',
+    title: 'Job',
     text: 'Amet consectetur adipisicing elit. Dolorum ipsum dolorem consequatur, impedit iusto aut adipisci excepturi nemo quam laborum earum ratione iure explicabo, sapiente sint minus exercitationem iste placeat.',
     color: '#A020F0',
     from: 900,
-    to: 990,
+    to: 1020,
     __v: 0,
   },
   {
     _id: '63e158245010e434534cfae5',
     userId: '63df879ff7a5081606fb4fb8',
-    title: 'Plan 3',
+    title: 'Family',
     text: 'Consectetur adipisicing elit. Dolorum ipsum dolorem consequatur, impedit iusto aut adipisci excepturi nemo quam laborum earum ratione iure explicabo, sapiente sint minus exercitationem iste placeat.',
     color: '#89CFF0',
     from: 1320,
@@ -68,8 +68,8 @@ const emptyData = [
     from: 0,
     to: 1440,
     color: '#afafaf',
-    title: 'Empty',
-    text: '',
+    title: 'Free time',
+    text: 'There are no plans at this time.',
   },
 ];
 

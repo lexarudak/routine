@@ -15,7 +15,7 @@ class Clock {
 
   getIcon(date: Date) {
     const hours = date.getHours();
-    getExistentElement(`.${HomePageClassList.chart}`);
+    // getExistentElement(`.${HomePageClassList.chart}`);
     if (hours >= 6 && hours < 12) return Links.morning;
     if (hours >= 12 && hours < 18) return Links.day;
     if (hours >= 18 && hours < 24) return Links.evening;
@@ -57,7 +57,7 @@ class Clock {
       dayInfoHTML.innerHTML = this.getDay(date);
       dayIcon.style.backgroundImage = this.getIcon(date);
       dayInfoHTML.prepend(dayIcon);
-      getExistentElement(`.${HomePageClassList.chart}`).append(dayInfoHTML);
+      getExistentElement(`.${HomePageClassList.clock}`).append(dayInfoHTML);
 
       hr.style.transform = `rotateZ(${hours + minutes / hourCount}deg)`;
       min.style.transform = `rotateZ(${minutes}deg)`;

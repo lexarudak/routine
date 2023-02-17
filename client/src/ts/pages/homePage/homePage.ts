@@ -134,8 +134,12 @@ class HomePage extends Page {
 
     const signIn = createElement('div', HomePageClassList.signIn);
     signIn.addEventListener('click', () => this.goTo(RoutsList.profilePage));
-    const userName = await this.getUserName();
-    signIn.textContent = userName;
+    try {
+      const userName = await this.getUserName();
+      signIn.textContent = userName;
+    } catch {
+      signIn.textContent = '';
+    }
 
     const clock = await this.clockChartInst.draw();
     // page.append(thought, signIn, plan, clock);

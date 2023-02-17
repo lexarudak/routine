@@ -124,6 +124,7 @@ const enum HomePageClassList {
   none = 'none',
   open = 'open',
   blur = 'blur',
+  timeOfDay = 'time-of-day',
 }
 
 const enum ProfilePageClassList {

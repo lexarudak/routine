@@ -13,7 +13,10 @@ const enum InnerText {
   minutesText = 'Minutes',
   thoughtText = 'Thought',
   planText = 'Plan',
-  emptyText = 'Empty',
+  emptyTitle = 'Free time',
+  emptyText = 'There are no plans at this time.',
+  timeOfDayAM = 'AM',
+  timeOfDayPM = 'PM',
 }
 
 export default InnerText;

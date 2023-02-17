@@ -4,7 +4,7 @@ import { ChartData } from '../../../base/interfaces';
 
 class ToDo {
   draw(currSector: number, data: ChartData[]) {
-    console.log('sector', data, currSector);
+    // console.log('sector', data, currSector);
     const sector = data.findIndex((el) => el.id === currSector);
 
     const toDoWrap = createElement('div', HomePageClassList.toDoWrap);
