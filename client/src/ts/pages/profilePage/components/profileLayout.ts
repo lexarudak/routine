@@ -33,10 +33,10 @@ class ProfileLayout extends Layout {
 
   public getUserSettings() {
     let classCSS = `.${ProfilePageClassList.settingsConfirmDay}>.${ProfilePageClassList.button}`;
-    const uiConfirmationDay = helpers.getExistentElementByClass(classCSS);
+    const uiConfirmationDay = helpers.getExistentElement(classCSS);
 
     classCSS = `.${ProfilePageClassList.settingsConfirmTime}>.${ProfilePageClassList.button}`;
-    const uiConfirmationTime = helpers.getExistentElementByClass<HTMLInputElement>(classCSS);
+    const uiConfirmationTime = helpers.getExistentElement<HTMLInputElement>(classCSS);
 
     const settings: UserSettings = {
       confirmationDay: uiConfirmationDay.textContent || enums.ConfirmationDays.today,
