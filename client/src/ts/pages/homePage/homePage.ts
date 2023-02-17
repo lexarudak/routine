@@ -118,9 +118,16 @@ class HomePage extends Page {
     return thought;
   }
 
-  private async getUserName() {
-    const user = await Api.getUserProfile();
-    return user.name;
+  private async checkConfirmTime(confirmDay: HTMLElement) {
+    const confirmTime = (await Api.getUserProfile()).confirmationTime;
+    console.log('confirmTime', confirmTime);
+    setInterval(() => {
+      if (this.clockChartInst.minutes >= 1408) {
+        confirmDay.style.visibility = 'visible';
+      } else {
+        confirmDay.style.visibility = '';
+      }
+    }, 1000);
   }
 
   protected async getFilledPage(): Promise<HTMLElement> {
@@ -132,18 +139,22 @@ class HomePage extends Page {
     plan.textContent = InnerText.planText;
     plan.addEventListener('click', () => this.goTo(RoutsList.planPage));
 
+    const confirmDay = createElement('div', HomePageClassList.confirmDay);
+    confirmDay.addEventListener('click', () => this.goTo(RoutsList.confirmPage));
+    this.checkConfirmTime(confirmDay);
+
     const signIn = createElement('div', HomePageClassList.signIn);
     signIn.addEventListener('click', () => this.goTo(RoutsList.profilePage));
     try {
-      const userName = await this.getUserName();
-      signIn.textContent = userName;
+      const userName = await Api.getUserProfile();
+      signIn.textContent = userName.name;
     } catch {
       signIn.textContent = '';
     }
 
     const clock = await this.clockChartInst.draw();
     // page.append(thought, signIn, plan, clock);
-    page.append(flyingThought, thought, signIn, plan, clock);
+    page.append(flyingThought, thought, signIn, plan, confirmDay, clock);
     setTimeout(() => this.clockChartInst.getTime());
 
     return page;

@@ -125,6 +125,7 @@ const enum HomePageClassList {
   open = 'open',
   blur = 'blur',
   timeOfDay = 'time-of-day',
+  confirmDay = 'confirm-day',
 }
 
 const enum ProfilePageClassList {
