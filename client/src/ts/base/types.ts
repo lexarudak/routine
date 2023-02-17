@@ -12,4 +12,4 @@ export type PlanDis = {
 export type UserSettings = {
   confirmationDay: string;
   confirmationTime: number;
-}
+};

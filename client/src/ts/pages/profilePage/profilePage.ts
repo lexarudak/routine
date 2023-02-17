@@ -5,12 +5,16 @@ import ProfileLayout from './components/profileLayout';
 import PlanEditor from '../planPage/components/planEditor';
 
 import { User, Statistics } from '../../base/interface';
-import PagesList from '../../base/enums/pageList';
 import { GoToFn } from '../../base/types';
 import { ClassList, ProfilePageClassList } from '../../base/enums/classList';
-import * as helpers from '../../base/helpers';
+
+import PagesList from '../../base/enums/pageList';
+import ErrorsList from '../../base/enums/errorsList';
 import ButtonNames from '../../base/enums/buttonNames';
 import RoutsList from '../../base/enums/routsList';
+
+import * as helpers from '../../base/helpers';
+import * as enums from '../../base/enums/enums';
 
 class ProfilePage extends Page {
   layout: ProfileLayout;
@@ -29,26 +33,31 @@ class ProfilePage extends Page {
   }
 
   private setEventLiseners() {
-    const uiConfirmDay = helpers.getExistentElement<HTMLButtonElement>('.settings__confirm-day>.button');
-    uiConfirmDay.addEventListener('click', () => {
-      uiConfirmDay.textContent = this.toggleConfirmDay(uiConfirmDay.textContent || '');
-      this.activateSaveButton();
-    });
+    let classCSS = `.${ProfilePageClassList.settingsConfirmDay}>.${ProfilePageClassList.button}`;
+    const uiConfirmDay = helpers.getExistentElement<HTMLButtonElement>(classCSS);
+    uiConfirmDay.addEventListener('click', () => this.changeConfirmationDay(uiConfirmDay));
 
-    const uiConfirmTime = helpers.getExistentElement<HTMLButtonElement>('.settings__confirm-time>.button');
+    classCSS = `.${ProfilePageClassList.settingsConfirmTime}>.${ProfilePageClassList.button}`;
+    const uiConfirmTime = helpers.getExistentElement<HTMLButtonElement>(classCSS);
     uiConfirmTime.addEventListener('change', () => this.activateSaveButton());
 
-    const uiLogOut = helpers.getExistentElement<HTMLButtonElement>('.settings__log-out>.button');
+    classCSS = `.${ProfilePageClassList.settingsLogOut}>.${ProfilePageClassList.button}`;
+    const uiLogOut = helpers.getExistentElement<HTMLButtonElement>(classCSS);
     uiLogOut.addEventListener('click', () => this.logOut());
   }
 
-  private toggleConfirmDay(day: string) {
-    return day === 'today' ? 'yesterday' : 'today';
+  private changeConfirmationDay(uiElement: HTMLButtonElement) {
+    uiElement.textContent = this.toggleConfirmationDay(uiElement.textContent || enums.ConfirmationDays.today);
+    this.activateSaveButton();
+  }
+
+  private toggleConfirmationDay(day: string) {
+    return day === enums.ConfirmationDays.today ? enums.ConfirmationDays.yesterday : enums.ConfirmationDays.today;
   }
 
   private async logOut() {
     await Api.logout();
-    helpers.loginRedirect(new Error('401'), this.goTo);
+    helpers.loginRedirect(new Error(ErrorsList.needLogin), this.goTo);
   }
 
   private activateSaveButton() {
@@ -67,11 +76,11 @@ class ProfilePage extends Page {
   protected async getFilledPage(): Promise<HTMLElement> {
     await this.setProfileInfo();
 
-    const container = document.createElement('section');
+    const container = document.createElement(ProfilePageClassList.section);
     container.classList.add(ProfilePageClassList.profile);
 
     const wrapper = document.createElement('div');
-    wrapper.classList.add('profile-wrapper');
+    wrapper.classList.add(ProfilePageClassList.profileWrapper);
     wrapper.append(this.layout.makeUserData(this.profile), this.layout.makeStatistics(this.statistics));
 
     container.append(this.layout.makeNavButton(ButtonNames.home, RoutsList.homePage, this.goTo), wrapper);

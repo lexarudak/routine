@@ -1,14 +1,16 @@
 import Layout from '../../layout';
 
 import { User, Statistics } from '../../../base/interface';
-import { getHours, getMinutes, timeToMin } from '../../../base/helpers';
+import { ProfilePageClassList } from '../../../base/enums/classList';
 import { UserSettings } from '../../../base/types';
+
 import * as helpers from '../../../base/helpers';
+import * as enums from '../../../base/enums/enums';
 
 class ProfileLayout extends Layout {
   public makeUserData(profile: User) {
     const container = document.createElement('div');
-    container.classList.add('user-data');
+    container.classList.add(ProfilePageClassList.userData);
 
     container.append(this.makeUserGreeting(profile));
     container.append(this.makeUserSettings(profile));
@@ -18,77 +20,85 @@ class ProfileLayout extends Layout {
 
   public makeStatistics(statistics: Statistics[]) {
     const container = document.createElement('div');
-    container.classList.add('statistics');
+    container.classList.add(ProfilePageClassList.statistics);
 
     const tanks = this.getStatisticsTanks(statistics);
 
-    container.append(this.makeStatisticsTank('Fulfilled', tanks[0]));
-    container.append(this.makeStatisticsTank('Underfulfilled', tanks[1]));
-    container.append(this.makeStatisticsTank('Overfulfilled', tanks[2]));
+    container.append(this.makeStatisticsTank(tanks[0], enums.StatisticsTankNames.Fulfilled));
+    container.append(this.makeStatisticsTank(tanks[1], enums.StatisticsTankNames.Underfulfilled));
+    container.append(this.makeStatisticsTank(tanks[2], enums.StatisticsTankNames.Overfulfilled));
 
     return container;
   }
 
   public getUserSettings() {
-    const uiConfirmationDay = helpers.getExistentElementByClass('settings__confirm-day>.button');
-    const uiConfirmationTime = helpers.getExistentElementByClass<HTMLInputElement>('settings__confirm-time>.button');
+    let classCSS = `.${ProfilePageClassList.settingsConfirmDay}>.${ProfilePageClassList.button}`;
+    const uiConfirmationDay = helpers.getExistentElementByClass(classCSS);
+
+    classCSS = `.${ProfilePageClassList.settingsConfirmTime}>.${ProfilePageClassList.button}`;
+    const uiConfirmationTime = helpers.getExistentElementByClass<HTMLInputElement>(classCSS);
 
     const settings: UserSettings = {
-      confirmationDay: uiConfirmationDay.textContent || 'today',
-      confirmationTime: timeToMin(uiConfirmationTime.value),
+      confirmationDay: uiConfirmationDay.textContent || enums.ConfirmationDays.today,
+      confirmationTime: helpers.timeToMin(uiConfirmationTime.value),
     };
 
     return settings;
   }
 
   private makeUserGreeting(profile: User) {
-    const container = document.createElement('div');
-    container.classList.add('greeting');
-
     const day = this.getDayOfAppUsing(new Date(profile.createdAt));
 
+    const container = document.createElement('div');
+    container.classList.add(ProfilePageClassList.greeting);
     container.innerHTML = `
-      <div class="greeting__hello">Hello, ${profile.name}!</div>
-      <div class="greeting__info">This is your ${day} day in this app</div>`;
+      <div class="${ProfilePageClassList.greetingHello}">Hello, ${profile.name}!</div>
+      <div class="${ProfilePageClassList.greetingInfo}">This is your ${day} day in this app</div>`;
 
     return container;
   }
 
   private makeUserSettings(profile: User) {
-    const container = document.createElement('div');
-    container.classList.add('settings');
-
     const confirmationTime = this.getFormattedTime(profile.confirmationTime);
 
+    const container = document.createElement('div');
+    container.classList.add('settings');
     container.innerHTML = `
-    <div class="settings__confirm-day">
-      <span class="settings__label">Confirm day</span>
-      <button class="button settings__button settings__button_capitalized">${profile.confirmationDay}</button>
+    <div class="${ProfilePageClassList.settingsConfirmDay}">
+      <span class="${ProfilePageClassList.settingsLabel}">Confirm day</span>
+      <button class="
+        ${ProfilePageClassList.button}
+        ${ProfilePageClassList.settingsButton}
+        ${ProfilePageClassList.settingsButtonCapitalized}">${profile.confirmationDay}</button>
     </div>
-    <div class="settings__confirm-time">
-      <span class="settings__label">Confirm time</span>
-      <input class="button settings__input" type="time" value="${confirmationTime}"></input>
+    <div class="${ProfilePageClassList.settingsConfirmTime}">
+      <span class="${ProfilePageClassList.settingsLabel}">Confirm time</span>
+      <input class="
+        ${ProfilePageClassList.button}
+        ${ProfilePageClassList.settingsInput}" type="time" value="${confirmationTime}"></input>
     </div>
-    <div class="settings__log-out">
-      <button class="button settings__button">Log out</button>
+    <div class="${ProfilePageClassList.settingsLogOut}">
+      <button class="
+        ${ProfilePageClassList.button}
+        ${ProfilePageClassList.settingsButton}">Log out</button>
     </div>`;
 
     return container;
   }
 
-  private makeStatisticsTank(name: string, data: Statistics[]) {
+  private makeStatisticsTank(data: Statistics[], name: string) {
     const container = document.createElement('div');
-    container.classList.add('statistics-tank');
+    container.classList.add(ProfilePageClassList.statisticsTank);
 
     let element: HTMLElement;
 
     element = document.createElement('div');
-    element.classList.add('statistics-tank__name');
+    element.classList.add(ProfilePageClassList.statisticsTankName);
     element.textContent = name;
     container.append(element);
 
     element = document.createElement('div');
-    element.classList.add('statistics-tank__content', name.toLowerCase());
+    element.classList.add(ProfilePageClassList.statisticsTankContent, name.toLowerCase());
     data.forEach((item) => element.append(this.makeStatisticsPlan(item)));
     container.append(element);
 
@@ -97,12 +107,12 @@ class ProfileLayout extends Layout {
 
   private makeStatisticsPlan(statistics: Statistics) {
     const container = document.createElement('div');
-    container.classList.add('plan-square');
+    container.classList.add(ProfilePageClassList.planSquare);
     container.style.backgroundColor = statistics.color;
 
     container.innerHTML = `
-      <div class="plan-square__name">${statistics.title}</div>
-      <div class="plan-square__deviation">${statistics.deviation} min/d</div>`;
+      <div class="${ProfilePageClassList.planSquareName}">${statistics.title}</div>
+      <div class="${ProfilePageClassList.planSquareDeviation}">${statistics.deviation} min/d</div>`;
 
     return container;
   }
@@ -130,7 +140,7 @@ class ProfileLayout extends Layout {
   }
 
   private getFormattedTime(time: number) {
-    return `${getHours(time).toString().padStart(2, '0')}:${getMinutes(time)}`;
+    return `${helpers.getHours(time).toString().padStart(2, '0')}:${helpers.getMinutes(time)}`;
   }
 }
 
