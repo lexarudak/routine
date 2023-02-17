@@ -106,12 +106,14 @@ class ProfileLayout extends Layout {
   }
 
   private makeStatisticsPlan(statistics: Statistics) {
+    const title = `${statistics.title.length < 16 ? statistics.title.length : statistics.title.slice(0, 16)}...`;
+
     const container = document.createElement('div');
     container.classList.add(ProfilePageClassList.planSquare);
     container.style.backgroundColor = statistics.color;
 
     container.innerHTML = `
-      <div class="${ProfilePageClassList.planSquareName}">${statistics.title}</div>
+      <div class="${ProfilePageClassList.planSquareName}">${title}</div>
       <div class="${ProfilePageClassList.planSquareDeviation}">${statistics.deviation} min/d</div>`;
 
     return container;
