@@ -10,6 +10,7 @@
     flex-wrap: wrap;
     gap: 10px;
     height: calc(100vh - 50px);
+    margin-top: -40px;
   }
 
   &__title {
@@ -114,5 +115,7 @@
 }
 
 .none {
-  display: none;
+  opacity: 0;
+  transform: translateX(-100%);
+  z-index: -5;
 }
