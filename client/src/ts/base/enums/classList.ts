@@ -136,4 +136,29 @@ const enum HomePageClassList {
   none = 'none',
 }
 
-export { ClassList, HomePageClassList };
+const enum ProfilePageClassList {
+  section = 'section',
+  profile = 'profile',
+  profileWrapper = 'profile-wrapper',
+  button = 'button',
+  settingsConfirmDay = 'settings__confirm-day',
+  settingsConfirmTime = 'settings__confirm-time',
+  settingsLogOut = 'settings__log-out',
+  settingsLabel = 'settings__label',
+  settingsInput = 'settings__input',
+  settingsButton = 'settings__button',
+  settingsButtonCapitalized = 'settings__button_capitalized',
+  userData = 'user-data',
+  statistics = 'statistics',
+  greeting = 'greeting',
+  greetingHello = 'greeting__hello',
+  greetingInfo = 'greeting__info',
+  statisticsTank = 'statistics-tank',
+  statisticsTankName = 'statistics-tank__name',
+  statisticsTankContent = 'statistics-tank__content',
+  planSquare = 'plan-square',
+  planSquareName = 'plan-square__name',
+  planSquareDeviation = 'plan-square__deviation',
+}
+
+export { ClassList, HomePageClassList, ProfilePageClassList };
