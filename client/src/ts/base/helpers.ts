@@ -97,6 +97,10 @@ function getMinutes(min: number) {
   return (min % 60).toString().padStart(2, '0');
 }
 
+function timeToMin(time: string) {
+  return +time.slice(0, 2) * 60 + +time.slice(3);
+}
+
 function getEventTarget(e: Event) {
   const { target } = e;
   if (!(target instanceof HTMLElement)) throw new Error(ErrorsList.elementNotFound);
@@ -159,6 +163,7 @@ export {
   makeColorTransparent,
   getHours,
   getMinutes,
+  timeToMin,
   getEventTarget,
   loginRedirect,
   createElement,

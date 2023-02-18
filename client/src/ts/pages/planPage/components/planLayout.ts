@@ -1,4 +1,5 @@
 /* eslint-disable no-underscore-dangle */
+import Layout from '../../layout';
 import ButtonClasses from '../../../base/enums/buttonClasses';
 import ButtonNames from '../../../base/enums/buttonNames';
 import { ClassList } from '../../../base/enums/classList';
@@ -12,18 +13,12 @@ import Api from '../../../api';
 import { Plan } from '../../../base/interface';
 import ErrorsList from '../../../base/enums/errorsList';
 
-class PlanLayout {
+class PlanLayout extends Layout {
   goTo: GoToFn;
 
   constructor(goTo: GoToFn) {
+    super();
     this.goTo = goTo;
-  }
-
-  public makeNavButton(name: string, routPath: RoutsList, callback: GoToFn) {
-    const btn: HTMLButtonElement = createNewElement('button', ButtonClasses.navButton);
-    btn.innerText = name;
-    btn.addEventListener('click', () => callback(routPath));
-    return btn;
   }
 
   public makeWeekLine() {
@@ -212,9 +207,8 @@ class PlanLayout {
     const li: HTMLLIElement = createNewElement('li', ClassList.planListItem);
     const color = createNewElement('div', ClassList.planListColor);
     color.style.backgroundColor = plan.color;
-    color.style.width = `${
-      ((Values.maxDayPlanWidth * plan.duration) / Values.allDayMinutes) * Values.planListWidthK
-    }px`;
+    const width = ((Values.maxDayPlanWidth * plan.duration) / Values.allDayMinutes) * Values.planListWidthK;
+    color.style.width = `${width}px`;
     const name = createNewElement('span', ClassList.planListName);
     name.innerText = plan.title;
     const dur = createNewElement('span', ClassList.planListDur);

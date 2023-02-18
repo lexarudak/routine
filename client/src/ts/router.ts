@@ -7,6 +7,7 @@ import LoginPage from './pages/loginPage/loginPage';
 import NotFoundPage from './pages/notFoundPage/notFoundPage';
 import PlanEditor from './pages/planPage/components/planEditor';
 import PlanPage from './pages/planPage/planPage';
+import ProfilePage from './pages/profilePage/profilePage';
 
 class Router {
   private editor: PlanEditor;
@@ -21,12 +22,15 @@ class Router {
 
   static loginPage: LoginPage;
 
+  static profilePage: ProfilePage;
+
   constructor(popup: Popup) {
     this.editor = new PlanEditor(popup, this.goTo);
     Router.homePage = new HomePage(this.goTo, this.editor);
     Router.planPage = new PlanPage(this.goTo, popup, this.editor);
     Router.loginPage = new LoginPage(this.goTo, this.editor);
     Router.dayPage = new DayPage(this.goTo, popup, this.editor);
+    Router.profilePage = new ProfilePage(this.goTo, this.editor);
     Router.notFoundPage = new NotFoundPage(this.goTo, this.editor);
   }
 
@@ -40,6 +44,9 @@ class Router {
         break;
       case RoutsList.homePage:
         await Router.homePage.draw();
+        break;
+      case RoutsList.profilePage:
+        await Router.profilePage.draw();
         break;
       default:
         if (isDayOfWeek(pathname)) {

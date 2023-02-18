@@ -34,6 +34,22 @@ export interface PlanToDay {
   duration: number;
 }
 
+export interface User {
+  _id: string;
+  name: string;
+  email: string;
+  confirmationDay: string;
+  confirmationTime: number;
+  createdAt: Date;
+}
+
+export interface Statistics {
+  title: string;
+  text: string;
+  color: string;
+  deviation: number;
+}
+
 export interface DistDayPlan {
   _id: string;
   title: string;

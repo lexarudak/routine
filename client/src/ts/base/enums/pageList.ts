@@ -5,6 +5,7 @@ const enum PageList {
   dayPage = 'Day page',
   notFound = '404 page',
   loginPage = 'Login page',
+  profilePage = 'Profile page',
 }
 
 export default PageList;

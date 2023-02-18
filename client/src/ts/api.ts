@@ -1,13 +1,20 @@
 import Path from './base/enums/path';
-import { LoginData, NewPlanData, PlanData, PlanToDay, RegistrationData } from './base/interface';
+import { LoginData, NewPlanData, PlanData, PlanToDay, RegistrationData, User, Statistics } from './base/interface';
+import { UserSettings } from './base/types';
 
 class Api {
-  public static async registration(registrationData: RegistrationData) {
-    return this.post(registrationData, Path.registration);
+  public static async registration(body: RegistrationData) {
+    console.log(this.name);
+    return this.post(body, Path.users, Path.registration);
   }
 
-  public static async login(loginData: LoginData) {
-    return this.post(loginData, Path.login);
+  public static async login(body: LoginData) {
+    return this.post(body, Path.users, Path.login);
+  }
+
+  public static async logout() {
+    const body: Record<string, never> = {};
+    return this.post(body, Path.users, Path.logout);
   }
 
   public static async getWeekDistribution() {
@@ -22,16 +29,29 @@ class Api {
     return this.get(false, Path.plans);
   }
 
-  public static async createNewPlan(userData: NewPlanData) {
-    return this.post(userData, Path.plans);
+  public static async createNewPlan(body: NewPlanData) {
+    return this.post(body, Path.plans);
   }
 
-  public static async editPlan(userData: PlanData) {
-    return this.post(userData, Path.plans, Path.update);
+  public static async editPlan(body: PlanData) {
+    return this.post(body, Path.plans, Path.update);
   }
 
-  public static async pushPlanToDay(userData: PlanToDay) {
-    return this.post(userData, Path.weekDistribution, Path.adjustPlan);
+  public static async pushPlanToDay(body: PlanToDay) {
+    console.log(body);
+    return this.post(body, Path.weekDistribution, Path.adjustPlan);
+  }
+
+  public static async getUserProfile(): Promise<User> {
+    return this.get(false, Path.users, Path.profile);
+  }
+
+  public static async saveUserSettings(body: UserSettings): Promise<User> {
+    return this.post(body, Path.users, Path.update);
+  }
+
+  public static async getStatistics(): Promise<Statistics[]> {
+    return this.get(false, Path.statistics, Path.get);
   }
 
   public static async getDayDistribution(id: string) {
@@ -54,17 +74,14 @@ class Api {
     return data;
   }
 
-  private static async post(
-    userData: RegistrationData | LoginData | NewPlanData | PlanData | PlanToDay,
-    ...path: Path[]
-  ) {
+  private static async post<T>(body: T, ...path: Path[]) {
     const options: RequestInit = {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
       credentials: 'include',
-      body: JSON.stringify(userData),
+      body: JSON.stringify(body),
     };
 
     const response = await fetch(`${Path.origin}${path.join('')}`, options);
