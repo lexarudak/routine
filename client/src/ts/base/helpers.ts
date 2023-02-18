@@ -148,6 +148,10 @@ function makeRoundIcon(round: HTMLElement) {
   return { icon, center };
 }
 
+function cutStringLine(str: string, length: number) {
+  return str.length <= length ? str : `${str.slice(0, length - 3)}...`;
+}
+
 export {
   isHTMLElement,
   getExistentElement,
@@ -169,4 +173,5 @@ export {
   sortAllPlans,
   makeRoundIcon,
   minToHourTimeline,
+  cutStringLine,
 };

@@ -18,3 +18,7 @@ export enum DaysOfWeek {
   saturday = 'Saturday',
   sunday = 'Sunday',
 }
+
+export enum DBAttributes {
+  id = '_id',
+}

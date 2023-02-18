@@ -84,20 +84,27 @@
 
 .confirm-plan {
   @include flexbox(flex-start, center);
-  padding: 5px 0;
+  padding: 10px 0;
 
   &__label {
     width: 170px;
   }
 
-  &__time {
+  &__line {
+    height: 40px;
+    padding: 0;
+    margin: 0;
+
     &::after {
       content: "|";
       width: 10px;
-      transform: translateX(20px);
       text-align: center;
       cursor: e-resize;
     }
+  }
+
+  &__time {
+    padding: 0 0 0 10px;
   }
 }
 

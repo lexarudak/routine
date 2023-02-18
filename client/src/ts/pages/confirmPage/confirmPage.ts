@@ -4,7 +4,7 @@ import Api from '../../api';
 import ConfirmLayout from './components/confirmLayout';
 import PlanEditor from '../planPage/components/planEditor';
 
-import { User } from '../../base/interface';
+import { User, Plan } from '../../base/interface';
 import { GoToFn } from '../../base/types';
 import { ClassList, ConfirmPageClassList } from '../../base/enums/classList';
 
@@ -17,6 +17,7 @@ import * as helpers from '../../base/helpers';
 class ConfirmPage extends Page {
   layout: ConfirmLayout;
   profile: User = {} as User;
+  weekDistribution: Plan[][] = [];
 
   constructor(goTo: GoToFn, editor: PlanEditor) {
     super(PagesList.confirmPage, goTo, editor);
@@ -24,7 +25,7 @@ class ConfirmPage extends Page {
   }
 
   private async setConfirmInfo() {
-    this.profile = await Api.getUserProfile();
+    [this.profile, this.weekDistribution] = await Promise.all([Api.getUserProfile(), Api.getWeekDistribution()]);
   }
 
   private setEventLiseners() {
@@ -47,7 +48,11 @@ class ConfirmPage extends Page {
 
     const wrapper = document.createElement('div');
     wrapper.classList.add(ConfirmPageClassList.confirmWrapper);
-    wrapper.append(this.layout.makeHeader(this.profile), this.layout.makeConfirmContent());
+
+    wrapper.append(
+      this.layout.makeHeader(this.profile),
+      this.layout.makeConfirmContent(this.profile, this.weekDistribution)
+    );
 
     container.append(this.layout.makeNavButton(ButtonNames.home, RoutsList.homePage, this.goTo), wrapper);
     return container;
@@ -57,6 +62,7 @@ class ConfirmPage extends Page {
     try {
       const container = helpers.getExistentElementByClass(ClassList.mainContainer);
       await this.animatedFilledPageAppend(container);
+      this.layout.setPageElementsParameters(this.profile, this.weekDistribution);
       this.setEventLiseners();
     } catch (error) {
       helpers.loginRedirect(error, this.goTo);

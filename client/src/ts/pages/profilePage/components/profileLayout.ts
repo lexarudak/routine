@@ -106,7 +106,7 @@ class ProfileLayout extends Layout {
   }
 
   private makeStatisticsPlan(statistics: Statistics) {
-    const title = `${statistics.title.length < 16 ? statistics.title.length : statistics.title.slice(0, 16)}...`;
+    const title = helpers.cutStringLine(statistics.title, 20);
 
     const container = document.createElement('div');
     container.classList.add(ProfilePageClassList.planSquare);
