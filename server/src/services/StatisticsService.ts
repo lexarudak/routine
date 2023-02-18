@@ -4,8 +4,10 @@ import Statistics from '../schemas/Statistics';
 import Service from './Service';
 import WeekDistributionService from './WeekDistributionService';
 import PlanService from './PlanService';
+import UserService from './UserService';
 
 import * as Type from '../common/types';
+import * as Enum from '../common/enums';
 
 class StatisticsService extends Service<Type.TStatistics> {
   protected model = Statistics;
@@ -79,15 +81,22 @@ class StatisticsService extends Service<Type.TStatistics> {
   }
 
   async confirmDay(userId: Types.ObjectId, item: Type.TStatisticsConfirmDay) {
-    const result: Type.TStatistics[] = [];
-
-    const distributionsPlan = (await WeekDistributionService.getByParameters({ userId, dayOfWeek: item.dayOfWeek })) as Type.TWeekDistribution[];
+    let distributionsPlan: Type.TWeekDistribution[] = [];
     const distributionsFact = item.dayDistribution;
+    let user: Type.TDBUser;
+
+    [user, distributionsPlan] = await Promise.all([
+      UserService.getById(userId),
+      WeekDistributionService.getByParameters({ userId, dayOfWeek: item.dayOfWeek })
+    ]);
 
     const plans = new Set<string>();
     distributionsPlan.forEach((distribution) => plans.add(distribution.planId.toString()));
     distributionsFact.forEach((distribution) => plans.add(distribution.planId.toString()));
     const PlanIDs = Array.from(plans.values());
+
+    const date = this.getConfirmationDate(user);
+    await this.model.deleteMany({ userId, confirmedDate: date });
 
     return await Promise.all(PlanIDs.map((planId) => {
       const distributionPlan = distributionsPlan.find((distribution) => String(distribution.planId) === planId);
@@ -97,10 +106,31 @@ class StatisticsService extends Service<Type.TStatistics> {
         userId: userId,
         planId: new Types.ObjectId(planId),
         deviation: this.getCalculatedDeviation(distributionPlan, distributionFact),
+        confirmedDate: date
       };
 
       return this.create(userId, statistics);
     }));
+  }
+
+  private getConfirmationDate(user: Type.TDBUser) {
+    const date = new Date();
+    date.setHours(0, 0, 0, 0);
+    if (user.confirmationDay === Enum.ConfirmationDays.yesterday) {
+      date.setDate(date.getDate() - 1);
+    }
+    return date;
+  }
+
+  async isDayConfirmed(userId: Types.ObjectId) {
+    const user = await UserService.getById(userId);
+    const date = this.getConfirmationDate(user);
+    return await this.isConfirmationExists(userId, date);
+  }
+
+  async isConfirmationExists(userId: Types.ObjectId, date: Date) {
+    const statistics = await this.model.findOne({ userId, confirmedDate: date });
+    return Boolean(statistics);
   }
 }
 
