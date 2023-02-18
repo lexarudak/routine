@@ -683,7 +683,8 @@ Returns json data about the user statistics.
   "_id": string,
   "userId": string,
   "planId": string,
-  "deviation": number
+  "deviation": number,
+  "confirmedDate": date
 }
 ```
 
@@ -774,4 +775,11 @@ Returns json data about the user statistics.
   ]
   ```
 
+  - `GET` /api/statistics/isDayConfirmed
+  
+  Respose `200` `OK`
+  ```
+  true/false
+  ```
+  
 </details>
