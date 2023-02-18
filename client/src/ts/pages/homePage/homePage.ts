@@ -5,9 +5,7 @@ import Page from '../page';
 import Api from '../../api';
 import { createElement, createNewElement, getExistentElement, client } from '../../base/helpers';
 import ClockChart from './components/clockChart';
-import FlyingThought from './components/flyingThought';
-import { ThoughtsData } from '../../base/interface';
-import ThoughtBuilder from './components/thoughtBuilder';
+import Thought from './components/thought';
 import RoutsList from '../../base/enums/routsList';
 import InnerText from '../../base/enums/innerText';
 import PlanEditor from '../planPage/components/planEditor';
@@ -18,79 +16,29 @@ class HomePage extends Page {
   constructor(goTo: GoToFn, editor: PlanEditor) {
     super(PageList.homePage, goTo, editor);
     this.clockChartInst = new ClockChart();
-  }
-
-  private updateHeight() {
-    const documentHeight = document.documentElement.clientHeight;
-    client.height = documentHeight;
-    client.planPosHeight = documentHeight / 2 - 15;
-    client.clockPosHeight = documentHeight / 2 - 15;
-  }
-
-  private checkResize(canvas: HTMLCanvasElement) {
-    canvas.height = client.height;
-    this.createFlyingThought(canvas);
+    this.clockChartInst = new ClockChart();
   }
 
   private createCanvas() {
     const canvas = createNewElement<HTMLCanvasElement>('canvas', HomePageClassList.canvas);
     canvas.width = client.width;
     canvas.height = client.height;
-    window.addEventListener(`resize`, () => this.checkResize(canvas));
-    this.createFlyingThought(canvas);
     return canvas;
   }
 
-  private async createFlyingThought(canvas: HTMLCanvasElement) {
-    const ctx = canvas.getContext('2d');
-    const thoughtsArray: FlyingThought[] = [];
-
-    const thoughtsDataList = await Api.getThoughts();
-    thoughtsDataList.forEach((thought: ThoughtsData) => {
-      const radius = 20;
-      // eslint-disable-next-line @typescript-eslint/naming-convention
-      const { _id } = thought;
-      if (!_id) return;
-      const x = Math.random() * (client.width - radius * 2) + radius;
-      const y = Math.random() * (client.height - radius * 2) + radius;
-      const dx = (Math.random() - 0.5) * 2;
-      const dy = (Math.random() - 0.5) * 2;
-      thoughtsArray.push(new FlyingThought(_id, x, y, dx, dy, radius));
-    });
-
-    if (ctx) {
-      const animate = () => {
-        requestAnimationFrame(animate);
-        ctx.clearRect(0, 0, client.width, client.height);
-        for (let i = 0; i < thoughtsArray.length; i += 1) {
-          thoughtsArray[i].draw(ctx);
-          thoughtsArray[i].thoughtCollision(thoughtsArray);
-        }
-        this.updateHeight();
-        const planBorder = new FlyingThought('planCircle', client.planPosWidth, client.planPosHeight, 1, 1, 100);
-        if (ctx) planBorder.drawCircles(ctx);
-
-        const clockCircle = new FlyingThought('clockCircle', client.clockPosWidth, client.clockPosHeight, 1, 1, 330);
-        if (ctx) clockCircle.drawCircles(ctx);
-        planBorder.thoughtCollision([...thoughtsArray, planBorder, clockCircle]);
-        clockCircle.thoughtCollision([...thoughtsArray, planBorder, clockCircle]);
-      };
-      animate();
-    }
-  }
-
-  private createThought() {
+  private createThought(canvas: HTMLCanvasElement) {
     const thought = createElement('div', HomePageClassList.thought);
     const thoughtContainer = createElement('div', HomePageClassList.thoughtContainer);
     const thoughtTitle = createElement('h3', HomePageClassList.thoughtTitle);
     thoughtTitle.textContent = InnerText.thoughtText;
 
-    const thoughtAddInst = new ThoughtBuilder('');
+    const thoughtAddInst = new Thought('');
     const thoughtAdd = thoughtAddInst.draw(HomePageClassList.thoughtAdd);
     thoughtAdd.classList.remove(HomePageClassList.none);
     thought.append(thoughtTitle, thoughtAdd, thoughtContainer);
 
     thoughtAddInst.createThoughtsList(thoughtContainer);
+    thoughtAddInst.createFlyingThought(canvas);
 
     const popup = createNewElement('div', HomePageClassList.blur);
     popup.classList.add(HomePageClassList.none);
@@ -100,8 +48,12 @@ class HomePage extends Page {
       getExistentElement(`.${HomePageClassList.canvas}`).classList.toggle(HomePageClassList.none);
       thoughtAdd.classList.toggle(HomePageClassList.none);
       popup.classList.toggle(HomePageClassList.none);
+
       document.querySelectorAll(`.${HomePageClassList.thoughtItem}`).forEach((el) => {
-        if (thoughtAdd.classList.contains('none')) el.classList.add(HomePageClassList.open);
+        if (thoughtAdd.classList.contains('none')) {
+          el.classList.add(HomePageClassList.open);
+          thoughtAdd.classList.remove(HomePageClassList.open);
+        }
         el.classList.toggle(HomePageClassList.none);
       });
     });
@@ -112,7 +64,7 @@ class HomePage extends Page {
     const confirmTime = (await Api.getUserProfile()).confirmationTime;
     console.log('confirmTime', confirmTime);
     setInterval(() => {
-      if (this.clockChartInst.minutes >= 1408) {
+      if (this.clockChartInst.minutes >= confirmTime) {
         confirmDay.style.visibility = 'visible';
       } else {
         confirmDay.style.visibility = '';
@@ -122,9 +74,10 @@ class HomePage extends Page {
 
   protected async getFilledPage(): Promise<HTMLElement> {
     const page = document.createElement(HomePageClassList.section);
-    const flyingThought = this.createCanvas();
-    // console.log(flyingThought);
-    const thought = this.createThought();
+    const canvas = this.createCanvas();
+
+    const thought = this.createThought(canvas);
+
     const plan = createElement('div', HomePageClassList.plan);
     plan.textContent = InnerText.planText;
     plan.addEventListener('click', () => this.goTo(RoutsList.planPage));
@@ -144,8 +97,9 @@ class HomePage extends Page {
     }
 
     const clock = await this.clockChartInst.draw();
-    // page.append(thought, signIn, plan, clock);
-    page.append(flyingThought, thought, signIn, plan, confirmDay, clock);
+
+    page.append(canvas, thought, signIn, plan, confirmDay, clock);
+
     setTimeout(() => this.clockChartInst.getTime());
 
     return page;

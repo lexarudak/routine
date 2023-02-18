@@ -15,6 +15,7 @@ class ToDo {
     if (data[sector].text) {
       const toDoTextarea = createElement('textarea', HomePageClassList.toDoTextarea);
       toDoTextarea.textContent = data[sector].text;
+      toDoTextarea.spellcheck = false;
       toDoWrap.append(toDoTextarea);
     } else {
       const toDoText = createElement('div', HomePageClassList.toDoText);
