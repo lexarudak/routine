@@ -133,6 +133,10 @@
   visibility: visible;
 }
 
+.blur.none {
+  display: none;
+}
+
 .none {
   opacity: 0;
   transform: translateX(-100%);

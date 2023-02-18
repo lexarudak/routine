@@ -2,6 +2,8 @@ const enum ClassList {
   mainContainer = 'main__container',
   mainContainerHide = 'main__container_hide',
   banner = 'banner',
+  imgContainer = 'img-container',
+  scaleNormal = 'scale-normal',
   // 404
   page404 = 'page-404',
   page404text = 'page-404__text',
@@ -37,6 +39,7 @@ const enum ClassList {
   planTools = 'plan__tools',
   planButtons = 'plan__buttons',
   planAddButton = 'plan__button-add',
+  planAddButtonDarg = 'plan__button-add_drag',
   planAddButtonValue = 'plan__button-add-value',
   planRemoveZone = 'plan__remove',
   planRemoveZoneDrag = 'plan__remove_drag',
@@ -73,6 +76,8 @@ const enum ClassList {
   timeContainerSlider = 'time-container__slider',
   timeContainerTimeInput = 'time-container__time-input',
   timeContainerTimeLabel = 'time-container__time-label',
+  timeContainerPer = 'time-container__per',
+  timeContainerPerVal = 'time-container__per-val',
   // slider popup
   sliderPopup = 'slider-popup',
   // day page
@@ -84,9 +89,19 @@ const enum ClassList {
   dayPageField = 'day-page__field',
   dayPageTools = 'day-page__tools',
   dayPageReturn = 'day-page__return',
+  dayPageReturnOver = 'day-page__return_over',
   dayPagePlansZone = 'day-page__plans-zone',
   // timeline
   timeline = 'timeline',
+  timelineDrag = 'timeline_drag',
+  timelineHeader = 'timeline-header',
+  timelineDiv = 'timeline-div',
+  timelineDivFake = 'timeline-div_fake',
+  timelineDivFrom = 'timeline-div__from',
+  timelineDivTo = 'timeline-div__to',
+  timelineDivLeft = 'timeline-div__left',
+  timelineDivRight = 'timeline-div__right',
+  timelineDivName = 'timeline-div__name',
   //
   planList = 'plan-list',
   planListItem = 'plan-list__item',
@@ -136,7 +151,28 @@ const enum HomePageClassList {
 }
 
 const enum ProfilePageClassList {
+  section = 'section',
   profile = 'profile',
+  profileWrapper = 'profile-wrapper',
+  button = 'button',
+  settingsConfirmDay = 'settings__confirm-day',
+  settingsConfirmTime = 'settings__confirm-time',
+  settingsLogOut = 'settings__log-out',
+  settingsLabel = 'settings__label',
+  settingsInput = 'settings__input',
+  settingsButton = 'settings__button',
+  settingsButtonCapitalized = 'settings__button_capitalized',
+  userData = 'user-data',
+  statistics = 'statistics',
+  greeting = 'greeting',
+  greetingHello = 'greeting__hello',
+  greetingInfo = 'greeting__info',
+  statisticsTank = 'statistics-tank',
+  statisticsTankName = 'statistics-tank__name',
+  statisticsTankContent = 'statistics-tank__content',
+  planSquare = 'plan-square',
+  planSquareName = 'plan-square__name',
+  planSquareDeviation = 'plan-square__deviation',
 }
 
 export { ClassList, HomePageClassList, ProfilePageClassList };

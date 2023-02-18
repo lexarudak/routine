@@ -41,9 +41,10 @@
   &__tools {
     display: flex;
     flex-direction: row-reverse;
-    margin-top: 15px;
+    margin-top: 30px;
     margin-bottom: 5px;
-    gap: 15px;
+    margin-right: 10px;
+    gap: 30px;
   }
 
   &__return {
@@ -56,8 +57,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: .4s;
-    transform: scale(0);
+    transition: .2s;
+    transform: scale(0) translateY(0%);
     background-color: rgba(255, 255, 255, 0.46);
 
     & > div {
@@ -68,8 +69,9 @@
       background-size: contain;
     }
 
-    &_drag {
-      border-width: 2px;
+    &.plan__remove_drag {
+      transform: scale(1.3) translateY(20%);
+
     }
 
     &_over {
@@ -85,6 +87,14 @@
     height: calc(100% - 150px);
     flex-wrap: wrap;
     padding-left: 10px;
+
+    &_drag {
+      border-width: 2px;
+    }
+
+    &_over {
+      background-color: $success-trans;
+    }
   }
 }
 

@@ -1,7 +1,8 @@
 import { ClassList } from '../../../base/enums/classList';
+import EditorMode from '../../../base/enums/editorMode';
 import InnerText from '../../../base/enums/innerText';
 import Values from '../../../base/enums/values';
-import { createNewElement, getHours, getMinutes } from '../../../base/helpers';
+import { createNewElement, getHours, getMinutes, minToHour } from '../../../base/helpers';
 
 class TimeSlider {
   minTime;
@@ -95,7 +96,39 @@ class TimeSlider {
     return label;
   }
 
-  public draw() {
+  private weekHoursToDay() {
+    return minToHour(Math.floor(this.currentTime / 7));
+  }
+
+  private makePerSection(
+    hours: HTMLInputElement,
+    minutes: HTMLInputElement,
+    slider: HTMLInputElement,
+    mode?: EditorMode
+  ) {
+    const perContainer = createNewElement('span', ClassList.timeContainerPer);
+
+    if (mode === EditorMode.newPlan || mode === EditorMode.editPlan) {
+      const perVal = createNewElement('span', ClassList.timeContainerPerVal);
+
+      minutes.addEventListener('blur', () => {
+        perVal.innerHTML = this.weekHoursToDay();
+      });
+      hours.addEventListener('blur', () => {
+        perVal.innerHTML = this.weekHoursToDay();
+      });
+      slider.addEventListener('input', () => {
+        perVal.innerHTML = this.weekHoursToDay();
+      });
+
+      perVal.innerHTML = this.weekHoursToDay();
+      perContainer.append('( ~ ', perVal, '/day)');
+    }
+    if (mode === EditorMode.newPlanDay || mode === EditorMode.day) perContainer.innerHTML = InnerText.perDay;
+    return perContainer;
+  }
+
+  public draw(mode?: EditorMode) {
     const container = createNewElement('div', ClassList.timeContainer);
     const { hours, minutes, slider } = this.addListeners(
       this.makeHoursInput(InnerText.hoursText),
@@ -108,6 +141,7 @@ class TimeSlider {
       this.makeLabel(InnerText.hoursText, Values.hoursInputId),
       minutes,
       this.makeLabel(InnerText.minutesText, Values.minutesInputId),
+      this.makePerSection(hours, minutes, slider, mode),
       slider
     );
     return container;

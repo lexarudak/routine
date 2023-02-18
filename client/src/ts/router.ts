@@ -24,18 +24,6 @@ class Router {
 
   static profilePage: ProfilePage;
 
-  // static accountPage: Page;
-
-  // static mondayPage: Page;
-
-  // static tuesdayPage: Page;
-
-  // static fridayPage: Page;
-
-  // static saturdayPage: Page;
-
-  // static sundayPage: Page;
-
   constructor(popup: Popup) {
     this.editor = new PlanEditor(popup, this.goTo);
     Router.homePage = new HomePage(this.goTo, this.editor);

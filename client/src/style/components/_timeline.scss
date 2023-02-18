@@ -1,8 +1,117 @@
+.timeline-header {
+  background: url(./assets/svg/timeline-1.svg);
+  background-position: top;
+  background-size: (100%, 100%);
+  width: 100%;
+  height: 30px;
+  flex-shrink: 0;
+  background-repeat: no-repeat;
+  margin-top: 15px;
+  border: 1px solid transparent;
+}
+
 .timeline {
+  position: relative;
+  z-index: 2;
   width: 100%;
   height: 100px;
   border: 1px solid $font-medium;
-  border-radius: 15px;
+  border-radius: 20px;
   margin-top: 10px;
   flex-shrink: 0;
+  transition: .2s;
+  transform-origin: top;
+  background: url(./assets/svg/timeline-2.svg);
+  background-position: center;
+  background-size: (100%, 100%);
+  padding: 0 2px;
+
+  &_drag {
+    border-style: dotted;
+    transform: scaleY(1.2);
+  }
+}
+
+.timeline-div {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: 0;
+  height: 100%;
+  border-radius: 7px;
+  border: 1px solid $font-light;
+  background-origin: border-box;
+  pointer-events: none;
+  cursor: pointer;
+
+  &_fake {
+    opacity: .5;
+  }
+
+  &__from {
+    z-index: 3;
+    min-width: 47px;
+    position: absolute;
+    bottom: -25px;
+    left: 2px;
+    padding-left: 3px;
+    line-height: 15px;
+    border-left: 1px solid $font-medium;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    font-size: 14px;
+    flex-wrap: nowrap;
+    font-family: 'Inconsolata', monospace;
+    color: $font-medium;
+  }
+
+  &__to {
+    z-index: 3;
+    min-width: 47px;
+    flex-wrap: nowrap;
+    font-size: 14px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    height: 35px;
+    width: 100%;
+    position: absolute;
+    bottom: -45px;
+    right: 2px;
+    padding-right: 3px;
+    line-height: 15px;
+    border-right: 1px solid $font-medium;
+    font-family: 'Inconsolata', monospace;
+    color: $font-medium;
+  }
+
+  &__name {
+    padding: 7px;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+
+  &__left,
+  &__right {
+    position: absolute;
+    height: 10%;
+    width: 10px;
+    background-color: $font-medium;
+    border: 1px solid $font-light;
+    border-radius: 10px;
+  }
+  
+  &__left {
+    left: 0;
+    top: 0;
+  }
+
+  &__right {
+    right: 0;
+    bottom: 0;
+  }
 }

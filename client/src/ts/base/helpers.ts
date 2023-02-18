@@ -1,6 +1,9 @@
+import PlanRoundConfig from '../components/planRoundConfig';
+import { ClassList } from './enums/classList';
 import Days from './enums/days';
 import ErrorsList from './enums/errorsList';
 import RoutsList from './enums/routsList';
+import Values from './enums/values';
 import { Plan } from './interface';
 import { GoToFn } from './types';
 
@@ -79,12 +82,25 @@ function minToHour(min: number) {
   throw new Error(ErrorsList.minToHourError);
 }
 
+function minToHourTimeline(min: number) {
+  if (min >= 0) {
+    return `${Math.floor(min / 60)
+      .toString()
+      .padStart(2, '0')}:${(min % 60).toString().padStart(2, '0')}`;
+  }
+  throw new Error(ErrorsList.minToHourError);
+}
+
 function getHours(min: number) {
   return Math.floor(min / 60);
 }
 
 function getMinutes(min: number) {
   return (min % 60).toString().padStart(2, '0');
+}
+
+function timeToMin(time: string) {
+  return +time.slice(0, 2) * 60 + +time.slice(3);
 }
 
 function getEventTarget(e: Event) {
@@ -115,6 +131,29 @@ function isDayOfWeek(path: string) {
   return '';
 }
 
+function makeRoundIcon(round: HTMLElement) {
+  const width = round.clientWidth;
+  const icon = round.cloneNode(true);
+  let center = 0;
+  if (icon instanceof HTMLElement) {
+    getExistentElementByClass(ClassList.imgContainer).append(icon);
+    icon.style.transform = Values.scaleNormal;
+    icon.style.boxShadow = 'none';
+    center = width / 2;
+    const newBlur = icon.childNodes.item(1);
+    if (newBlur instanceof HTMLElement) newBlur.style.display = `none`;
+    if (width > 100) {
+      icon.style.width = `${PlanRoundConfig.iconRoundSize}px`;
+      icon.style.height = icon.style.width;
+      if (icon.firstChild instanceof HTMLElement) icon.firstChild.style.fontSize = '14px';
+      center = PlanRoundConfig.iconRoundSize / 2;
+    }
+    if (icon.lastChild instanceof HTMLElement) icon.lastChild.style.display = 'none';
+  }
+  if (!(icon instanceof HTMLElement)) throw new Error(ErrorsList.elementNotFound);
+  return { icon, center };
+}
+
 export {
   isHTMLElement,
   getExistentElement,
@@ -126,6 +165,7 @@ export {
   makeColorTransparent,
   getHours,
   getMinutes,
+  timeToMin,
   getEventTarget,
   loginRedirect,
   createElement,
@@ -133,4 +173,6 @@ export {
   client,
   isDayOfWeek,
   sortAllPlans,
+  makeRoundIcon,
+  minToHourTimeline,
 };

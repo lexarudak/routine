@@ -17,6 +17,8 @@ const enum InnerText {
   emptyText = '',
   timeOfDayAM = 'AM',
   timeOfDayPM = 'PM',
+  perWeek = '(per week)',
+  perDay = 'per day',
 }
 
 export default InnerText;

@@ -160,7 +160,7 @@ class PlanEditor {
     const container = this.makeContainer(secColor);
     const tools = createNewElement('div', ClassList.editorTools);
 
-    tools.append(this.makeAcceptButton(secColor), this.colorPicker(), this.makeColorBox(), this.slider.draw());
+    tools.append(this.makeAcceptButton(secColor), this.colorPicker(), this.makeColorBox(), this.slider.draw(this.mode));
     container.append(tools, this.makeTitle(), this.makeText());
     this.popup.open(container);
   }
@@ -216,13 +216,12 @@ class PlanEditor {
       buttonOff(currentTarget);
 
       try {
+        this.popup.easyClose();
+        getExistentElementByClass(ClassList.mainContainer).classList.add(ClassList.mainContainerHide);
         await this.sendPlan();
         this.goTo(!this.dayId ? RoutsList.planPage : `/${Days[Number(this.dayId)]}`);
       } catch (error) {
-        console.log(error);
         loginRedirect(error, this.goTo);
-      } finally {
-        this.popup.easyClose();
       }
     });
     return container;
