@@ -10,9 +10,12 @@ class Thought {
 
   thoughtId: string | undefined;
 
+  thoughtsDataList: ThoughtsData[] | undefined;
+
   constructor(text: string, id?: string) {
     this.thoughtText = text;
     this.thoughtId = id;
+    this.thoughtsDataList = undefined;
   }
 
   async convertToPlan(thoughtText: string, e: Event) {
@@ -84,14 +87,16 @@ class Thought {
   }
 
   async createFlyingThought(canvas: HTMLCanvasElement) {
-    window.addEventListener(`resize`, () => this.checkResize(canvas));
-
     const ctx = canvas.getContext('2d');
     const thoughtsArray: FlyingThought[] = [];
 
-    const thoughtsDataList = await Api.getThoughts();
-    console.log(thoughtsDataList);
-    thoughtsDataList.forEach((thought: ThoughtsData) => {
+    if (this.thoughtsDataList === undefined) {
+      this.thoughtsDataList = await Api.getThoughts();
+    }
+
+    if (this.thoughtsDataList === undefined) return;
+
+    this.thoughtsDataList.forEach((thought: ThoughtsData) => {
       const radius = 20;
       const id = thought._id;
       if (!id) return;
@@ -157,6 +162,17 @@ class Thought {
       });
       thoughtAdd.append(thoughtRemove);
     }
+
+    let isEvent = false;
+    window.addEventListener('resize', () => {
+      if (!isEvent) {
+        this.checkResize(getExistentElement(`.${HomePageClassList.canvas}`));
+        isEvent = true;
+        setTimeout(() => {
+          isEvent = false;
+        }, 1000);
+      }
+    });
 
     thoughtAdd.append(thoughtCreate, thoughtAddBtn);
     return thoughtAdd;
