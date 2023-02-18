@@ -44,6 +44,7 @@ router.get('/dayDistribution/get/:dayOfWeek', DayDistributionController.get.bind
 router.post('/dayDistribution/adjustPlan', DayDistributionController.adjustPlan.bind(DayDistributionController));
 
 router.get('/statistics/get', StatisticsController.get.bind(StatisticsController));
+router.get('/statistics/isDayConfirmed', StatisticsController.isDayConfirmed.bind(StatisticsController));
 router.post('/statistics/confirmDay', StatisticsController.confirmDay.bind(StatisticsController));
 
 export default router;
