@@ -7,6 +7,7 @@ import { createElement, createNewElement, getExistentElement, client } from '../
 import ClockChart from './components/clockChart';
 import Thought from './components/thought';
 import RoutsList from '../../base/enums/routsList';
+import Path from '../../base/enums/path';
 import InnerText from '../../base/enums/innerText';
 import PlanEditor from '../planPage/components/planEditor';
 
@@ -32,7 +33,7 @@ class HomePage extends Page {
     const thoughtTitle = createElement('h3', HomePageClassList.thoughtTitle);
     thoughtTitle.textContent = InnerText.thoughtText;
 
-    const thoughtAddInst = new Thought('');
+    const thoughtAddInst = new Thought(this.goTo, '');
     const thoughtAdd = thoughtAddInst.draw(HomePageClassList.thoughtAdd);
     thoughtAdd.classList.remove(HomePageClassList.none);
     thought.append(thoughtTitle, thoughtAdd, thoughtContainer);
@@ -61,47 +62,53 @@ class HomePage extends Page {
   }
 
   private async checkConfirmTime(confirmDay: HTMLElement) {
-    const confirmTime = (await Api.getUserProfile()).confirmationTime;
-    console.log('confirmTime', confirmTime);
-    setInterval(() => {
-      if (this.clockChartInst.minutes >= confirmTime) {
-        confirmDay.style.visibility = 'visible';
-      } else {
-        confirmDay.style.visibility = '';
-      }
-    }, 1000);
+    try {
+      const confirmTime = (await Api.getUserProfile()).confirmationTime;
+      console.log('confirmTime', confirmTime);
+      setInterval(() => {
+        if (!(window.location.pathname === Path.home)) return;
+        if (this.clockChartInst.minutes >= confirmTime) {
+          confirmDay.style.visibility = 'visible';
+        } else {
+          confirmDay.style.visibility = '';
+        }
+      }, 1000);
+    } catch (error) {
+      console.log(error);
+      this.goTo(RoutsList.loginPage);
+    }
   }
 
   protected async getFilledPage(): Promise<HTMLElement> {
     const page = document.createElement(HomePageClassList.section);
-    const canvas = this.createCanvas();
-
-    const thought = this.createThought(canvas);
-
-    const plan = createElement('div', HomePageClassList.plan);
-    plan.textContent = InnerText.planText;
-    plan.addEventListener('click', () => this.goTo(RoutsList.planPage));
-
-    const confirmDay = createElement('div', HomePageClassList.confirmDay);
-    confirmDay.addEventListener('click', () => this.goTo(RoutsList.confirmPage));
-    this.checkConfirmTime(confirmDay);
-
-    const signIn = createElement('div', HomePageClassList.signIn);
-    signIn.addEventListener('click', () => this.goTo(RoutsList.profilePage));
-
     try {
+      const canvas = this.createCanvas();
+
+      const thought = this.createThought(canvas);
+
+      const plan = createElement('div', HomePageClassList.plan);
+      plan.textContent = InnerText.planText;
+      plan.addEventListener('click', () => this.goTo(RoutsList.planPage));
+
+      const confirmDay = createElement('div', HomePageClassList.confirmDay);
+      confirmDay.addEventListener('click', () => this.goTo(RoutsList.confirmPage));
+      this.checkConfirmTime(confirmDay);
+
+      const signIn = createElement('div', HomePageClassList.signIn);
+      signIn.addEventListener('click', () => this.goTo(RoutsList.profilePage));
+
       const userName = await Api.getUserProfile();
       signIn.textContent = userName.name;
-    } catch {
-      signIn.textContent = '';
+
+      const clock = await this.clockChartInst.draw();
+
+      page.append(canvas, thought, signIn, plan, confirmDay, clock);
+
+      setTimeout(() => this.clockChartInst.getTime());
+    } catch (error) {
+      console.log(error);
+      this.goTo(RoutsList.loginPage);
     }
-
-    const clock = await this.clockChartInst.draw();
-
-    page.append(canvas, thought, signIn, plan, confirmDay, clock);
-
-    setTimeout(() => this.clockChartInst.getTime());
-
     return page;
   }
 }

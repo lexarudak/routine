@@ -10,6 +10,7 @@ import Clock from './clock';
 import Chart from './chart';
 import ToDo from './toDo';
 import { chartData, emptyData } from '../data/chartData';
+import Path from '../../../base/enums/path';
 
 class ClockChart extends Clock {
   toDoInst: ToDo;
@@ -146,6 +147,7 @@ class ClockChart extends Clock {
     this.getCurrData();
     this.setDataByTime();
     setInterval(() => {
+      if (!(window.location.pathname === Path.home)) return;
       this.getCurrData();
       const sector = this.chartData.findIndex((el) => el.id === this.currPlanNum);
       // console.log('updData', this.minutes, this.chartData[sector].to);

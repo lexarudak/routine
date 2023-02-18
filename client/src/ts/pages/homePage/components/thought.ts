@@ -4,15 +4,21 @@ import Api from '../../../api';
 import { ThoughtsData } from '../../../base/interface';
 import { SetAttribute, GetAttribute } from '../../../base/enums/attributes';
 import FlyingThought from './flyingThought';
+import { GoToFn } from '../../../base/types';
+import RoutsList from '../../../base/enums/routsList';
+import Path from '../../../base/enums/path';
 
 class Thought {
+  goTo: GoToFn;
+
   thoughtText: string;
 
   thoughtId: string | undefined;
 
   thoughtsDataList: ThoughtsData[] | undefined;
 
-  constructor(text: string, id?: string) {
+  constructor(goTo: GoToFn, text: string, id?: string) {
+    this.goTo = goTo;
     this.thoughtText = text;
     this.thoughtId = id;
     this.thoughtsDataList = undefined;
@@ -60,17 +66,21 @@ class Thought {
   }
 
   async createThoughtsList(thoughtContainer: HTMLElement) {
-    const container = thoughtContainer;
-    container.innerHTML = '';
+    thoughtContainer.innerHTML = '';
     const thoughtsArr: Thought[] = [];
-    const thoughtsDataList = await Api.getThoughts();
-    thoughtsDataList.forEach((thoughtDataEl: ThoughtsData) => {
-      thoughtsArr.push(new Thought(thoughtDataEl.title, thoughtDataEl._id));
-    });
+    try {
+      const thoughtsDataList = await Api.getThoughts();
+      thoughtsDataList.forEach((thoughtDataEl: ThoughtsData) => {
+        thoughtsArr.push(new Thought(this.goTo, thoughtDataEl.title, thoughtDataEl._id));
+      });
 
-    for (let i = 0; i < thoughtsArr.length; i += 1) {
-      const thoughtEl = thoughtsArr[i].draw(HomePageClassList.thoughtItem);
-      container.append(thoughtEl);
+      for (let i = 0; i < thoughtsArr.length; i += 1) {
+        const thoughtEl = thoughtsArr[i].draw(HomePageClassList.thoughtItem);
+        thoughtContainer.append(thoughtEl);
+      }
+    } catch (error) {
+      console.log(error);
+      this.goTo(RoutsList.loginPage);
     }
   }
 
@@ -89,42 +99,45 @@ class Thought {
   async createFlyingThought(canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext('2d');
     const thoughtsArray: FlyingThought[] = [];
+    try {
+      if (this.thoughtsDataList === undefined) {
+        this.thoughtsDataList = await Api.getThoughts();
+      }
 
-    if (this.thoughtsDataList === undefined) {
-      this.thoughtsDataList = await Api.getThoughts();
-    }
+      if (this.thoughtsDataList === undefined) return;
 
-    if (this.thoughtsDataList === undefined) return;
+      this.thoughtsDataList.forEach((thought: ThoughtsData) => {
+        const radius = 20;
+        const id = thought._id;
+        if (!id) return;
+        const x = Math.random() * (client.width - radius * 2) + radius;
+        const y = Math.random() * (client.height - radius * 2) + radius;
+        const dx = (Math.random() - 0.5) * 2;
+        const dy = (Math.random() - 0.5) * 2;
+        thoughtsArray.push(new FlyingThought(id, x, y, dx, dy, radius));
+      });
 
-    this.thoughtsDataList.forEach((thought: ThoughtsData) => {
-      const radius = 20;
-      const id = thought._id;
-      if (!id) return;
-      const x = Math.random() * (client.width - radius * 2) + radius;
-      const y = Math.random() * (client.height - radius * 2) + radius;
-      const dx = (Math.random() - 0.5) * 2;
-      const dy = (Math.random() - 0.5) * 2;
-      thoughtsArray.push(new FlyingThought(id, x, y, dx, dy, radius));
-    });
+      if (ctx) {
+        const animate = () => {
+          requestAnimationFrame(animate);
+          ctx.clearRect(0, 0, client.width, client.height);
+          for (let i = 0; i < thoughtsArray.length; i += 1) {
+            thoughtsArray[i].draw(ctx);
+            thoughtsArray[i].thoughtCollision(thoughtsArray);
+          }
+          this.updateHeight();
+          const planBorder = new FlyingThought('planCircle', client.planPosWidth, client.planPosHeight, 1, 1, 100);
+          if (ctx) planBorder.drawCircles(ctx);
 
-    if (ctx) {
-      const animate = () => {
-        requestAnimationFrame(animate);
-        ctx.clearRect(0, 0, client.width, client.height);
-        for (let i = 0; i < thoughtsArray.length; i += 1) {
-          thoughtsArray[i].draw(ctx);
-          thoughtsArray[i].thoughtCollision(thoughtsArray);
-        }
-        this.updateHeight();
-        const planBorder = new FlyingThought('planCircle', client.planPosWidth, client.planPosHeight, 1, 1, 100);
-        if (ctx) planBorder.drawCircles(ctx);
-
-        const clockCircle = new FlyingThought('clockCircle', client.clockPosWidth, client.clockPosHeight, 1, 1, 330);
-        if (ctx) clockCircle.drawCircles(ctx);
-        planBorder.thoughtCollision([...thoughtsArray, planBorder, clockCircle]);
-        clockCircle.thoughtCollision([...thoughtsArray, planBorder, clockCircle]);
-      };
-      animate();
+          const clockCircle = new FlyingThought('clockCircle', client.clockPosWidth, client.clockPosHeight, 1, 1, 330);
+          if (ctx) clockCircle.drawCircles(ctx);
+          planBorder.thoughtCollision([...thoughtsArray, planBorder, clockCircle]);
+          clockCircle.thoughtCollision([...thoughtsArray, planBorder, clockCircle]);
+        };
+        animate();
+      }
+    } catch {
+      this.goTo(RoutsList.loginPage);
     }
   }
 
@@ -164,7 +177,9 @@ class Thought {
     }
 
     let isEvent = false;
+
     window.addEventListener('resize', () => {
+      if (!(window.location.pathname === Path.home)) return;
       if (!isEvent) {
         this.checkResize(getExistentElement(`.${HomePageClassList.canvas}`));
         isEvent = true;
