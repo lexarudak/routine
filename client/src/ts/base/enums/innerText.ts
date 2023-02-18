@@ -14,7 +14,7 @@ const enum InnerText {
   thoughtText = 'Thought',
   planText = 'Plan',
   emptyTitle = 'Free time',
-  emptyText = 'There are no plans at this time.',
+  emptyText = '',
   timeOfDayAM = 'AM',
   timeOfDayPM = 'PM',
 }

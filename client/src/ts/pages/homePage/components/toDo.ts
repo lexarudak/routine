@@ -18,7 +18,7 @@ class ToDo {
       toDoWrap.append(toDoTextarea);
     } else {
       const toDoText = createElement('div', HomePageClassList.toDoText);
-      toDoText.textContent = 'Text';
+      toDoText.textContent = 'There are no plans at this time.';
       toDoWrap.append(toDoText);
     }
 

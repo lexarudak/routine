@@ -46,7 +46,7 @@ const chartData = [
     text: 'Amet consectetur adipisicing elit. Dolorum ipsum dolorem consequatur, impedit iusto aut adipisci excepturi nemo quam laborum earum ratione iure explicabo, sapiente sint minus exercitationem iste placeat.',
     color: '#A020F0',
     from: 900,
-    to: 1020,
+    to: 1320,
     __v: 0,
   },
   {
