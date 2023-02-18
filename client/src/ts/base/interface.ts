@@ -1,3 +1,5 @@
+import { ConfirmationDay } from './types';
+
 export interface Plan {
   _id: string;
   color: string;
@@ -38,7 +40,7 @@ export interface User {
   _id: string;
   name: string;
   email: string;
-  confirmationDay: string;
+  confirmationDay: ConfirmationDay;
   confirmationTime: number;
   createdAt: Date;
 }

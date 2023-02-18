@@ -1,4 +1,5 @@
 import RoutsList from './enums/routsList';
+import { ConfirmationDays } from './enums/enums';
 import { Plan } from './interface';
 
 export type GoToFn = (pageName: RoutsList | string) => void;
@@ -10,6 +11,8 @@ export type PlanDis = {
 };
 
 export type UserSettings = {
-  confirmationDay: string;
+  confirmationDay: ConfirmationDay;
   confirmationTime: number;
 };
+
+export type ConfirmationDay = ConfirmationDays.today | ConfirmationDays.yesterday;

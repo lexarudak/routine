@@ -2,7 +2,7 @@ import Layout from '../../layout';
 
 import { User, Statistics } from '../../../base/interface';
 import { ProfilePageClassList } from '../../../base/enums/classList';
-import { UserSettings } from '../../../base/types';
+import { UserSettings, ConfirmationDay } from '../../../base/types';
 
 import * as helpers from '../../../base/helpers';
 import * as enums from '../../../base/enums/enums';
@@ -39,7 +39,7 @@ class ProfileLayout extends Layout {
     const uiConfirmationTime = helpers.getExistentElement<HTMLInputElement>(classCSS);
 
     const settings: UserSettings = {
-      confirmationDay: uiConfirmationDay.textContent || enums.ConfirmationDays.today,
+      confirmationDay: (uiConfirmationDay.textContent || enums.ConfirmationDays.today) as ConfirmationDay,
       confirmationTime: helpers.timeToMin(uiConfirmationTime.value),
     };
 
