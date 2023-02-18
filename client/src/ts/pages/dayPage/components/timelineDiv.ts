@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import { ClassList } from '../../../base/enums/classList';
-import { createNewElement } from '../../../base/helpers';
+import { createNewElement, minToHourTimeline } from '../../../base/helpers';
 import { Plan } from '../../../base/interface';
 import colorsAndFonts from '../../../components/colorsAndFonts';
 
@@ -42,12 +42,12 @@ class TimelineDiv {
     this.div.style.width = `${finish}px`;
   }
 
-  public showTimeInterval(from: string, to: string, show: boolean) {
+  public showTimeInterval(fromMin: number, toMin: number, show: boolean) {
     if (show) {
       this.from.style.display = 'flex';
       this.to.style.display = 'flex';
-      this.from.innerText = from;
-      this.to.innerText = to;
+      this.from.innerText = minToHourTimeline(fromMin);
+      this.to.innerText = minToHourTimeline(fromMin + toMin);
       this.name.innerText = this.plan.title;
     } else {
       this.from.style.display = 'none';

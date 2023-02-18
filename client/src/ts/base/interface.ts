@@ -58,3 +58,14 @@ export interface DistDayPlan {
   from: number;
   to: number;
 }
+
+export interface DistPlan {
+  planId: string;
+  from: number;
+  to: number;
+}
+
+export interface DayDist {
+  dayOfWeek: number;
+  dayDistribution: DistPlan[];
+}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-underscore-dangle */
 import Layout from '../../layout';
 import ButtonClasses from '../../../base/enums/buttonClasses';
@@ -10,7 +11,7 @@ import Values from '../../../base/enums/values';
 import { GoToFn } from '../../../base/types';
 import { createNewElement, getExistentElementByClass, loginRedirect, minToHour } from '../../../base/helpers';
 import Api from '../../../api';
-import { Plan } from '../../../base/interface';
+import { DistDayPlan, Plan } from '../../../base/interface';
 import ErrorsList from '../../../base/enums/errorsList';
 
 class PlanLayout extends Layout {
@@ -79,23 +80,25 @@ class PlanLayout extends Layout {
     return btn;
   }
 
-  private makeReturnToWeekZone(dayId: string, allDayPlans: Plan[]) {
+  private makeReturnToWeekZone(dayId: string, allDayPlans: Plan[], distPlans: DistDayPlan[]) {
     const zone = createNewElement('div', ClassList.dayPageReturn);
     const icon = document.createElement('div');
     icon.style.backgroundImage = Values.returnImg;
     zone.append(icon);
-    this.addReturnListeners(zone, dayId, allDayPlans);
+    this.addReturnListeners(zone, dayId, allDayPlans, distPlans);
     return zone;
   }
 
-  private addReturnListeners(zone: HTMLElement, dayId: string, allDayPlans: Plan[]) {
+  private addReturnListeners(zone: HTMLElement, dayId: string, allDayPlans: Plan[], distPlans: DistDayPlan[]) {
     zone.addEventListener('dragover', function enter(e) {
       e.preventDefault();
       this.classList.add(ClassList.dayPageReturnOver);
     });
+
     zone.addEventListener('dragleave', function leave() {
       this.classList.remove(ClassList.dayPageReturnOver);
     });
+
     zone.addEventListener('drop', async (e) => {
       e.stopPropagation();
       e.preventDefault();
@@ -105,13 +108,22 @@ class PlanLayout extends Layout {
       const id = roundDiv.dataset[GetAttribute.planId];
       if (!id) throw new Error(ErrorsList.noId);
 
+      const newDistList = distPlans.filter((plan) => plan._id !== id);
+      const dayDistribution = newDistList.map((plan) => {
+        const { _id, from, to } = plan;
+        return { planId: _id, from, to };
+      });
+      const dayOfWeek = Number(dayId);
+      const body = { dayOfWeek, dayDistribution };
+
       const planDur = allDayPlans.filter((plan) => plan._id === id)[0].duration;
       const opt = { dayOfWeek: Number(dayId), planId: id, duration: -planDur };
+
       if (id) {
         try {
           roundDiv.style.visibility = 'hidden';
           getExistentElementByClass(ClassList.mainContainer).classList.add(ClassList.mainContainerHide);
-          await Api.pushPlanToDay(opt);
+          await Promise.all([Api.pushPlanToDay(opt), Api.pushDayDistribution(body)]);
           this.goTo(`/${Days[Number(dayId)]}`);
         } catch (error) {
           loginRedirect(error, this.goTo);
@@ -226,7 +238,7 @@ class PlanLayout extends Layout {
     return filledList;
   }
 
-  public makeDayBody(dayId: string, allDayPlans: Plan[]) {
+  public makeDayBody(dayId: string, allDayPlans: Plan[], distPlans: DistDayPlan[]) {
     const container = createNewElement('div', ClassList.dayPageBody);
     const info = createNewElement('div', ClassList.dayPageInfo);
     const field = createNewElement('div', ClassList.dayPageField);
@@ -237,7 +249,7 @@ class PlanLayout extends Layout {
     const planList: HTMLUListElement = createNewElement('ul', ClassList.planList);
     this.fillPlanList(planList, allDayPlans);
 
-    tools.append(this.makeReturnToWeekZone(dayId, allDayPlans), this.makeAddButton());
+    tools.append(this.makeReturnToWeekZone(dayId, allDayPlans, distPlans), this.makeAddButton());
     field.append(tools, plansZone);
     info.append(name, planList);
     container.append(info, field);

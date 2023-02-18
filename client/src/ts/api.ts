@@ -1,5 +1,14 @@
 import Path from './base/enums/path';
-import { LoginData, NewPlanData, PlanData, PlanToDay, RegistrationData, User, Statistics } from './base/interface';
+import {
+  LoginData,
+  NewPlanData,
+  PlanData,
+  PlanToDay,
+  RegistrationData,
+  User,
+  Statistics,
+  DayDist,
+} from './base/interface';
 import { UserSettings } from './base/types';
 
 class Api {
@@ -58,6 +67,10 @@ class Api {
     return this.get(id, Path.dayDistribution, Path.get);
   }
 
+  public static async pushDayDistribution(body: DayDist) {
+    return this.post(body, Path.dayDistribution, Path.adjustPlan);
+  }
+
   private static async get(id: string | false, ...path: Path[]) {
     let url = `${Path.origin}${path.join('')}`;
     if (id) url = `${url}/${id}`;
@@ -75,6 +88,7 @@ class Api {
   }
 
   private static async post<T>(body: T, ...path: Path[]) {
+    console.log(body, path);
     const options: RequestInit = {
       method: 'POST',
       headers: {

@@ -50,7 +50,7 @@ class DayPage extends Page {
     super(PageList.dayPage, goTo, editor);
     this.popup = popup;
     this.layout = new PlanLayout(goTo);
-    this.timeLine = new Timeline();
+    this.timeLine = new Timeline(goTo);
   }
 
   private setRoundClick(roundDiv: HTMLElement, round: PlanRound) {
@@ -191,9 +191,9 @@ class DayPage extends Page {
   }
 
   private getDayPlanDistTime(round: PlanRound) {
-    const distTime =
-      round.planInfo.duration - this.notDistPlans.filter((plan) => plan._id === round.planInfo._id)[0].duration;
-    return distTime;
+    const roundInNoDistList = this.notDistPlans.filter((plan) => plan._id === round.planInfo._id)[0];
+    if (roundInNoDistList) return round.planInfo.duration - roundInNoDistList.duration;
+    return round.planInfo.duration;
   }
 
   private async setDayInfo() {
@@ -223,7 +223,7 @@ class DayPage extends Page {
       this.layout.makeInfoText(InnerText.allDayHours),
       createNewElement('div', ClassList.timelineHeader),
       this.timeLine.draw(),
-      this.layout.makeDayBody(this.dayId, this.allDayPlans)
+      this.layout.makeDayBody(this.dayId, this.allDayPlans, this.distPlans)
     );
 
     return container;
@@ -239,8 +239,9 @@ class DayPage extends Page {
       this.fillPlansZone();
       this.setAddButton();
       this.showElements();
-      this.timeLine.setTimeline(this.notDistPlans, this.distPlans, this.allDayPlans);
+      this.timeLine.setTimeline(this.notDistPlans, this.distPlans, this.allDayPlans, id);
     } catch (error) {
+      console.log(error);
       this.goTo(RoutsList.loginPage);
     }
   }
