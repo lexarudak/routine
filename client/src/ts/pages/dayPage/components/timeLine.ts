@@ -207,7 +207,7 @@ class Timeline {
       this.setCurrentDivTimeInterval(startMin, divDurMin);
       if (this.currentDiv) {
         this.currentDiv.showFake(startPx, divWidthPx);
-        this.currentDiv.showTimeInterval(startMin, divDurMin, divWidthPx > 47);
+        this.currentDiv.showTimeInterval(startMin, divDurMin, divWidthPx > 55);
       }
     });
   }
@@ -316,7 +316,7 @@ class Timeline {
       this.appendDiv(plan);
       const planDur = to - from;
       this.currentDiv?.showFake(this.minToPx(from), this.minToPx(planDur));
-      this.currentDiv?.showTimeInterval(from, planDur, this.minToPx(planDur) > 47);
+      this.currentDiv?.showTimeInterval(from, planDur, this.minToPx(planDur) > 55);
       this.currentDivHTML?.setAttribute(SetAttribute.from, from.toString());
       this.currentDivHTML?.classList.remove(ClassList.timelineDivFake);
       this.currentDiv = undefined;

@@ -27,12 +27,13 @@ class TimelineDiv {
     const div: HTMLDivElement = createNewElement('div', ClassList.timelineDiv);
     div.setAttribute('draggable', 'true');
     const left = createNewElement('div', ClassList.timelineDivLeft);
+    left.innerText = '<';
     const right = createNewElement('div', ClassList.timelineDivRight);
+    right.innerText = '>';
     div.style.backgroundColor = this.plan.color;
     const textColor = colorsAndFonts.get(this.plan.color);
     if (textColor) div.style.color = textColor;
 
-    console.log();
     div.append(this.from, left, this.name, right, this.to);
     return div;
   }
