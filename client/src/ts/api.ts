@@ -1,5 +1,14 @@
 import Path from './base/enums/path';
-import { LoginData, NewPlanData, PlanData, PlanToDay, RegistrationData, User, Statistics } from './base/interface';
+import {
+  LoginData,
+  NewPlanData,
+  PlanData,
+  PlanToDay,
+  RegistrationData,
+  User,
+  Statistics,
+  ThoughtsData,
+} from './base/interface';
 
 class Api {
   public static async registration(registrationData: RegistrationData) {
@@ -52,6 +61,18 @@ class Api {
     return this.get(id, Path.dayDistribution, Path.get);
   }
 
+  public static async getThoughts() {
+    return this.get(false, Path.thoughts);
+  }
+
+  public static async createThoughts(thoughtData: ThoughtsData) {
+    return this.post(thoughtData, Path.thoughts);
+  }
+
+  public static async deleteThoughts(id: string) {
+    return this.delete(id, Path.thoughts);
+  }
+
   private static async get(id: string | false, ...path: Path[]) {
     let url = `${Path.origin}${path.join('')}`;
     if (id) url = `${url}/${id}`;
@@ -69,7 +90,7 @@ class Api {
   }
 
   private static async post(
-    userData: RegistrationData | LoginData | NewPlanData | PlanData | PlanToDay | null,
+    userData: RegistrationData | LoginData | NewPlanData | PlanData | PlanToDay | ThoughtsData | null,
     ...path: Path[]
   ) {
     const options: RequestInit = {

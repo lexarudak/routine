@@ -129,7 +129,7 @@ class ClockChart extends Clock {
     const [hours] = this.getCurrTime();
     const currData = hours < Values.clockHours ? this.dayData[0] : this.dayData[1];
     this.chartData = currData;
-    console.log('currData', this.minutes, this.chartData);
+    // console.log('currData', this.minutes, this.chartData);
     return currData;
   }
 
@@ -148,7 +148,7 @@ class ClockChart extends Clock {
     setInterval(() => {
       this.getCurrData();
       const sector = this.chartData.findIndex((el) => el.id === this.currPlanNum);
-      console.log('updData', this.minutes, this.chartData[sector].to);
+      // console.log('updData', this.minutes, this.chartData[sector].to);
       if (this.minutes > this.chartData[sector].to) {
         this.setDataByTime();
         const toDo = getExistentElement(`.${HomePageClassList.toDo}`);
@@ -165,7 +165,7 @@ class ClockChart extends Clock {
 
   setDataByTime() {
     const currPlan = this.chartData.filter((el) => this.minutes >= el.from && this.minutes <= el.to);
-    console.log('currPlan', currPlan);
+    // console.log('currPlan', currPlan);
     this.currPlanNum = currPlan[0].id;
     this.currColor = currPlan[0].color;
   }

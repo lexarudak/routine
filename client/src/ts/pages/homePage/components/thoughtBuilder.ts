@@ -1,6 +1,8 @@
 import { getExistentElement } from '../../../base/helpers';
-import thoughtData from '../data/thoughtData';
+import { ThoughtsData } from '../../../base/interface';
+// import thoughtData from '../data/thoughtData';
 import Thought from './thought';
+import Api from '../../../api';
 import { HomePageClassList } from '../../../base/enums/classList';
 
 class ThoughtBuilder extends Thought {
@@ -12,12 +14,11 @@ class ThoughtBuilder extends Thought {
     this.thoughtText = text;
   }
 
-  createThought(thoughtText: string) {
+  async createThought(thoughtText: string) {
+    // console.log('data', await Api.getThoughts());
     if (!thoughtText) return;
-    thoughtData.push({
-      id: '63dab20a1bad4d34504b5c10',
-      title: thoughtText,
-    });
+
+    await Api.createThoughts({ title: thoughtText });
 
     this.createThoughtsList(getExistentElement(`.${HomePageClassList.thoughtContainer}`));
     console.log('create:', thoughtText);
@@ -25,12 +26,14 @@ class ThoughtBuilder extends Thought {
     getExistentElement<HTMLInputElement>(`.${HomePageClassList.thoughtInput}`).value = this.thoughtText;
   }
 
-  createThoughtsList(thoughtContainer: HTMLElement) {
+  async createThoughtsList(thoughtContainer: HTMLElement) {
     const container = thoughtContainer;
     container.innerHTML = '';
     const thoughtsArr: Thought[] = [];
-    thoughtData.forEach((thoughtDataEl) => {
-      thoughtsArr.push(new Thought(thoughtDataEl.title));
+    const thoughtsDataList = await Api.getThoughts();
+    thoughtsDataList.forEach((thoughtDataEl: ThoughtsData) => {
+      // eslint-disable-next-line no-underscore-dangle
+      thoughtsArr.push(new Thought(thoughtDataEl.title, thoughtDataEl._id));
     });
 
     for (let i = 0; i < thoughtsArr.length; i += 1) {

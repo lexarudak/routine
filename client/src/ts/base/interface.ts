@@ -58,3 +58,8 @@ export interface Statistics {
   color: string;
   deviation: number;
 }
+
+export interface ThoughtsData {
+  _id?: string;
+  title: string;
+}

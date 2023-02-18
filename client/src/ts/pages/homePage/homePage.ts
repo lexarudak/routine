@@ -4,10 +4,9 @@ import { GoToFn } from '../../base/types';
 import Page from '../page';
 import Api from '../../api';
 import { createElement, createNewElement, getExistentElement, client } from '../../base/helpers';
-import thoughtData from './data/thoughtData';
 import ClockChart from './components/clockChart';
 import FlyingThought from './components/flyingThought';
-import Thought from './components/thought';
+import { ThoughtsData } from '../../base/interface';
 import ThoughtBuilder from './components/thoughtBuilder';
 import RoutsList from '../../base/enums/routsList';
 import InnerText from '../../base/enums/innerText';
@@ -42,18 +41,21 @@ class HomePage extends Page {
     return canvas;
   }
 
-  private createFlyingThought(canvas: HTMLCanvasElement) {
+  private async createFlyingThought(canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext('2d');
     const thoughtsArray: FlyingThought[] = [];
-    // for (let i = 0; i < 50; i += 1) { //test
-    thoughtData.forEach((thought) => {
+
+    const thoughtsDataList = await Api.getThoughts();
+    thoughtsDataList.forEach((thought: ThoughtsData) => {
       const radius = 20;
-      const { id } = thought;
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      const { _id } = thought;
+      if (!_id) return;
       const x = Math.random() * (client.width - radius * 2) + radius;
       const y = Math.random() * (client.height - radius * 2) + radius;
       const dx = (Math.random() - 0.5) * 2;
       const dy = (Math.random() - 0.5) * 2;
-      thoughtsArray.push(new FlyingThought(id, x, y, dx, dy, radius));
+      thoughtsArray.push(new FlyingThought(_id, x, y, dx, dy, radius));
     });
 
     if (ctx) {
@@ -77,18 +79,6 @@ class HomePage extends Page {
     }
   }
 
-  createThoughtsList(thoughtContainer: HTMLElement) {
-    const thoughtsArr: Thought[] = [];
-    thoughtData.forEach((thoughtDataEl) => {
-      thoughtsArr.push(new Thought(thoughtDataEl.title));
-    });
-
-    for (let i = 0; i < thoughtsArr.length; i += 1) {
-      const thoughtEl = thoughtsArr[i].draw(HomePageClassList.thoughtItem);
-      thoughtContainer.append(thoughtEl);
-    }
-  }
-
   private createThought() {
     const thought = createElement('div', HomePageClassList.thought);
     const thoughtContainer = createElement('div', HomePageClassList.thoughtContainer);
@@ -100,7 +90,7 @@ class HomePage extends Page {
     thoughtAdd.classList.remove(HomePageClassList.none);
     thought.append(thoughtTitle, thoughtAdd, thoughtContainer);
 
-    this.createThoughtsList(thoughtContainer);
+    thoughtAddInst.createThoughtsList(thoughtContainer);
 
     const popup = createNewElement('div', HomePageClassList.blur);
     popup.classList.add(HomePageClassList.none);
@@ -111,7 +101,7 @@ class HomePage extends Page {
       thoughtAdd.classList.toggle(HomePageClassList.none);
       popup.classList.toggle(HomePageClassList.none);
       document.querySelectorAll(`.${HomePageClassList.thoughtItem}`).forEach((el) => {
-        el.classList.toggle(HomePageClassList.open);
+        if (thoughtAdd.classList.contains('none')) el.classList.add(HomePageClassList.open);
         el.classList.toggle(HomePageClassList.none);
       });
     });
@@ -145,6 +135,7 @@ class HomePage extends Page {
 
     const signIn = createElement('div', HomePageClassList.signIn);
     signIn.addEventListener('click', () => this.goTo(RoutsList.profilePage));
+
     try {
       const userName = await Api.getUserProfile();
       signIn.textContent = userName.name;
