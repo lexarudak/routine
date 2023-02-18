@@ -4,8 +4,8 @@ import Api from '../../api';
 import ConfirmLayout from './components/confirmLayout';
 import PlanEditor from '../planPage/components/planEditor';
 
-import { User, Plan } from '../../base/interface';
-import { GoToFn, ConfirmationDay } from '../../base/types';
+import { User, Plan, ConfirmationDay, ConfirmDay, ConfirmDayDistribution } from '../../base/interface';
+import { GoToFn } from '../../base/types';
 import { ClassList, ConfirmPageClassList } from '../../base/enums/classList';
 
 import PagesList from '../../base/enums/pageList';
@@ -17,9 +17,8 @@ import * as enums from '../../base/enums/enums';
 
 class ConfirmPage extends Page {
   layout: ConfirmLayout;
-  profile: User = {} as User;
-  weekDistribution: Plan[][] = [];
   dayPlans: Plan[] = [];
+  dayOfWeek = 0;
 
   constructor(goTo: GoToFn, editor: PlanEditor) {
     super(PagesList.confirmPage, goTo, editor);
@@ -27,19 +26,18 @@ class ConfirmPage extends Page {
   }
 
   private async setConfirmInfo() {
-    [this.profile, this.weekDistribution] = await Promise.all([Api.getUserProfile(), Api.getWeekDistribution()]);
+    let profile: User = {} as User;
+    let weekDistribution: Plan[][] = [];
+
+    [profile, weekDistribution] = await Promise.all([Api.getUserProfile(), Api.getWeekDistribution()]);
+
+    this.dayOfWeek = this.getDayOfWeekByConfirmationDay(profile.confirmationDay);
+    this.dayPlans = weekDistribution[this.dayOfWeek];
   }
 
   private setEventLiseners() {
-    // let classCSS = `.${ProfilePageClassList.settingsConfirmDay}>.${ProfilePageClassList.button}`;
-    // const uiConfirmDay = helpers.getExistentElement<HTMLButtonElement>(classCSS);
-    // uiConfirmDay.addEventListener('click', () => this.changeConfirmationDay(uiConfirmDay));
-    // classCSS = `.${ProfilePageClassList.settingsConfirmTime}>.${ProfilePageClassList.button}`;
-    // const uiConfirmTime = helpers.getExistentElement<HTMLButtonElement>(classCSS);
-    // uiConfirmTime.addEventListener('change', () => this.activateSaveButton());
-    // classCSS = `.${ProfilePageClassList.settingsLogOut}>.${ProfilePageClassList.button}`;
-    // const uiLogOut = helpers.getExistentElement<HTMLButtonElement>(classCSS);
-    // uiLogOut.addEventListener('click', () => this.logOut());
+    const uiConfirmButton = helpers.getExistentElement<HTMLButtonElement>('.confirm__main-button');
+    uiConfirmButton.addEventListener('click', () => this.confirm());
   }
 
   protected async getFilledPage(): Promise<HTMLElement> {
@@ -51,10 +49,7 @@ class ConfirmPage extends Page {
     const wrapper = document.createElement('div');
     wrapper.classList.add(ConfirmPageClassList.confirmWrapper);
 
-    const dayOfWeek = this.getDayOfWeekByConfirmationDay(this.profile.confirmationDay);
-    this.dayPlans = this.weekDistribution[dayOfWeek];
-
-    wrapper.append(this.layout.makeHeader(dayOfWeek), this.layout.makeConfirmContent(this.dayPlans));
+    wrapper.append(this.layout.makeHeader(this.dayOfWeek), this.layout.makeConfirmContent(this.dayPlans));
     container.append(this.layout.makeNavButton(ButtonNames.home, RoutsList.homePage, this.goTo), wrapper);
     return container;
   }
@@ -68,6 +63,23 @@ class ConfirmPage extends Page {
     } catch (error) {
       helpers.loginRedirect(error, this.goTo);
     }
+  }
+
+  private async confirm() {
+    const body: ConfirmDay = {
+      dayOfWeek: this.dayOfWeek,
+      dayDistribution: [],
+    };
+
+    this.dayPlans.forEach((plan) => {
+      const item: ConfirmDayDistribution = {
+        planId: plan[enums.DBAttributes.id],
+        duration: plan.duration,
+      };
+      body.dayDistribution.push(item);
+    });
+
+    await Api.confirmDay(body);
   }
 
   private getDayOfWeekByConfirmationDay(confirmationDay: ConfirmationDay) {

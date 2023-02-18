@@ -1,4 +1,4 @@
-import { ConfirmationDay } from './types';
+import { ConfirmationDays } from './enums/enums';
 
 export interface Plan {
   _id: string;
@@ -52,6 +52,11 @@ export interface Statistics {
   deviation: number;
 }
 
+export interface ConfirmDay {
+  dayOfWeek: number;
+  dayDistribution: ConfirmDayDistribution[];
+}
+
 export interface DistDayPlan {
   _id: string;
   title: string;
@@ -60,3 +65,15 @@ export interface DistDayPlan {
   from: number;
   to: number;
 }
+
+export type UserSettings = {
+  confirmationDay: ConfirmationDay;
+  confirmationTime: number;
+};
+
+export type ConfirmationDay = ConfirmationDays.today | ConfirmationDays.yesterday;
+
+export type ConfirmDayDistribution = {
+  planId: string;
+  duration: number;
+};

@@ -1,8 +1,7 @@
 import Layout from '../../layout';
 
-import { User, Statistics } from '../../../base/interface';
+import { User, Statistics, UserSettings, ConfirmationDay } from '../../../base/interface';
 import { ProfilePageClassList } from '../../../base/enums/classList';
-import { UserSettings, ConfirmationDay } from '../../../base/types';
 
 import * as helpers from '../../../base/helpers';
 import * as enums from '../../../base/enums/enums';
