@@ -25,6 +25,7 @@ class TimelineDiv {
 
   private makeDiv() {
     const div: HTMLDivElement = createNewElement('div', ClassList.timelineDiv);
+    div.setAttribute('draggable', 'true');
     const left = createNewElement('div', ClassList.timelineDivLeft);
     const right = createNewElement('div', ClassList.timelineDivRight);
     div.style.backgroundColor = this.plan.color;

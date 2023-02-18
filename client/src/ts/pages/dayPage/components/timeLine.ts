@@ -11,7 +11,9 @@ import TimelineDiv from './timelineDiv';
 import TimelineMode from './timelineMode';
 
 class Timeline {
-  timelineHTML: HTMLDivElement;
+  sensor: HTMLDivElement;
+
+  showLine: HTMLDivElement;
 
   width = 0;
 
@@ -46,20 +48,22 @@ class Timeline {
   };
 
   constructor() {
-    this.timelineHTML = this.makeTimelineHTML();
+    this.sensor = this.makeSensor();
+    this.showLine = createNewElement('div', ClassList.timelineShow);
   }
 
   public set value(mode: TimelineMode) {
     this.mode = mode;
   }
 
-  private makeTimelineHTML() {
-    const timelineDiv: HTMLDivElement = createNewElement('div', ClassList.timeline);
-    this.addListenerEnter(timelineDiv);
-    this.addListenerOver(timelineDiv);
-    this.addListenerLeave(timelineDiv);
-    this.addListenerDrop(timelineDiv);
-    return timelineDiv;
+  private makeSensor() {
+    const sensor: HTMLDivElement = createNewElement('div', ClassList.timelineSensor);
+    this.addListenerEnter(sensor);
+    this.addListenerOver(sensor);
+    this.addListenerLeave(sensor);
+    this.addListenerDrop(sensor);
+
+    return sensor;
   }
 
   public getPlanFromDiv(div: HTMLElement) {
@@ -91,12 +95,9 @@ class Timeline {
     if (from <= cursorMin && from > startMin) {
       this.dragInfo.currentZone.startMin = from;
     }
-    console.log(from <= cursorMin && from > startMin, '1');
     if (to <= cursorMin && to > startMin) {
       this.dragInfo.currentZone.startMin = to;
     }
-    console.log(to <= cursorMin && to > startMin, '2');
-    console.log('from:', from, 'to:', to, 'cursor:', cursorMin, 'start:', this.dragInfo.currentZone.startMin);
   }
 
   private setEnd(cursorMin: number, distDayPlan: DistDayPlan) {
@@ -125,13 +126,10 @@ class Timeline {
     this.dragInfo.currentZone.freeZone = true;
 
     this.distPlans.forEach((plan) => {
-      console.log('plans on timeline', plan);
       this.setStart(cursorMin, plan);
       this.setEnd(cursorMin, plan);
       this.setZoneType(cursorMin, plan);
     });
-
-    console.log('set zone', this.dragInfo.currentZone);
   }
 
   private checkZone(e: DragEvent, cursorMin: number) {
@@ -142,7 +140,6 @@ class Timeline {
         this.appendDiv();
       } else {
         this.removeDiv();
-        console.log('remove');
       }
     }
   }
@@ -153,12 +150,14 @@ class Timeline {
   }
 
   private appendDiv() {
-    const currentDiv = new TimelineDiv(this.plan);
-    const newDiv = currentDiv.draw();
-    newDiv.classList.add(ClassList.timelineDivFake);
-    this.currentDiv = currentDiv;
-    this.currentDivHTML = newDiv;
-    this.timelineHTML.append(this.currentDivHTML);
+    if (this.plan.duration >= Values.minPlanDuration) {
+      const currentDiv = new TimelineDiv(this.plan);
+      const newDiv = currentDiv.draw();
+      newDiv.classList.add(ClassList.timelineDivFake);
+      this.currentDiv = currentDiv;
+      this.currentDivHTML = newDiv;
+      this.showLine.append(this.currentDivHTML);
+    }
   }
 
   private removeDiv() {
@@ -235,20 +234,20 @@ class Timeline {
       this.currentDivHTML.classList.remove(ClassList.timelineDivFake);
       this.currentDiv = undefined;
       this.currentDivHTML = undefined;
-      console.log(this.distPlans);
+      // console.log('drop no dist', this.notDistPlans);
+      // console.log('drop dist', this.distPlans);
     }
   }
 
   private dropSmallPlan() {
-    const { fromMin } = this.dragInfo.currentDiv;
-    const { toMin } = this.dragInfo.currentDiv;
-    console.log(fromMin, toMin);
-    if (toMin - fromMin < Values.minPlanDuration) {
-      this.dragInfo.currentDiv.fromMin = toMin - Values.minPlanDuration;
-      console.log(this.dragInfo.currentDiv.fromMin, this.dragInfo.currentDiv.toMin);
-      if (this.currentDiv) {
-        console.log(this.currentDiv);
-        this.currentDiv.showFake(this.minToPx(this.dragInfo.currentDiv.fromMin), this.minPlanInPx);
+    if (this.currentDivHTML instanceof HTMLDivElement) {
+      const { fromMin } = this.dragInfo.currentDiv;
+      const { toMin } = this.dragInfo.currentDiv;
+      if (toMin - fromMin < Values.minPlanDuration) {
+        this.dragInfo.currentDiv.fromMin = toMin - Values.minPlanDuration;
+        if (this.currentDiv) {
+          this.currentDiv.showFake(this.minToPx(this.dragInfo.currentDiv.fromMin), this.minPlanInPx);
+        }
       }
     }
   }
@@ -269,17 +268,19 @@ class Timeline {
   }
 
   public setTimeline(notDistPlans: Plan[], distPlans: DistDayPlan[], allDayPlans: Plan[]) {
-    this.width = this.timelineHTML.clientWidth;
+    this.width = this.sensor.clientWidth;
     this.notDistPlans = notDistPlans;
     this.distPlans = distPlans;
     this.allDayPlans = allDayPlans;
     this.minPlanInPx = this.minToPx(Values.minPlanDuration);
-    console.log('load dist', this.distPlans);
-    console.log('load noDist', this.notDistPlans);
+    // console.log('load dist', this.distPlans);
+    // console.log('load noDist', this.notDistPlans);
   }
 
   public draw() {
-    return this.timelineHTML;
+    const timelineDiv: HTMLDivElement = createNewElement('div', ClassList.timeline);
+    timelineDiv.append(this.showLine, this.sensor);
+    return timelineDiv;
   }
 }
 

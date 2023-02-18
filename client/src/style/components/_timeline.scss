@@ -24,7 +24,32 @@
   background: url(./assets/svg/timeline-2.svg);
   background-position: center;
   background-size: (100%, 100%);
-  padding: 0 2px;
+
+  &__show {
+    z-index: 4;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border-radius: 7px;
+    border: 1px solid $font-medium;
+  }
+
+    &__sensor {
+      z-index: 3;
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border-radius: 7px;
+      border: 1px solid $font-medium;
+
+      &_active {
+        z-index: 5;
+      }
+    }
 
   &_drag {
     border-style: dotted;
@@ -43,7 +68,7 @@
   border-radius: 7px;
   border: 1px solid $font-light;
   background-origin: border-box;
-  pointer-events: none;
+  // pointer-events: none;
   cursor: pointer;
 
   &_fake {

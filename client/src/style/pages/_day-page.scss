@@ -31,12 +31,18 @@
   }
 
   &__field {
-    height: 100%;
+    height: calc(100% - 45px);
     display: flex;
     flex-grow: 1;
     flex-direction: row-reverse;
     position: relative;
     margin-top: 45px;
+    transition: .2s;
+    border: 1px dotted transparent;
+
+    &_darg {
+      border: 1px dotted $font-medium;
+    }
   }
 
   &__tools {

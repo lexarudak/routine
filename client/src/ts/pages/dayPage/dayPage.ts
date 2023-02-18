@@ -53,9 +53,20 @@ class DayPage extends Page {
     this.timeLine = new Timeline();
   }
 
+  private setRoundClick(roundDiv: HTMLElement, round: PlanRound) {
+    const allPlanDur = this.allWeekPlans.filter((plan) => plan._id === round.planInfo._id)[0].duration;
+    const maxTime =
+      round.planInfo.duration +
+      Math.min(allPlanDur - this.allPlansDist[round.planInfo._id], Values.allDayMinutes - this.getDayDistTime());
+    roundDiv.addEventListener('click', () => {
+      const minTime = this.getDayPlanDistTime(round);
+      this.editor.open(minTime, maxTime, EditorMode.day, round.planInfo, this.dayId);
+    });
+  }
+
   private makePlans() {
     this.planRounds = [];
-    this.planRounds = this.notDistPlans.map((plan) => new PlanRound(plan));
+    this.planRounds = this.allDayPlans.map((plan) => new PlanRound(plan));
   }
 
   private showElements() {
@@ -126,7 +137,7 @@ class DayPage extends Page {
       const roundDiv = round.draw();
       const distTime = this.getDayPlanDistTime(round);
       round.paintRound(distTime);
-      this.setRoundClick(roundDiv, distTime, round);
+      this.setRoundClick(roundDiv, round);
       this.setRoundMove(roundDiv);
 
       planZone.append(roundDiv);
@@ -136,6 +147,7 @@ class DayPage extends Page {
   private setRoundMove(roundDiv: HTMLElement) {
     const returnZone = getExistentElementByClass(ClassList.dayPageReturn);
     const timeline = getExistentElementByClass(ClassList.timeline);
+    const sensor = getExistentElementByClass(ClassList.timelineSensor);
 
     roundDiv.addEventListener('dragstart', (e) => {
       if (e.target instanceof HTMLDivElement) {
@@ -146,6 +158,7 @@ class DayPage extends Page {
     });
 
     roundDiv.addEventListener('dragstart', function dragstart(e) {
+      sensor.classList.add(ClassList.timelineSensorActive);
       const { icon, center } = makeRoundIcon(this);
       if (e.dataTransfer) e.dataTransfer.setDragImage(icon, center, center);
       this.classList.add(ClassList.planRoundDrag);
@@ -158,21 +171,11 @@ class DayPage extends Page {
     });
 
     roundDiv.addEventListener('dragend', function dragend() {
+      sensor.classList.remove(ClassList.timelineSensorActive);
       this.classList.remove(ClassList.planRoundDrag);
       returnZone.classList.remove(ClassList.planRemoveZoneDrag);
       timeline.classList.remove(ClassList.timelineDrag);
     });
-  }
-
-  private setRoundClick(roundDiv: HTMLElement, distTime: number, round: PlanRound) {
-    const allPlanDur = this.allWeekPlans.filter((plan) => plan._id === round.planInfo._id)[0].duration;
-    const minTime = distTime;
-    const maxTime =
-      round.planInfo.duration +
-      Math.min(allPlanDur - this.allPlansDist[round.planInfo._id], Values.allDayMinutes - this.getDayDistTime());
-    roundDiv.addEventListener('click', () =>
-      this.editor.open(minTime, maxTime, EditorMode.day, round.planInfo, this.dayId)
-    );
   }
 
   private setPlanDistTime() {
@@ -188,7 +191,9 @@ class DayPage extends Page {
   }
 
   private getDayPlanDistTime(round: PlanRound) {
-    return round.planInfo.duration - this.notDistPlans.filter((plan) => plan._id === round.planInfo._id)[0].duration;
+    const distTime =
+      round.planInfo.duration - this.notDistPlans.filter((plan) => plan._id === round.planInfo._id)[0].duration;
+    return distTime;
   }
 
   private async setDayInfo() {
