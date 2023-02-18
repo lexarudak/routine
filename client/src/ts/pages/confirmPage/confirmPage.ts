@@ -47,7 +47,7 @@ class ConfirmPage extends Page {
 
     const wrapper = document.createElement('div');
     wrapper.classList.add(ConfirmPageClassList.confirmWrapper);
-    wrapper.append(this.layout.makeHeader(this.profile));
+    wrapper.append(this.layout.makeHeader(this.profile), this.layout.makeConfirmContent());
 
     container.append(this.layout.makeNavButton(ButtonNames.home, RoutsList.homePage, this.goTo), wrapper);
     return container;

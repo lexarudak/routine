@@ -5,12 +5,103 @@
   width: 100%;
   height: 100%;
   padding: 20px 70px 70px;
+
+  &__main-button {
+    width: 135px;
+    height: 135px;
+
+    padding: 0;
+
+    font-weight: 500;
+    font-size: 24px;
+    text-align: center;
+    color: $background-color;
+
+    background: $success;
+    border: 3px solid $success;
+
+    border-radius: 50%;
+  }
 }
 
 .confirm-wrapper {
-  @include flexbox();
+  @include flexbox(center, flex-start);
   flex-direction: column;
 
   width: 100%;
   flex-grow: 1;
+}
+
+.confirm-header {
+  &__greeting {
+    font-weight: 500;
+    font-size: 50px;
+    color: $success;
+  }
+
+  &__info {
+    padding: 5px 0 0 5px;
+
+    font-weight: 400;
+    font-size: 18px;
+  }
+}
+
+.confirm-content {
+  @include flexbox();
+
+  width: 100%;
+  height: 641px;
+
+  padding: 80px 0 0 0;
+}
+
+.confirm-plans {
+  flex-grow: 1;
+
+  height: 100%;
+  margin: 0 50px 0 0;
+
+  overflow: auto;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 20px;
+    background: $font-light;
+    margin: 0 0.5rem;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $font-main-light;
+    border-radius: 20px;
+    border: 1px solid $font-light;
+  }
+}
+
+.confirm-plan {
+  @include flexbox(flex-start, center);
+  padding: 5px 0;
+
+  &__label {
+    width: 170px;
+  }
+
+  &__time {
+    &::after {
+      content: "|";
+      width: 10px;
+      transform: translateX(20px);
+      text-align: center;
+      cursor: e-resize;
+    }
+  }
+}
+
+.confirm-buttons {
+  @include flexbox(center, flex-end);
+  height: 100%;
 }
