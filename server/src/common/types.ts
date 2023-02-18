@@ -120,6 +120,7 @@ export type TStatistics = {
   userId: Types.ObjectId;
   planId: Types.ObjectId;
   deviation: number;
+  confirmedDate: Date;
 };
 
 export type TDBStatistics = TDBId & TStatistics;

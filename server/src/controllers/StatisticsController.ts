@@ -16,6 +16,11 @@ class StatisticsController extends Controller {
     const process = async (userId: Types.ObjectId) => await StatisticsService.confirmDay(userId, req.body);
     this.handleWithAuthorization<Type.TStatistics[]>(req, res, process);
   }
+
+  async isDayConfirmed(req: Request, res: Response) {
+    const process = async (userId: Types.ObjectId) => await StatisticsService.isDayConfirmed(userId);
+    this.handleWithAuthorization<Boolean>(req, res, process);
+  }
 }
 
 export default new StatisticsController();

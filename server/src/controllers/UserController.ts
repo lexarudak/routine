@@ -82,7 +82,7 @@ class UserController extends Controller {
   }
 
   private setJwtToken(res: Response, token: string, maxAge: number) {
-    res.cookie(Enum.Constants.tokenDescription, token, { maxAge, httpOnly: true, secure: true, sameSite: 'none' });
+    res.cookie(Enum.Constants.tokenDescription, token, { maxAge, httpOnly: true /* , secure: true, sameSite: 'none' */ });
   }
 }
 
