@@ -1,15 +1,13 @@
 import Layout from '../../layout';
 
-import { User, Plan } from '../../../base/interface';
-import { ConfirmationDay } from '../../../base/types';
+import { Plan } from '../../../base/interface';
 import Values from '../../../base/enums/values';
 
 import * as helpers from '../../../base/helpers';
 import * as enums from '../../../base/enums/enums';
 
 class ConfirmLayout extends Layout {
-  public makeHeader(profile: User) {
-    const dayOfWeek = this.getDayOfWeekByConfirmationDay(profile.confirmationDay);
+  public makeHeader(dayOfWeek: number) {
     const dayOfWeekName = this.getDayOfWeekName(dayOfWeek);
 
     const container = document.createElement('div');
@@ -21,34 +19,22 @@ class ConfirmLayout extends Layout {
     return container;
   }
 
-  private getDayOfWeekByConfirmationDay(confirmationDay: ConfirmationDay) {
-    const date = new Date();
-    return confirmationDay === enums.ConfirmationDays.today ? date.getDay() : this.getPreviousDayOfWeek(date.getDay());
-  }
-
-  private getPreviousDayOfWeek(dayOfWeek: number) {
-    return dayOfWeek - 1 < 0 ? 6 : dayOfWeek - 1;
-  }
-
   private getDayOfWeekName(dayOfWeek: number) {
     const daysOfWeek = [
-      enums.DaysOfWeek.sunday,
       enums.DaysOfWeek.monday,
       enums.DaysOfWeek.tuesday,
       enums.DaysOfWeek.wednesday,
       enums.DaysOfWeek.thursday,
       enums.DaysOfWeek.friday,
       enums.DaysOfWeek.saturday,
+      enums.DaysOfWeek.sunday,
     ];
     return daysOfWeek[dayOfWeek];
   }
 
-  public makeConfirmContent(profile: User, weekDistribution: Plan[][]) {
+  public makeConfirmContent(dayPlans: Plan[]) {
     const container = document.createElement('div');
     container.classList.add('confirm-content');
-
-    const dayOfWeek = this.getDayOfWeekByConfirmationDay(profile.confirmationDay);
-    const dayPlans = weekDistribution[dayOfWeek];
 
     container.append(this.makeConfirmPlans(dayPlans));
     container.append(this.makeConfirmButton());
@@ -89,10 +75,7 @@ class ConfirmLayout extends Layout {
     return container;
   }
 
-  public setPageElementsParameters(profile: User, weekDistribution: Plan[][]) {
-    const dayOfWeek = this.getDayOfWeekByConfirmationDay(profile.confirmationDay);
-    const dayPlans = weekDistribution[dayOfWeek];
-
+  public setPageElementsParameters(dayPlans: Plan[]) {
     dayPlans.forEach((plan) => {
       const classCSS = `.confirm-plan[data-id="${plan[enums.DBAttributes.id]}"]`;
       const uiConfirmPlan = helpers.getExistentElement<HTMLElement>(classCSS);

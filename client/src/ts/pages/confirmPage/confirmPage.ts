@@ -5,7 +5,7 @@ import ConfirmLayout from './components/confirmLayout';
 import PlanEditor from '../planPage/components/planEditor';
 
 import { User, Plan } from '../../base/interface';
-import { GoToFn } from '../../base/types';
+import { GoToFn, ConfirmationDay } from '../../base/types';
 import { ClassList, ConfirmPageClassList } from '../../base/enums/classList';
 
 import PagesList from '../../base/enums/pageList';
@@ -13,11 +13,13 @@ import ButtonNames from '../../base/enums/buttonNames';
 import RoutsList from '../../base/enums/routsList';
 
 import * as helpers from '../../base/helpers';
+import * as enums from '../../base/enums/enums';
 
 class ConfirmPage extends Page {
   layout: ConfirmLayout;
   profile: User = {} as User;
   weekDistribution: Plan[][] = [];
+  dayPlans: Plan[] = [];
 
   constructor(goTo: GoToFn, editor: PlanEditor) {
     super(PagesList.confirmPage, goTo, editor);
@@ -49,11 +51,10 @@ class ConfirmPage extends Page {
     const wrapper = document.createElement('div');
     wrapper.classList.add(ConfirmPageClassList.confirmWrapper);
 
-    wrapper.append(
-      this.layout.makeHeader(this.profile),
-      this.layout.makeConfirmContent(this.profile, this.weekDistribution)
-    );
+    const dayOfWeek = this.getDayOfWeekByConfirmationDay(this.profile.confirmationDay);
+    this.dayPlans = this.weekDistribution[dayOfWeek];
 
+    wrapper.append(this.layout.makeHeader(dayOfWeek), this.layout.makeConfirmContent(this.dayPlans));
     container.append(this.layout.makeNavButton(ButtonNames.home, RoutsList.homePage, this.goTo), wrapper);
     return container;
   }
@@ -62,11 +63,20 @@ class ConfirmPage extends Page {
     try {
       const container = helpers.getExistentElementByClass(ClassList.mainContainer);
       await this.animatedFilledPageAppend(container);
-      this.layout.setPageElementsParameters(this.profile, this.weekDistribution);
+      this.layout.setPageElementsParameters(this.dayPlans);
       this.setEventLiseners();
     } catch (error) {
       helpers.loginRedirect(error, this.goTo);
     }
+  }
+
+  private getDayOfWeekByConfirmationDay(confirmationDay: ConfirmationDay) {
+    const dayOfWeek = this.getPreviousDayOfWeek(new Date().getDay());
+    return confirmationDay === enums.ConfirmationDays.today ? dayOfWeek : this.getPreviousDayOfWeek(dayOfWeek);
+  }
+
+  private getPreviousDayOfWeek(dayOfWeek: number) {
+    return dayOfWeek - 1 < 0 ? 6 : dayOfWeek - 1;
   }
 }
 
