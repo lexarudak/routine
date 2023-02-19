@@ -51,22 +51,31 @@ class ConfirmPage extends Page {
     }
 
     const rect = target.getBoundingClientRect();
+    const [dayPlans] = [this.dayPlans];
 
     function onMouseMove(eMouseMove: MouseEvent) {
       const minWidth = 15;
-      const maxWidth = Values.allDayMinutes / 2;
+      const maxWidth = minWidth + Values.allDayMinutes / 2;
+
+      const uiConfirmPlan = target.closest('.confirm-plan') as HTMLElement;
+      const plan = dayPlans.find((item) => item[enums.DBAttributes.id] === uiConfirmPlan.dataset.id) as Plan;
+
       const offsetCursor = 5;
+      const allDuration = dayPlans.reduce((sum, item) => sum + item.duration, 0);
+      const maxDuration = Values.allDayMinutes - allDuration + plan.duration;
+      const maxPossibleWidth = minWidth + Math.round((maxDuration * (maxWidth - minWidth)) / Values.allDayMinutes);
 
       let width = eMouseMove.x - rect.x + offsetCursor;
+      width = width > maxPossibleWidth ? maxPossibleWidth : width;
       width = width > maxWidth ? maxWidth : width;
       width = width < minWidth ? minWidth : width;
+      target.style.width = `${width}px`;
 
-      const min = Math.round((width * (Values.allDayMinutes + minWidth)) / maxWidth) - minWidth;
+      const duration = Math.round(((width - minWidth) * Values.allDayMinutes) / (maxWidth - minWidth));
+      plan.duration = duration > maxDuration ? maxDuration : duration;
 
       const uiPlanLabel = target.nextElementSibling as HTMLElement;
-      uiPlanLabel.textContent = helpers.minToHour(min);
-
-      target.style.width = `${width}px`;
+      uiPlanLabel.textContent = helpers.minToHour(plan.duration);
     }
 
     function onMouseUp() {

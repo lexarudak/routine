@@ -82,7 +82,7 @@ class ConfirmLayout extends Layout {
 
       const minWidth = 15;
       const maxWidth = Values.allDayMinutes / 2;
-      const width = Math.round(((plan.duration + minWidth) * maxWidth) / (Values.allDayMinutes + minWidth));
+      const width = minWidth + Math.round((plan.duration * (maxWidth - minWidth)) / Values.allDayMinutes);
 
       const uiPlanTime = helpers.getExistentElementByClass('confirm-plan__line', uiConfirmPlan);
       uiPlanTime.style.width = `${width}px`;
