@@ -8,6 +8,7 @@ import { User, Plan, ConfirmationDay, ConfirmDay, ConfirmDayDistribution } from 
 import { GoToFn } from '../../base/types';
 import { ClassList, ConfirmPageClassList } from '../../base/enums/classList';
 
+import Values from '../../base/enums/values';
 import PagesList from '../../base/enums/pageList';
 import ButtonNames from '../../base/enums/buttonNames';
 import RoutsList from '../../base/enums/routsList';
@@ -49,13 +50,21 @@ class ConfirmPage extends Page {
       return;
     }
 
+    const rect = target.getBoundingClientRect();
+
     function onMouseMove(eMouseMove: MouseEvent) {
       const minWidth = 15;
-      const maxWidth = 825;
+      const maxWidth = Values.allDayMinutes / 2;
+      const offsetCursor = 5;
 
-      let width = eMouseMove.x - 510 + 5;
+      let width = eMouseMove.x - rect.x + offsetCursor;
       width = width > maxWidth ? maxWidth : width;
       width = width < minWidth ? minWidth : width;
+
+      const min = Math.round((width * (Values.allDayMinutes + minWidth)) / maxWidth) - minWidth;
+
+      const uiPlanLabel = target.nextElementSibling as HTMLElement;
+      uiPlanLabel.textContent = helpers.minToHour(min);
 
       target.style.width = `${width}px`;
     }

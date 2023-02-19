@@ -80,11 +80,12 @@ class ConfirmLayout extends Layout {
       const classCSS = `.confirm-plan[data-id="${plan[enums.DBAttributes.id]}"]`;
       const uiConfirmPlan = helpers.getExistentElement<HTMLElement>(classCSS);
 
-      const uiPlanLabel = helpers.getExistentElementByClass('confirm-plan__label', uiConfirmPlan);
-      const fullWidth = uiConfirmPlan.offsetWidth - uiPlanLabel.offsetWidth;
+      const minWidth = 15;
+      const maxWidth = Values.allDayMinutes / 2;
+      const width = Math.round(((plan.duration + minWidth) * maxWidth) / (Values.allDayMinutes + minWidth));
 
       const uiPlanTime = helpers.getExistentElementByClass('confirm-plan__line', uiConfirmPlan);
-      uiPlanTime.style.width = `${Math.round((fullWidth * plan.duration) / Values.allDayMinutes)}px`;
+      uiPlanTime.style.width = `${width}px`;
     });
   }
 }
