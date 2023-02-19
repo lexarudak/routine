@@ -5,7 +5,7 @@ import { GetAttribute, SetAttribute } from '../../../base/enums/attributes';
 import { ClassList } from '../../../base/enums/classList';
 import ErrorsList from '../../../base/enums/errorsList';
 import Values from '../../../base/enums/values';
-import { createNewElement, loginRedirect } from '../../../base/helpers';
+import { createNewElement, loginRedirect, minToPx, pxToMin } from '../../../base/helpers';
 import { DistDayPlan, Plan } from '../../../base/interface';
 import { GoToFn } from '../../../base/types';
 import defaultPlan from '../../planPage/components/defaultPlan';
@@ -80,20 +80,12 @@ class Timeline {
     [this.plan] = this.notDistPlans.filter((plan) => plan._id === id);
   }
 
-  private pxToMin(px: number) {
-    return Math.floor((px / this.width) * Values.allDayMinutes);
-  }
-
-  private minToPx(minutes: number) {
-    return (this.width / Values.allDayMinutes) * minutes;
-  }
-
   private getCursorX(e: DragEvent) {
     const viewWidth = window.innerWidth;
     const cursor = e.pageX - (viewWidth - this.width) / 2;
     if (cursor < 0) return 0;
-    if (cursor > this.width - this.minToPx(Values.minPlanDuration))
-      return this.width - this.minToPx(Values.minPlanDuration);
+    if (cursor > this.width - minToPx(this.width, Values.minPlanDuration))
+      return this.width - minToPx(this.width, Values.minPlanDuration);
     return cursor;
   }
 
@@ -126,7 +118,7 @@ class Timeline {
   }
 
   private setCurrentZone(point: number) {
-    const cursorMin = this.pxToMin(point);
+    const cursorMin = pxToMin(this.width, point);
 
     this.dragInfo.currentZone.startMin = 0;
     this.dragInfo.currentZone.endMin = Values.allDayMinutes;
@@ -141,13 +133,11 @@ class Timeline {
 
   private checkZone(e: DragEvent, cursorMin: number) {
     if (cursorMin >= this.dragInfo.currentZone.endMin || cursorMin < this.dragInfo.currentZone.startMin) {
-      console.log('check');
       const cursor = this.getCursorX(e);
       this.setCurrentZone(cursor);
       if (this.dragInfo.currentZone.freeZone) {
         this.appendDiv(this.plan);
       } else {
-        console.log('remove');
         this.removeDiv();
       }
     }
@@ -160,7 +150,8 @@ class Timeline {
 
   private appendDiv(plan: Plan) {
     if (plan.duration >= Values.minPlanDuration) {
-      const currentDiv = new TimelineDiv(plan, this.distPlans);
+      console.log('append plan', plan);
+      const currentDiv = new TimelineDiv(this.width, plan, this.distPlans, this.pushToServer.bind(this), this.goTo);
       const newDiv = currentDiv.draw();
       newDiv.classList.add(ClassList.timelineDivFake);
       this.currentDiv = currentDiv;
@@ -188,6 +179,7 @@ class Timeline {
       const cursor = this.getCursorX(e);
       this.setCurrentZone(cursor);
       if (this.dragInfo.currentZone.freeZone) {
+        console.log(this.plan);
         if (this.plan) this.appendDiv(this.plan);
       } else {
         this.removeDiv();
@@ -200,16 +192,15 @@ class Timeline {
       e.preventDefault();
       e.stopPropagation();
       const startPx = this.getCursorX(e);
-      const startMin = this.pxToMin(startPx);
+      const startMin = pxToMin(this.width, startPx);
 
       this.checkZone(e, startMin);
 
       const divDurMin = this.setDivWidth(startMin);
-      const divWidthPx = this.minToPx(divDurMin);
       this.setCurrentDivTimeInterval(startMin, divDurMin);
       if (this.currentDiv) {
-        this.currentDiv.showFake(startPx, divWidthPx);
-        this.currentDiv.showTimeInterval(startMin, divDurMin, divWidthPx > 55);
+        this.currentDiv.showDiv(startMin, divDurMin);
+        this.currentDiv.showTimeInterval(startMin, divDurMin);
       }
     });
   }
@@ -219,7 +210,6 @@ class Timeline {
       e.preventDefault();
       e.stopPropagation();
       if (this.currentDivHTML instanceof HTMLDivElement) this.currentDivHTML.remove();
-      console.log('leave');
     });
   }
 
@@ -265,7 +255,7 @@ class Timeline {
       };
       this.distPlans.push(newDistPlan);
       this.reduceNoDistPlan();
-      this.paintRound();
+      this.paintRound(this.round, this.plan);
       this.currentDivHTML.setAttribute(SetAttribute.from, newDistPlan.from.toString());
       this.currentDivHTML.classList.remove(ClassList.timelineDivFake);
       this.currentDiv = undefined;
@@ -287,17 +277,17 @@ class Timeline {
       if (toMin - fromMin < Values.minPlanDuration) {
         this.dragInfo.currentDiv.fromMin = toMin - Values.minPlanDuration;
         if (this.currentDiv) {
-          this.currentDiv.showFake(this.minToPx(this.dragInfo.currentDiv.fromMin), this.minPlanInPx);
+          this.currentDiv.showDiv(this.dragInfo.currentDiv.fromMin, Values.minPlanDuration);
         }
       }
     }
   }
 
-  private paintRound() {
-    if (this.round) {
-      const allTime = this.allDayPlans.filter((plan) => plan._id === this.plan._id)[0].duration;
-      const noDistTime = this.notDistPlans.filter((plan) => plan._id === this.plan._id)[0].duration;
-      const blur = this.round.childNodes[1];
+  private paintRound(round: HTMLElement | undefined, plan: Plan) {
+    if (round) {
+      const allTime = this.allDayPlans.filter((plans) => plans._id === plan._id)[0].duration;
+      const noDistTime = this.notDistPlans.filter((plans) => plans._id === plan._id)[0].duration;
+      const blur = round.childNodes[1];
       if (blur instanceof HTMLElement) {
         blur.style.height = `${100 * (1 - noDistTime / allTime)}%`;
       }
@@ -310,18 +300,25 @@ class Timeline {
 
   private fillTimeline() {
     this.showLine.innerHTML = '';
-    console.log(this.distPlans);
     this.distPlans.forEach((distPlan) => {
+      console.log(distPlan);
       const { _id, color, title, text, from, to } = distPlan;
-      const plan = { _id, color, title, text, duration: to - from };
-      this.appendDiv(plan);
+      const p = this.notDistPlans.filter((plan) => plan._id === _id)[0];
       const planDur = to - from;
-      this.currentDiv?.showFake(this.minToPx(from), this.minToPx(planDur));
-      this.currentDiv?.showTimeInterval(from, planDur, this.minToPx(planDur) > 55);
-      this.currentDivHTML?.setAttribute(SetAttribute.from, from.toString());
-      this.currentDivHTML?.classList.remove(ClassList.timelineDivFake);
-      this.currentDiv = undefined;
-      this.currentDivHTML = undefined;
+      const plan = { _id, color, title, text, duration: 0 };
+
+      const currentDiv = new TimelineDiv(
+        this.width,
+        p || plan,
+        this.distPlans,
+        this.pushToServer.bind(this),
+        this.goTo
+      );
+      const newDiv = currentDiv.draw();
+      this.showLine.append(newDiv);
+      currentDiv.showDiv(from, planDur);
+      currentDiv.showTimeInterval(from, planDur);
+      newDiv.setAttribute(SetAttribute.from, from.toString());
     });
   }
 
@@ -331,7 +328,7 @@ class Timeline {
     this.distPlans = distPlans;
     this.allDayPlans = allDayPlans;
     this.dayId = dayId;
-    this.minPlanInPx = this.minToPx(Values.minPlanDuration);
+    this.minPlanInPx = minToPx(this.width, Values.minPlanDuration);
     this.fillTimeline();
   }
 

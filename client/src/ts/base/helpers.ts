@@ -135,6 +135,14 @@ function isDayOfWeek(path: string) {
   return '';
 }
 
+function pxToMin(containerWidthPx: number, px: number) {
+  return Math.floor((px / containerWidthPx) * Values.allDayMinutes);
+}
+
+function minToPx(containerWidthPx: number, minutes: number) {
+  return (containerWidthPx / Values.allDayMinutes) * minutes;
+}
+
 function makeRoundIcon(round: HTMLElement) {
   const width = round.clientWidth;
   const icon = round.cloneNode(true);
@@ -180,4 +188,6 @@ export {
   makeRoundIcon,
   minToHourTimeline,
   sortDistPlans,
+  pxToMin,
+  minToPx,
 };
