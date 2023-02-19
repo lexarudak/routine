@@ -119,27 +119,41 @@ const enum ClassList {
 const enum HomePageClassList {
   section = 'section',
   canvas = 'canvas',
+  chart = 'chart',
+  // thought
   thought = 'thought',
   thoughtTitle = 'thought__title',
+  thoughtContainer = 'thought__container',
   thoughtAdd = 'thought__add',
   thoughtItem = 'thought__item',
   thoughtAddBtn = 'thought__add-btn',
   thoughtCreateBtn = 'thought__create-btn',
+  thoughtRemoveBtn = 'thought__remove-btn',
   thoughtInput = 'thought__input',
+
   plan = 'plan-btn',
   signIn = 'sign-in',
-  chart = 'chart',
+  confirmDay = 'confirm-day',
+  // to-do
   toDo = 'to-do',
+  toDoWrap = 'to-do__wrapper',
   toDoTitle = 'to-do__title',
   toDoTextarea = 'to-do__textarea',
+  toDoText = 'to-do__text',
+  // clock
   clock = 'clock',
   hour = 'hour',
   hourCircle = 'hour__circle',
   minutes = 'minutes',
   minutesCircle = 'minutes__circle',
+
   dayInfo = 'day-info',
   dayIcon = 'day-info__icon',
+  timeOfDay = 'time-of-day',
+
   none = 'none',
+  open = 'open',
+  blur = 'blur',
 }
 
 const enum ProfilePageClassList {

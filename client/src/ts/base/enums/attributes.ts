@@ -3,6 +3,7 @@ export const enum SetAttribute {
   planId = 'data-plan-id',
   pickerColor = 'data-picker-color',
   from = 'data-from',
+  thoughtId = 'data-thought-id',
 }
 
 export const enum GetAttribute {
@@ -10,6 +11,7 @@ export const enum GetAttribute {
   planId = 'planId',
   pickerColor = 'pickerColor',
   from = 'from',
+  thoughtId = 'thoughtId',
 }
 
 export const enum Attributes {

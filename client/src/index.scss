@@ -17,7 +17,8 @@
 'style/layout/footer';
 
 // 5. Components
-@import 'style/components/button',
+@import
+'style/components/button',
 'style/components/timeline',
 'style/components/slider-popup',
 'style/components/timeSlider',
@@ -27,9 +28,10 @@
 'style/components/thoughts';
 
 // 6. Page-specific styles
-@import 'style/pages/home-page',
+@import
 'style/pages/day-page',
 'style/pages/login-page',
 'style/pages/not-found-page',
 'style/pages/plan-page',
-'style/pages/profile-page';
+'style/pages/profile-page',
+'style/pages/home-page';

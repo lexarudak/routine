@@ -8,6 +8,7 @@ import {
   User,
   Statistics,
   DayDist,
+  ThoughtsData,
 } from './base/interface';
 import { UserSettings } from './base/types';
 
@@ -69,6 +70,21 @@ class Api {
 
   public static async pushDayDistribution(body: DayDist) {
     return this.post(body, Path.dayDistribution, Path.adjustPlan);
+    
+  public static async getThoughts() {
+    return this.get(false, Path.thoughts);
+  }
+
+  public static async createThoughts(thoughtData: ThoughtsData) {
+    return this.post(thoughtData, Path.thoughts);
+  }
+
+  public static async updateThought(thoughtData: ThoughtsData) {
+    return this.post(thoughtData, Path.thoughts, Path.update);
+  }
+
+  public static async deleteThought(id: string) {
+    return this.delete(id, Path.thoughts);
   }
 
   private static async get(id: string | false, ...path: Path[]) {
