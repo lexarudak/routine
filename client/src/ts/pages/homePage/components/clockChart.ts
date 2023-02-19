@@ -147,7 +147,7 @@ class ClockChart extends Clock {
     this.getCurrData();
     this.setDataByTime();
     setInterval(() => {
-      if (!(window.location.pathname === Path.home)) return;
+      if (!(window.location.pathname === Path.home) || document.readyState === 'complete') return;
       this.getCurrData();
       const sector = this.chartData.findIndex((el) => el.id === this.currPlanNum);
       // console.log('updData', this.minutes, this.chartData[sector].to);

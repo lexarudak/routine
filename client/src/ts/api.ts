@@ -75,7 +75,11 @@ class Api {
     return this.post(thoughtData, Path.thoughts);
   }
 
-  public static async deleteThoughts(id: string) {
+  public static async updateThought(thoughtData: ThoughtsData) {
+    return this.post(thoughtData, Path.thoughts, Path.update);
+  }
+
+  public static async deleteThought(id: string) {
     return this.delete(id, Path.thoughts);
   }
 

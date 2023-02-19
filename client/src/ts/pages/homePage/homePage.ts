@@ -33,7 +33,7 @@ class HomePage extends Page {
     const thoughtTitle = createElement('h3', HomePageClassList.thoughtTitle);
     thoughtTitle.textContent = InnerText.thoughtText;
 
-    const thoughtAddInst = new Thought(this.goTo, '');
+    const thoughtAddInst = new Thought(this.goTo, this.editor, '');
     const thoughtAdd = thoughtAddInst.draw(HomePageClassList.thoughtAdd);
     thoughtAdd.classList.remove(HomePageClassList.none);
     thought.append(thoughtTitle, thoughtAdd, thoughtContainer);
@@ -64,7 +64,6 @@ class HomePage extends Page {
   private async checkConfirmTime(confirmDay: HTMLElement) {
     try {
       const confirmTime = (await Api.getUserProfile()).confirmationTime;
-      console.log('confirmTime', confirmTime);
       setInterval(() => {
         if (!(window.location.pathname === Path.home)) return;
         if (this.clockChartInst.minutes >= confirmTime) {

@@ -7,9 +7,14 @@ import FlyingThought from './flyingThought';
 import { GoToFn } from '../../../base/types';
 import RoutsList from '../../../base/enums/routsList';
 import Path from '../../../base/enums/path';
+import PlanEditor from '../../planPage/components/planEditor';
+// import Values from '../../../base/enums/values';
+// import EditorMode from '../../../base/enums/editorMode';
 
 class Thought {
   goTo: GoToFn;
+
+  protected editor: PlanEditor;
 
   thoughtText: string;
 
@@ -17,8 +22,9 @@ class Thought {
 
   thoughtsDataList: ThoughtsData[] | undefined;
 
-  constructor(goTo: GoToFn, text: string, id?: string) {
+  constructor(goTo: GoToFn, editor: PlanEditor, text: string, id?: string) {
     this.goTo = goTo;
+    this.editor = editor;
     this.thoughtText = text;
     this.thoughtId = id;
     this.thoughtsDataList = undefined;
@@ -29,10 +35,13 @@ class Thought {
   }
 
   async updateThought(thoughtText: string, e: Event) {
-    console.log(thoughtText, e);
+    if (!isHTMLElement(e.target) || !e.target.parentElement) return;
+    const thoughtId = e.target.parentElement.dataset[GetAttribute.thoughtId];
+    console.log(thoughtId, thoughtText, e);
+    if (thoughtId) await Api.updateThought({ _id: thoughtId, title: thoughtText });
   }
 
-  async removeThought(thoughtText: string, e: Event) {
+  async deleteThought(thoughtText: string, e: Event) {
     if (!isHTMLElement(e.target) || !e.target.parentElement) return;
     const thought = e.target.parentElement;
     const thoughtId = e.target.parentElement.dataset[GetAttribute.thoughtId];
@@ -40,7 +49,7 @@ class Thought {
     thought.classList.add(HomePageClassList.none);
     setTimeout(() => thought.parentElement?.removeChild(thought), 350);
 
-    if (thoughtId) await Api.deleteThoughts(thoughtId);
+    if (thoughtId) await Api.deleteThought(thoughtId);
     console.log(thoughtText, thoughtId);
     this.createFlyingThought(getExistentElement(`.${HomePageClassList.canvas}`));
   }
@@ -71,7 +80,7 @@ class Thought {
     try {
       const thoughtsDataList = await Api.getThoughts();
       thoughtsDataList.forEach((thoughtDataEl: ThoughtsData) => {
-        thoughtsArr.push(new Thought(this.goTo, thoughtDataEl.title, thoughtDataEl._id));
+        thoughtsArr.push(new Thought(this.goTo, this.editor, thoughtDataEl.title, thoughtDataEl._id));
       });
 
       for (let i = 0; i < thoughtsArr.length; i += 1) {
@@ -149,9 +158,10 @@ class Thought {
     const thoughtInput = createNewElement<HTMLInputElement>('input', HomePageClassList.thoughtInput);
     thoughtInput.value = this.thoughtText;
     if (this.thoughtId !== undefined) thoughtAdd.setAttribute(SetAttribute.thoughtId, this.thoughtId.toString());
-    thoughtInput.addEventListener('blur', () => {
+    thoughtInput.addEventListener('blur', (e) => {
       if (!thoughtInput.value) return;
       this.thoughtText = thoughtInput.value;
+      if (elClass === HomePageClassList.thoughtItem) this.updateThought(this.thoughtText, e);
     });
 
     const thoughtCreate = createNewElement('div', HomePageClassList.thoughtCreateBtn);
@@ -171,7 +181,7 @@ class Thought {
       const thoughtRemove = createNewElement('div', HomePageClassList.thoughtRemoveBtn);
 
       thoughtRemove.addEventListener('click', (e) => {
-        this.removeThought(this.thoughtText, e);
+        this.deleteThought(this.thoughtText, e);
       });
       thoughtAdd.append(thoughtRemove);
     }

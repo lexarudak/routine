@@ -50,7 +50,7 @@ class Clock {
     const dayIcon = createElement('div', HomePageClassList.dayIcon);
 
     setInterval(() => {
-      if (!(window.location.pathname === Path.home)) return;
+      if (!(window.location.pathname === Path.home) || !document.querySelector(`.${HomePageClassList.clock}`)) return;
       const date = new Date();
       const hours = date.getHours() * hourDeg;
       const minutes = date.getMinutes() * deg;
