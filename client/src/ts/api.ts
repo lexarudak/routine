@@ -70,7 +70,8 @@ class Api {
 
   public static async pushDayDistribution(body: DayDist) {
     return this.post(body, Path.dayDistribution, Path.adjustPlan);
-    
+  }
+
   public static async getThoughts() {
     return this.get(false, Path.thoughts);
   }

@@ -146,6 +146,7 @@ section {
 
 .hour__circle,
 .minutes__circle {
+  transition: 1s;
   position: absolute;
   display: flex;
   justify-content: center;
