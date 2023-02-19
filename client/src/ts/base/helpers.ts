@@ -4,7 +4,7 @@ import Days from './enums/days';
 import ErrorsList from './enums/errorsList';
 import RoutsList from './enums/routsList';
 import Values from './enums/values';
-import { Plan } from './interface';
+import { DistDayPlan, Plan } from './interface';
 import { GoToFn } from './types';
 
 function isHTMLElement<T>(el: T | HTMLElement): el is HTMLElement {
@@ -71,6 +71,10 @@ function buttonOff(...buttons: HTMLButtonElement[]) {
 
 function sortAllPlans(plansArr: Plan[]) {
   return plansArr.sort((a, b) => (a.duration > b.duration ? -1 : 1));
+}
+
+function sortDistPlans(plansArr: DistDayPlan[]) {
+  return plansArr.sort((a, b) => (a.from < b.from ? -1 : 1));
 }
 
 function minToHour(min: number) {
@@ -175,4 +179,5 @@ export {
   sortAllPlans,
   makeRoundIcon,
   minToHourTimeline,
+  sortDistPlans,
 };

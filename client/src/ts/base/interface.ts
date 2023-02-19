@@ -62,3 +62,14 @@ export interface ThoughtsData {
   _id?: string;
   title: string;
 }
+
+export interface DistPlan {
+  planId: string;
+  from: number;
+  to: number;
+}
+
+export interface DayDist {
+  dayOfWeek: number;
+  dayDistribution: DistPlan[];
+}

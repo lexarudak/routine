@@ -7,6 +7,7 @@ import {
   RegistrationData,
   User,
   Statistics,
+  DayDist,
   ThoughtsData,
 } from './base/interface';
 import { UserSettings } from './base/types';
@@ -67,6 +68,9 @@ class Api {
     return this.get(id, Path.dayDistribution, Path.get);
   }
 
+  public static async pushDayDistribution(body: DayDist) {
+    return this.post(body, Path.dayDistribution, Path.adjustPlan);
+    
   public static async getThoughts() {
     return this.get(false, Path.thoughts);
   }
@@ -91,7 +95,6 @@ class Api {
       credentials: 'include',
     });
     const data = await response.json();
-    console.log(data);
 
     if (!response.ok) {
       throw new Error(response.status.toString());
@@ -101,6 +104,7 @@ class Api {
   }
 
   private static async post<T>(body: T, ...path: Path[]) {
+    console.log(body, path);
     const options: RequestInit = {
       method: 'POST',
       headers: {
