@@ -1,5 +1,14 @@
 import Path from './base/enums/path';
-import { LoginData, NewPlanData, PlanData, PlanToDay, RegistrationData, User, Statistics } from './base/interface';
+import {
+  LoginData,
+  NewPlanData,
+  PlanData,
+  PlanToDay,
+  RegistrationData,
+  User,
+  Statistics,
+  ThoughtsData,
+} from './base/interface';
 import { UserSettings } from './base/types';
 
 class Api {
@@ -56,6 +65,22 @@ class Api {
 
   public static async getDayDistribution(id: string) {
     return this.get(id, Path.dayDistribution, Path.get);
+  }
+
+  public static async getThoughts() {
+    return this.get(false, Path.thoughts);
+  }
+
+  public static async createThoughts(thoughtData: ThoughtsData) {
+    return this.post(thoughtData, Path.thoughts);
+  }
+
+  public static async updateThought(thoughtData: ThoughtsData) {
+    return this.post(thoughtData, Path.thoughts, Path.update);
+  }
+
+  public static async deleteThought(id: string) {
+    return this.delete(id, Path.thoughts);
   }
 
   private static async get(id: string | false, ...path: Path[]) {

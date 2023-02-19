@@ -1,172 +1,113 @@
 import PageList from '../../base/enums/pageList';
 import { HomePageClassList } from '../../base/enums/classList';
 import { GoToFn } from '../../base/types';
-// import { ThoughtData } from '../../base/interfaces';
 import Page from '../page';
+import Api from '../../api';
 import { createElement, createNewElement, getExistentElement, client } from '../../base/helpers';
-import Chart from './components/chart';
-import ToDo from './components/toDo';
-import chartData from './data/chartData';
-import thoughtData from './data/thoughtData';
-import Clock from './components/clock';
-import FlyingThought from './components/flyingThought';
+import ClockChart from './components/clockChart';
 import Thought from './components/thought';
-import ThoughtBuilder from './components/thoughtBuilder';
 import RoutsList from '../../base/enums/routsList';
+import Path from '../../base/enums/path';
+import InnerText from '../../base/enums/innerText';
 import PlanEditor from '../planPage/components/planEditor';
-import { Attributes } from '../../base/enums/attributes';
 
 class HomePage extends Page {
-  toDoInst: ToDo;
-
-  clockInst: Clock;
-
-  chartInst: Chart;
+  clockChartInst: ClockChart;
 
   constructor(goTo: GoToFn, editor: PlanEditor) {
     super(PageList.homePage, goTo, editor);
-    this.toDoInst = new ToDo();
-    this.clockInst = new Clock();
-    this.chartInst = new Chart();
+    this.clockChartInst = new ClockChart();
+    this.clockChartInst = new ClockChart();
   }
 
-  private showToDo(e: Event) {
-    if (!(e.target instanceof SVGCircleElement) || !e.target.id) return;
-    const toDo = getExistentElement('.to-do');
-    const color = e.target.getAttribute(Attributes.stroke);
-    if (color) toDo.style.backgroundColor = color;
-    toDo.innerHTML = '';
-    const toDoList = this.toDoInst.draw(+e.target.id - 1);
-    toDo.append(toDoList);
-  }
-
-  private showCurrToDo(e: Event) {
-    if (!(e.target instanceof SVGCircleElement) || !e.target.id) return;
-
-    const toDo = getExistentElement('.to-do');
-    toDo.style.backgroundColor = '';
-    toDo.innerHTML = '';
-    const toDoList = this.toDoInst.draw(0);
-    toDo.append(toDoList);
-  }
-
-  private createFlyingThought() {
+  private createCanvas() {
     const canvas = createNewElement<HTMLCanvasElement>('canvas', HomePageClassList.canvas);
-    const ctx = canvas.getContext('2d');
     canvas.width = client.width;
     canvas.height = client.height;
-
-    const thoughtsArray: FlyingThought[] = [];
-
-    // for (let i = 0; i < 50; i += 1) { //test
-    thoughtData.forEach((thought) => {
-      const radius = 20;
-      const { id } = thought;
-      const x = Math.random() * (client.width - radius * 2) + radius;
-      const y = Math.random() * (client.height - radius * 2) + radius;
-      const dx = (Math.random() - 0.5) * 2;
-      const dy = (Math.random() - 0.5) * 2;
-      thoughtsArray.push(new FlyingThought(id, x, y, dx, dy, radius));
-    });
-
-    if (ctx) {
-      const animate = () => {
-        requestAnimationFrame(animate);
-        ctx.clearRect(0, 0, client.width, client.height);
-        for (let i = 0; i < thoughtsArray.length; i += 1) {
-          thoughtsArray[i].draw(ctx);
-          thoughtsArray[i].thoughtCollision(thoughtsArray);
-        }
-      };
-      animate();
-    }
-    // canvas.addEventListener('click', () => console.log(client.width, client.height));
     return canvas;
   }
 
-  createThoughtsList(thoughtContainer: HTMLElement) {
-    const thoughtsArr: Thought[] = [];
-    thoughtData.forEach((thoughtDataEl) => {
-      thoughtsArr.push(new Thought(thoughtDataEl.title));
-    });
-
-    for (let i = 0; i < thoughtsArr.length; i += 1) {
-      const thoughtEl = thoughtsArr[i].draw(HomePageClassList.thoughtItem);
-      thoughtContainer.append(thoughtEl);
-    }
-  }
-
-  private createThought() {
+  private createThought(canvas: HTMLCanvasElement) {
     const thought = createElement('div', HomePageClassList.thought);
-    const thoughtContainer = createElement('div', 'thought__container');
+    const thoughtContainer = createElement('div', HomePageClassList.thoughtContainer);
     const thoughtTitle = createElement('h3', HomePageClassList.thoughtTitle);
-    thoughtTitle.textContent = 'Thought';
+    thoughtTitle.textContent = InnerText.thoughtText;
 
-    const thoughtAddInst = new ThoughtBuilder('');
+    const thoughtAddInst = new Thought(this.goTo, this.editor, '');
     const thoughtAdd = thoughtAddInst.draw(HomePageClassList.thoughtAdd);
-    thoughtAdd.classList.remove('none');
+    thoughtAdd.classList.remove(HomePageClassList.none);
     thought.append(thoughtTitle, thoughtAdd, thoughtContainer);
 
-    this.createThoughtsList(thoughtContainer);
+    thoughtAddInst.createThoughtsList(thoughtContainer);
+    thoughtAddInst.createFlyingThought(canvas);
 
-    const popup = createNewElement('div', 'blur');
-    popup.classList.add('none');
+    const popup = createNewElement('div', HomePageClassList.blur);
+    popup.classList.add(HomePageClassList.none);
     document.body.append(popup);
 
     thoughtTitle.addEventListener('click', () => {
-      getExistentElement('.canvas').classList.toggle('none');
-      thoughtAdd.classList.toggle('none');
+      getExistentElement(`.${HomePageClassList.canvas}`).classList.toggle(HomePageClassList.none);
+      thoughtAdd.classList.toggle(HomePageClassList.none);
       popup.classList.toggle(HomePageClassList.none);
-      document.querySelectorAll('.thought__item').forEach((el) => {
-        el.classList.toggle('open');
-        el.classList.toggle('none');
+
+      document.querySelectorAll(`.${HomePageClassList.thoughtItem}`).forEach((el) => {
+        if (thoughtAdd.classList.contains('none')) {
+          el.classList.add(HomePageClassList.open);
+          thoughtAdd.classList.remove(HomePageClassList.open);
+        }
+        el.classList.toggle(HomePageClassList.none);
       });
     });
     return thought;
   }
 
-  private createClockChart() {
-    const clock = createElement('div', HomePageClassList.clock);
-    const hour = createElement('div', HomePageClassList.hour);
-    const hr = createElement('div', HomePageClassList.hourCircle);
-    const minutes = createElement('div', HomePageClassList.minutes);
-    const min = createElement('div', HomePageClassList.minutesCircle);
-    hour.append(hr);
-    minutes.append(min);
-
-    const chart = createElement('div', HomePageClassList.chart);
-    this.chartInst.createChart(chart, chartData, { strokeWidth: 14, radius: 320 });
-    chart.append(hour, minutes);
-
-    const toDo = createElement('div', HomePageClassList.toDo);
-    const toDoList = this.toDoInst.draw(0);
-    toDo.append(toDoList);
-    chart.append(toDo);
-    clock.append(chart);
-
-    chart.addEventListener('mouseover', (e) => this.showToDo(e));
-    chart.addEventListener('mouseout', (e) => this.showCurrToDo(e));
-
-    return clock;
+  private async checkConfirmTime(confirmDay: HTMLElement) {
+    try {
+      const confirmTime = (await Api.getUserProfile()).confirmationTime;
+      setInterval(() => {
+        if (!(window.location.pathname === Path.home)) return;
+        if (this.clockChartInst.minutes >= confirmTime) {
+          confirmDay.style.visibility = 'visible';
+        } else {
+          confirmDay.style.visibility = '';
+        }
+      }, 1000);
+    } catch (error) {
+      console.log(error);
+      this.goTo(RoutsList.loginPage);
+    }
   }
 
   protected async getFilledPage(): Promise<HTMLElement> {
     const page = document.createElement(HomePageClassList.section);
-    const flyingThought = this.createFlyingThought();
-    const thought = this.createThought();
+    try {
+      const canvas = this.createCanvas();
 
-    const plan = createElement('div', HomePageClassList.plan);
-    plan.textContent = 'Plan';
-    plan.addEventListener('click', () => this.goTo(RoutsList.planPage));
+      const thought = this.createThought(canvas);
 
-    const signIn = createElement('div', HomePageClassList.signIn);
-    signIn.textContent = 'User';
+      const plan = createElement('div', HomePageClassList.plan);
+      plan.textContent = InnerText.planText;
+      plan.addEventListener('click', () => this.goTo(RoutsList.planPage));
 
-    const clock = this.createClockChart();
+      const confirmDay = createElement('div', HomePageClassList.confirmDay);
+      confirmDay.addEventListener('click', () => this.goTo(RoutsList.confirmPage));
+      this.checkConfirmTime(confirmDay);
 
-    page.append(flyingThought, thought, signIn, plan, clock);
+      const signIn = createElement('div', HomePageClassList.signIn);
+      signIn.addEventListener('click', () => this.goTo(RoutsList.profilePage));
 
-    setTimeout(() => this.clockInst.getTime());
+      const userName = await Api.getUserProfile();
+      signIn.textContent = userName.name;
+
+      const clock = await this.clockChartInst.draw();
+
+      page.append(canvas, thought, signIn, plan, confirmDay, clock);
+
+      setTimeout(() => this.clockChartInst.getTime());
+    } catch (error) {
+      console.log(error);
+      this.goTo(RoutsList.loginPage);
+    }
     return page;
   }
 }

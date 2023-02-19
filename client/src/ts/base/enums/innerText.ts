@@ -11,6 +11,12 @@ const enum InnerText {
   defaultPlanName = 'Plan for ...',
   hoursText = 'Hours',
   minutesText = 'Minutes',
+  thoughtText = 'Thought',
+  planText = 'Plan',
+  emptyTitle = 'Free time',
+  emptyText = '',
+  timeOfDayAM = 'AM',
+  timeOfDayPM = 'PM',
   perWeek = '(per week)',
   perDay = 'per day',
 }

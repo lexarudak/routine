@@ -81,6 +81,11 @@ class PlanEditor {
         this.loadToLocalStorage();
         break;
 
+      case EditorMode.planFromThought:
+        this.popup.editorMode(this.saveToLocalStorage);
+        this.loadToLocalStorage();
+        break;
+
       default:
         break;
     }

@@ -33,6 +33,14 @@ export interface PlanToDay {
   planId: string;
   duration: number;
 }
+export interface DistDayPlan {
+  _id: string;
+  title: string;
+  text: string;
+  color: string;
+  from: number;
+  to: number;
+}
 
 export interface User {
   _id: string;
@@ -50,11 +58,7 @@ export interface Statistics {
   deviation: number;
 }
 
-export interface DistDayPlan {
-  _id: string;
+export interface ThoughtsData {
+  _id?: string;
   title: string;
-  text: string;
-  color: string;
-  from: number;
-  to: number;
 }

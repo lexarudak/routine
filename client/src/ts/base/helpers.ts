@@ -36,9 +36,15 @@ function createNewElement<T extends HTMLElement>(tag: string, className: string)
   return <T>element;
 }
 
+const container = 1380;
+
 const client = {
   width: document.documentElement.clientWidth,
   height: document.documentElement.clientHeight,
+  planPosWidth: document.documentElement.clientWidth / 2 - container / 2 + 250,
+  planPosHeight: document.documentElement.clientHeight / 2 - 15,
+  clockPosWidth: document.documentElement.clientWidth / 2 + container / 2 - 330,
+  clockPosHeight: document.documentElement.clientHeight / 2 - 15,
 };
 
 function getExistentInputElement<T extends HTMLElement>(
