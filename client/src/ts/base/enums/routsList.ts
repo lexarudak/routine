@@ -4,7 +4,6 @@ const enum RoutsList {
   profilePage = '/profile',
   accountPage = '/account',
   loginPage = '/login',
-  confirmPage = '/confirm',
   monday = '/monday',
   confirmPage = '/confirm',
 }

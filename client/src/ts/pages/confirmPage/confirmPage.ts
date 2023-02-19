@@ -38,6 +38,35 @@ class ConfirmPage extends Page {
   private setEventLiseners() {
     const uiConfirmButton = helpers.getExistentElement<HTMLButtonElement>('.confirm__main-button');
     uiConfirmButton.addEventListener('click', () => this.confirm());
+
+    const uiPlans = helpers.getExistentElementByClass('confirm-plans');
+    uiPlans.addEventListener('mousedown', (event) => this.startMove(event));
+  }
+
+  private startMove(eMouseDown: MouseEvent) {
+    const target = eMouseDown.target as HTMLElement;
+    if (!target.classList.contains('plan-square')) {
+      return;
+    }
+
+    function onMouseMove(eMouseMove: MouseEvent) {
+      const minWidth = 15;
+      const maxWidth = 825;
+
+      let width = eMouseMove.x - 510 + 5;
+      width = width > maxWidth ? maxWidth : width;
+      width = width < minWidth ? minWidth : width;
+
+      target.style.width = `${width}px`;
+    }
+
+    function onMouseUp() {
+      document.removeEventListener('mousemove', onMouseMove);
+      document.onmouseup = null;
+    }
+
+    document.addEventListener('mousemove', onMouseMove);
+    document.onmouseup = onMouseUp;
   }
 
   protected async getFilledPage(): Promise<HTMLElement> {
