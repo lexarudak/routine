@@ -7,10 +7,11 @@ import {
   RegistrationData,
   User,
   Statistics,
+  ConfirmDay,
+  UserSettings,
   DayDist,
   ThoughtsData,
 } from './base/interface';
-import { UserSettings } from './base/types';
 
 class Api {
   public static async registration(body: RegistrationData) {
@@ -66,6 +67,10 @@ class Api {
 
   public static async getDayDistribution(id: string) {
     return this.get(id, Path.dayDistribution, Path.get);
+  }
+
+  public static async confirmDay(body: ConfirmDay) {
+    return this.post(body, Path.statistics, Path.confirmDay);
   }
 
   public static async pushDayDistribution(body: DayDist) {

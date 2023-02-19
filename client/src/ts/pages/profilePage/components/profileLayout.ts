@@ -1,8 +1,7 @@
 import Layout from '../../layout';
 
-import { User, Statistics } from '../../../base/interface';
+import { User, Statistics, UserSettings, ConfirmationDay } from '../../../base/interface';
 import { ProfilePageClassList } from '../../../base/enums/classList';
-import { UserSettings } from '../../../base/types';
 
 import * as helpers from '../../../base/helpers';
 import * as enums from '../../../base/enums/enums';
@@ -39,7 +38,7 @@ class ProfileLayout extends Layout {
     const uiConfirmationTime = helpers.getExistentElement<HTMLInputElement>(classCSS);
 
     const settings: UserSettings = {
-      confirmationDay: uiConfirmationDay.textContent || enums.ConfirmationDays.today,
+      confirmationDay: (uiConfirmationDay.textContent || enums.ConfirmationDays.today) as ConfirmationDay,
       confirmationTime: helpers.timeToMin(uiConfirmationTime.value),
     };
 
@@ -106,7 +105,7 @@ class ProfileLayout extends Layout {
   }
 
   private makeStatisticsPlan(statistics: Statistics) {
-    const title = `${statistics.title.length < 16 ? statistics.title.length : statistics.title.slice(0, 16)}...`;
+    const title = helpers.cutStringLine(statistics.title, 20);
 
     const container = document.createElement('div');
     container.classList.add(ProfilePageClassList.planSquare);

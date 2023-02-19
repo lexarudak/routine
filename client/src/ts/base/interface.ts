@@ -1,3 +1,5 @@
+import { ConfirmationDays } from './enums/enums';
+
 export interface Plan {
   _id: string;
   color: string;
@@ -46,7 +48,7 @@ export interface User {
   _id: string;
   name: string;
   email: string;
-  confirmationDay: string;
+  confirmationDay: ConfirmationDay;
   confirmationTime: number;
   createdAt: Date;
 }
@@ -56,6 +58,11 @@ export interface Statistics {
   text: string;
   color: string;
   deviation: number;
+}
+
+export interface ConfirmDay {
+  dayOfWeek: number;
+  dayDistribution: ConfirmDayDistribution[];
 }
 
 export interface ThoughtsData {
@@ -68,6 +75,18 @@ export interface DistPlan {
   from: number;
   to: number;
 }
+
+export type UserSettings = {
+  confirmationDay: ConfirmationDay;
+  confirmationTime: number;
+};
+
+export type ConfirmationDay = ConfirmationDays.today | ConfirmationDays.yesterday;
+
+export type ConfirmDayDistribution = {
+  planId: string;
+  duration: number;
+};
 
 export interface DayDist {
   dayOfWeek: number;

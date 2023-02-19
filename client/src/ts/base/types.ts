@@ -8,8 +8,3 @@ export type WeekInfo = [Plan[], Plan[][]];
 export type PlanDis = {
   [_id: string]: number;
 };
-
-export type UserSettings = {
-  confirmationDay: string;
-  confirmationTime: number;
-};
