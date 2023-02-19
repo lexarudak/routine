@@ -9,6 +9,8 @@ import {
   Statistics,
   ConfirmDay,
   UserSettings,
+  DayDist,
+  ThoughtsData,
 } from './base/interface';
 
 class Api {
@@ -71,6 +73,26 @@ class Api {
     return this.post(body, Path.statistics, Path.confirmDay);
   }
 
+  public static async pushDayDistribution(body: DayDist) {
+    return this.post(body, Path.dayDistribution, Path.adjustPlan);
+  }
+
+  public static async getThoughts() {
+    return this.get(false, Path.thoughts);
+  }
+
+  public static async createThoughts(thoughtData: ThoughtsData) {
+    return this.post(thoughtData, Path.thoughts);
+  }
+
+  public static async updateThought(thoughtData: ThoughtsData) {
+    return this.post(thoughtData, Path.thoughts, Path.update);
+  }
+
+  public static async deleteThought(id: string) {
+    return this.delete(id, Path.thoughts);
+  }
+
   private static async get(id: string | false, ...path: Path[]) {
     let url = `${Path.origin}${path.join('')}`;
     if (id) url = `${url}/${id}`;
@@ -79,7 +101,6 @@ class Api {
       credentials: 'include',
     });
     const data = await response.json();
-    console.log(data);
 
     if (!response.ok) {
       throw new Error(response.status.toString());
@@ -89,6 +110,7 @@ class Api {
   }
 
   private static async post<T>(body: T, ...path: Path[]) {
+    console.log(body, path);
     const options: RequestInit = {
       method: 'POST',
       headers: {

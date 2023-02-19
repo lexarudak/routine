@@ -5,6 +5,7 @@ const enum Values {
   passwordPlaceholder = 'Password',
   secondPasswordPlaceholder = 'Repeat password',
   rememberMeId = 'rememberMe',
+  clockHours = 12,
   allWeekMinutes = 10080,
   allDayMinutes = 1440,
   minPlanDuration = 15,

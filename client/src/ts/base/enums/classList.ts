@@ -91,17 +91,23 @@ const enum ClassList {
   dayPageReturn = 'day-page__return',
   dayPageReturnOver = 'day-page__return_over',
   dayPagePlansZone = 'day-page__plans-zone',
+  dayPagePlansZoneDrag = 'day-page__plans-zone_drag',
   // timeline
   timeline = 'timeline',
   timelineDrag = 'timeline_drag',
   timelineHeader = 'timeline-header',
   timelineDiv = 'timeline-div',
+  timelineDivActive = 'timeline-div_active',
+  timelineShow = 'timeline__show',
+  timelineSensor = 'timeline__sensor',
+  timelineSensorActive = 'timeline__sensor_active',
   timelineDivFake = 'timeline-div_fake',
   timelineDivFrom = 'timeline-div__from',
   timelineDivTo = 'timeline-div__to',
   timelineDivLeft = 'timeline-div__left',
   timelineDivRight = 'timeline-div__right',
   timelineDivName = 'timeline-div__name',
+  timelineDivBody = 'timeline-div__body',
   //
   planList = 'plan-list',
   planListItem = 'plan-list__item',
@@ -113,27 +119,41 @@ const enum ClassList {
 const enum HomePageClassList {
   section = 'section',
   canvas = 'canvas',
+  chart = 'chart',
+  // thought
   thought = 'thought',
   thoughtTitle = 'thought__title',
+  thoughtContainer = 'thought__container',
   thoughtAdd = 'thought__add',
   thoughtItem = 'thought__item',
   thoughtAddBtn = 'thought__add-btn',
   thoughtCreateBtn = 'thought__create-btn',
+  thoughtRemoveBtn = 'thought__remove-btn',
   thoughtInput = 'thought__input',
+
   plan = 'plan-btn',
   signIn = 'sign-in',
-  chart = 'chart',
+  confirmDay = 'confirm-day',
+  // to-do
   toDo = 'to-do',
+  toDoWrap = 'to-do__wrapper',
   toDoTitle = 'to-do__title',
   toDoTextarea = 'to-do__textarea',
+  toDoText = 'to-do__text',
+  // clock
   clock = 'clock',
   hour = 'hour',
   hourCircle = 'hour__circle',
   minutes = 'minutes',
   minutesCircle = 'minutes__circle',
+
   dayInfo = 'day-info',
   dayIcon = 'day-info__icon',
+  timeOfDay = 'time-of-day',
+
   none = 'none',
+  open = 'open',
+  blur = 'blur',
 }
 
 const enum ProfilePageClassList {

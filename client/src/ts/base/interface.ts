@@ -35,6 +35,14 @@ export interface PlanToDay {
   planId: string;
   duration: number;
 }
+export interface DistDayPlan {
+  _id: string;
+  title: string;
+  text: string;
+  color: string;
+  from: number;
+  to: number;
+}
 
 export interface User {
   _id: string;
@@ -57,11 +65,13 @@ export interface ConfirmDay {
   dayDistribution: ConfirmDayDistribution[];
 }
 
-export interface DistDayPlan {
-  _id: string;
+export interface ThoughtsData {
+  _id?: string;
   title: string;
-  text: string;
-  color: string;
+}
+
+export interface DistPlan {
+  planId: string;
   from: number;
   to: number;
 }
@@ -77,3 +87,8 @@ export type ConfirmDayDistribution = {
   planId: string;
   duration: number;
 };
+
+export interface DayDist {
+  dayOfWeek: number;
+  dayDistribution: DistPlan[];
+}
