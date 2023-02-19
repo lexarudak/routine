@@ -97,6 +97,7 @@ const enum ClassList {
   timelineDrag = 'timeline_drag',
   timelineHeader = 'timeline-header',
   timelineDiv = 'timeline-div',
+  timelineDivActive = 'timeline-div_active',
   timelineShow = 'timeline__show',
   timelineSensor = 'timeline__sensor',
   timelineSensorActive = 'timeline__sensor_active',
@@ -106,6 +107,7 @@ const enum ClassList {
   timelineDivLeft = 'timeline-div__left',
   timelineDivRight = 'timeline-div__right',
   timelineDivName = 'timeline-div__name',
+  timelineDivBody = 'timeline-div__body',
   //
   planList = 'plan-list',
   planListItem = 'plan-list__item',

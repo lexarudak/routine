@@ -92,7 +92,12 @@ class PlanLayout extends Layout {
   private addReturnListeners(zone: HTMLElement, dayId: string, allDayPlans: Plan[], distPlans: DistDayPlan[]) {
     zone.addEventListener('dragover', function enter(e) {
       e.preventDefault();
-      this.classList.add(ClassList.dayPageReturnOver);
+      try {
+        getExistentElementByClass(ClassList.planRoundDrag);
+        this.classList.add(ClassList.dayPageReturnOver);
+      } catch {
+        console.log();
+      }
     });
 
     zone.addEventListener('dragleave', function leave() {
@@ -104,6 +109,12 @@ class PlanLayout extends Layout {
       e.preventDefault();
       const { currentTarget } = e;
       if (currentTarget instanceof HTMLElement) currentTarget.classList.remove(ClassList.dayPageReturnOver);
+      try {
+        getExistentElementByClass(ClassList.planRoundDrag);
+      } catch {
+        console.log('this element is from timeline');
+        return;
+      }
       const roundDiv = getExistentElementByClass(ClassList.planRoundDrag);
       const id = roundDiv.dataset[GetAttribute.planId];
       if (!id) throw new Error(ErrorsList.noId);

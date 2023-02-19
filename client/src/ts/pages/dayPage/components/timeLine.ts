@@ -125,9 +125,8 @@ class Timeline {
     }
   }
 
-  private setCurrentZone(e: DragEvent) {
-    const cursor = this.getCursorX(e);
-    const cursorMin = this.pxToMin(cursor);
+  private setCurrentZone(point: number) {
+    const cursorMin = this.pxToMin(point);
 
     this.dragInfo.currentZone.startMin = 0;
     this.dragInfo.currentZone.endMin = Values.allDayMinutes;
@@ -143,7 +142,8 @@ class Timeline {
   private checkZone(e: DragEvent, cursorMin: number) {
     if (cursorMin >= this.dragInfo.currentZone.endMin || cursorMin < this.dragInfo.currentZone.startMin) {
       console.log('check');
-      this.setCurrentZone(e);
+      const cursor = this.getCursorX(e);
+      this.setCurrentZone(cursor);
       if (this.dragInfo.currentZone.freeZone) {
         this.appendDiv(this.plan);
       } else {
@@ -160,7 +160,7 @@ class Timeline {
 
   private appendDiv(plan: Plan) {
     if (plan.duration >= Values.minPlanDuration) {
-      const currentDiv = new TimelineDiv(plan);
+      const currentDiv = new TimelineDiv(plan, this.distPlans);
       const newDiv = currentDiv.draw();
       newDiv.classList.add(ClassList.timelineDivFake);
       this.currentDiv = currentDiv;
@@ -177,16 +177,18 @@ class Timeline {
   }
 
   private setDivWidth(startMin: number) {
-    return Math.min(this.plan.duration, this.dragInfo.currentZone.endMin - startMin);
+    if (this.plan) return Math.min(this.plan.duration, this.dragInfo.currentZone.endMin - startMin);
+    return 0;
   }
 
   private addListenerEnter(timelineDiv: HTMLDivElement) {
     timelineDiv.addEventListener('dragenter', (e) => {
       e.preventDefault();
       e.stopPropagation();
-      this.setCurrentZone(e);
+      const cursor = this.getCursorX(e);
+      this.setCurrentZone(cursor);
       if (this.dragInfo.currentZone.freeZone) {
-        this.appendDiv(this.plan);
+        if (this.plan) this.appendDiv(this.plan);
       } else {
         this.removeDiv();
       }
@@ -312,7 +314,6 @@ class Timeline {
     this.distPlans.forEach((distPlan) => {
       const { _id, color, title, text, from, to } = distPlan;
       const plan = { _id, color, title, text, duration: to - from };
-      console.log(plan);
       this.appendDiv(plan);
       const planDur = to - from;
       this.currentDiv?.showFake(this.minToPx(from), this.minToPx(planDur));
