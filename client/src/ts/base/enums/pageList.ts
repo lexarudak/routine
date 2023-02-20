@@ -6,6 +6,7 @@ const enum PageList {
   notFound = '404 page',
   loginPage = 'Login page',
   profilePage = 'Profile page',
+  confirmPage = 'Confirm page',
 }
 
 export default PageList;

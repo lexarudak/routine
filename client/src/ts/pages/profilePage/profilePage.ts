@@ -18,9 +18,7 @@ import * as enums from '../../base/enums/enums';
 
 class ProfilePage extends Page {
   layout: ProfileLayout;
-
   profile: User = {} as User;
-
   statistics: Statistics[] = [];
 
   constructor(goTo: GoToFn, editor: PlanEditor) {
@@ -76,7 +74,7 @@ class ProfilePage extends Page {
   protected async getFilledPage(): Promise<HTMLElement> {
     await this.setProfileInfo();
 
-    const container = document.createElement(ProfilePageClassList.section);
+    const container = document.createElement('section');
     container.classList.add(ProfilePageClassList.profile);
 
     const wrapper = document.createElement('div');
