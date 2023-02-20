@@ -1,6 +1,7 @@
 const enum ClassList {
   mainContainer = 'main__container',
   mainContainerHide = 'main__container_hide',
+  mainContainerNoSelect = 'main__container_no-select',
   banner = 'banner',
   imgContainer = 'img-container',
   scaleNormal = 'scale-normal',
