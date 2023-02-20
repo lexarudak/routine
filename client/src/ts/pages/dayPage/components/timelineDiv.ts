@@ -75,10 +75,28 @@ class TimelineDiv {
     this.minToPx = minToPx.bind(this, this.timelineWidthPx);
   }
 
+  private rightButtonResize(e: MouseEvent) {
+    const dur = this.toMin - this.fromMin;
+    const maxValue = Math.min(this.zone.to, this.fromMin + dur + this.plan.duration);
+    const minDifferenceMin = this.pxToMin(e.clientX - this.move.start); //  - | +
+
+    if (this.toMin + minDifferenceMin > maxValue) {
+      this.newToMin = maxValue;
+      this.showDiv(this.fromMin, this.newToMin - this.fromMin);
+    } else if (dur + minDifferenceMin < Values.minPlanDuration) {
+      this.newToMin = this.fromMin + Values.minPlanDuration;
+      this.showDiv(this.fromMin, Values.minPlanDuration);
+    } else {
+      this.newToMin = this.toMin + minDifferenceMin;
+      this.showDiv(this.fromMin, dur + minDifferenceMin);
+    }
+  }
+
   private leftButtonResize(e: MouseEvent) {
     const dur = this.toMin - this.fromMin;
     const minValue = Math.max(this.zone.from, this.fromMin - this.plan.duration);
     const minDifferenceMin = this.pxToMin(this.move.start - e.clientX); //  + | -
+
     if (this.fromMin - minDifferenceMin < minValue) {
       this.newFromMin = minValue;
       this.showDiv(this.newFromMin, this.toMin - this.newFromMin);
@@ -94,11 +112,11 @@ class TimelineDiv {
   private addSizeListener(btn: HTMLElement, resizeFn: (e: MouseEvent) => void, setZoneFn: () => void) {
     const sensor = getExistentElementByClass(ClassList.timelineSensor);
     const main = getExistentElementByClass(ClassList.mainContainer);
+
     btn.addEventListener('mousedown', (e) => {
       e.stopPropagation();
       this.move.start = e.clientX;
       console.log('mouse down');
-      console.log('mouse down plan', this.plan);
       this.newFromMin = this.fromMin;
       this.newToMin = this.toMin;
       this.div.setAttribute('draggable', 'false');
@@ -121,32 +139,38 @@ class TimelineDiv {
           main.classList.remove(ClassList.mainContainerNoSelect);
           this.div.classList.remove(ClassList.timelineDivFake);
           document.removeEventListener('mousemove', resizeFn);
-          console.log('mouse up plan', this.plan);
+          this.updatePlan();
+          this.paintRound(this.findRound(this.plan._id), this.plan);
 
-          this.plan.duration -= this.fromMin - this.newFromMin;
-
-          this.distPlans.forEach((plan) => {
-            if (plan.from === this.fromMin) {
-              plan.from = this.newFromMin;
-              plan.to = this.newToMin;
-            }
-          });
-          this.fromMin = this.newFromMin;
-          this.toMin = this.newToMin;
-          const round = document.querySelector(`div[data-plan-id="${this.plan._id}"]`);
-          console.log(round);
-          if (round instanceof HTMLElement) this.paintRound(round, this.plan);
-          console.log('for each DIST PLANS', this.plan.duration);
           try {
             await this.pushToServer();
           } catch (error) {
             loginRedirect(error, this.goTo);
           }
-          // console.log('small plan', this.plan, this.plan.duration);
         },
         { once: true }
       );
     });
+  }
+
+  private findRound(planId: string) {
+    const round = document.querySelector(`div[data-plan-id="${planId}"]`);
+    if (round instanceof HTMLElement) return round;
+    return undefined;
+  }
+
+  private updatePlan() {
+    this.plan.duration -= this.fromMin - this.newFromMin;
+    this.plan.duration -= this.newToMin - this.toMin;
+
+    this.distPlans.forEach((plan) => {
+      if (plan.from === this.fromMin) {
+        plan.from = this.newFromMin;
+        plan.to = this.newToMin;
+      }
+    });
+    this.fromMin = this.newFromMin;
+    this.toMin = this.newToMin;
   }
 
   private makeDiv() {
@@ -158,6 +182,7 @@ class TimelineDiv {
     right.innerText = '>';
 
     this.addSizeListener(left, this.leftButtonResize.bind(this), this.setZoneStart.bind(this));
+    this.addSizeListener(right, this.rightButtonResize.bind(this), this.setZoneEnd.bind(this));
     div.style.backgroundColor = this.plan.color;
     const textColor = colorsAndFonts.get(this.plan.color);
     if (textColor) div.style.color = textColor;
@@ -200,7 +225,7 @@ class TimelineDiv {
   }
 
   private updateInfoView(durMin: number) {
-    if (this.minToPx(durMin) > 55) {
+    if (this.minToPx(durMin) > Values.minTimelineBlockWithText) {
       this.from.style.display = 'flex';
       this.to.style.display = 'flex';
       this.name.style.display = 'flex';
@@ -230,6 +255,16 @@ class TimelineDiv {
       return acc;
     }, 0);
     this.zone.from = start;
+  }
+
+  private setZoneEnd() {
+    const end = this.distPlans.reduce((acc, plan) => {
+      if (plan.from >= this.toMin && plan.from < acc) {
+        return plan.from;
+      }
+      return acc;
+    }, <number>Values.allDayMinutes);
+    this.zone.to = end;
   }
 }
 

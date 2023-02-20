@@ -11,6 +11,7 @@ const enum Values {
   minPlanDuration = 15,
   maxDayPlanWidth = 200,
   planListWidthK = 2,
+  minTimelineBlockWithText = 55,
   binImg = `url('./assets/svg/bin.svg')`,
   returnImg = `url('./assets/svg/return.svg')`,
   timeSliderId = 'time-slider-id',

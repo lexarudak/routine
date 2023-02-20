@@ -150,14 +150,13 @@ class Timeline {
 
   private appendDiv(plan: Plan) {
     if (plan.duration >= Values.minPlanDuration) {
-      console.log('append plan', plan);
       const currentDiv = new TimelineDiv(
         this.width,
         plan,
         this.distPlans,
         this.pushToServer.bind(this),
         this.goTo,
-        this.paintRound
+        this.paintRound.bind(this)
       );
       const newDiv = currentDiv.draw();
       newDiv.classList.add(ClassList.timelineDivFake);
@@ -186,7 +185,6 @@ class Timeline {
       const cursor = this.getCursorX(e);
       this.setCurrentZone(cursor);
       if (this.dragInfo.currentZone.freeZone) {
-        console.log(this.plan);
         if (this.plan) this.appendDiv(this.plan);
       } else {
         this.removeDiv();
@@ -272,8 +270,6 @@ class Timeline {
       } catch (error) {
         loginRedirect(error, this.goTo);
       }
-      // console.log('drop no dist', this.notDistPlans);
-      // console.log('drop dist', this.distPlans);
     }
   }
 
@@ -297,7 +293,7 @@ class Timeline {
       const blur = round.childNodes[1];
       if (blur instanceof HTMLElement) {
         blur.style.height = `${100 * (1 - (noDistPlan ? noDistPlan.duration : plan.duration) / allTime)}%`;
-        console.log(noDistPlan, blur.style.height);
+        // console.log(noDistPlan, blur.style.height);
       }
     }
   }
@@ -313,6 +309,7 @@ class Timeline {
       const p = this.notDistPlans.filter((plan) => plan._id === _id)[0];
       const planDur = to - from;
       const plan = { _id, color, title, text, duration: 0 };
+      if (!p) this.notDistPlans.push(plan);
 
       const currentDiv = new TimelineDiv(
         this.width,
