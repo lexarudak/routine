@@ -3,7 +3,7 @@ import { HomePageClassList } from '../../base/enums/classList';
 import { GoToFn } from '../../base/types';
 import Page from '../page';
 import Api from '../../api';
-import { createElement, createNewElement, getExistentElement, client } from '../../base/helpers';
+import { createElement, createNewElement, client } from '../../base/helpers';
 import ClockChart from './components/clockChart';
 import Thought from './components/thought';
 import RoutsList from '../../base/enums/routsList';
@@ -16,7 +16,6 @@ class HomePage extends Page {
 
   constructor(goTo: GoToFn, editor: PlanEditor) {
     super(PageList.homePage, goTo, editor);
-    this.clockChartInst = new ClockChart();
     this.clockChartInst = new ClockChart();
   }
 
@@ -45,19 +44,9 @@ class HomePage extends Page {
     popup.classList.add(HomePageClassList.none);
     document.body.append(popup);
 
-    thoughtTitle.addEventListener('click', () => {
-      getExistentElement(`.${HomePageClassList.canvas}`).classList.toggle(HomePageClassList.none);
-      thoughtAdd.classList.toggle(HomePageClassList.none);
-      popup.classList.toggle(HomePageClassList.none);
+    thoughtTitle.addEventListener('click', () => thoughtAddInst.openCloseThoughtList(thoughtAdd, popup));
+    popup.addEventListener('click', () => thoughtAddInst.openCloseThoughtList(thoughtAdd, popup));
 
-      document.querySelectorAll(`.${HomePageClassList.thoughtItem}`).forEach((el) => {
-        if (thoughtAdd.classList.contains('none')) {
-          el.classList.add(HomePageClassList.open);
-          thoughtAdd.classList.remove(HomePageClassList.open);
-        }
-        el.classList.toggle(HomePageClassList.none);
-      });
-    });
     return thought;
   }
 
@@ -74,7 +63,7 @@ class HomePage extends Page {
       }, 1000);
     } catch (error) {
       console.log(error);
-      this.goTo(RoutsList.loginPage);
+      // this.goTo(RoutsList.loginPage);
     }
   }
 
