@@ -18,7 +18,9 @@ import * as enums from '../../base/enums/enums';
 
 class ProfilePage extends Page {
   layout: ProfileLayout;
+
   profile: User = {} as User;
+
   statistics: Statistics[] = [];
 
   constructor(goTo: GoToFn, editor: PlanEditor) {

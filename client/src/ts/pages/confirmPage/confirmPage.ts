@@ -18,7 +18,9 @@ import * as enums from '../../base/enums/enums';
 
 class ConfirmPage extends Page {
   layout: ConfirmLayout;
+
   dayPlans: Plan[] = [];
+
   dayOfWeek = 0;
 
   constructor(goTo: GoToFn, editor: PlanEditor) {

@@ -20,7 +20,7 @@ class TimeSlider {
   public setTimer(minTime: number, maxTime: number, currentTime?: number) {
     this.minTime = minTime > Values.minPlanDuration ? minTime : Values.minPlanDuration;
     this.maxTime = maxTime;
-    this.currentTime = currentTime || this.minTime;
+    this.currentTime = currentTime || (maxTime > 60 ? 60 : this.minTime);
   }
 
   private makeSlider() {
