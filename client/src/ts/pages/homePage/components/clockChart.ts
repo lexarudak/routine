@@ -5,6 +5,7 @@ import Values from '../../../base/enums/values';
 import Colors from '../../../base/enums/colors';
 import InnerText from '../../../base/enums/innerText';
 import { ChartData } from '../../../base/interfaces';
+import { DistDayPlan } from '../../../base/interface';
 import Api from '../../../api';
 import Clock from './clock';
 import Chart from './chart';
@@ -16,6 +17,8 @@ class ClockChart extends Clock {
   toDoInst: ToDo;
 
   chartInst: Chart;
+
+  distributedPlans: DistDayPlan[];
 
   dayData: ChartData[][];
 
@@ -31,6 +34,7 @@ class ClockChart extends Clock {
     super();
     this.toDoInst = new ToDo();
     this.chartInst = new Chart();
+    this.distributedPlans = [];
     this.dayData = [emptyData, emptyData];
     this.chartData = emptyData;
     this.minutes = 0;
@@ -38,22 +42,23 @@ class ClockChart extends Clock {
     this.currColor = this.chartData[0].color;
   }
 
-  async getDayInfo() {
-    const dayInfo = await Api.getDayDistribution(this.dayOfWeek.toString());
-    console.log(dayInfo);
+  async getDistributedPlans() {
+    const plans = await Api.getDayDistribution(this.dayOfWeek.toString());
+    console.log(plans.distributedPlans);
+    this.distributedPlans = plans.distributedPlans;
   }
 
   transformData() {
     const data: ChartData[] = [];
     let counter = 0;
-    chartData.forEach((_, i) => {
+    this.distributedPlans.forEach((_, i) => {
       if (i === 0) {
-        if (chartData[i].from !== 0) {
+        if (this.distributedPlans[i].from !== 0) {
           const plan: ChartData = {
             id: counter,
-            hours: (chartData[i].from - 0) / 60,
+            hours: (this.distributedPlans[i].from - 0) / 60,
             from: 0,
-            to: chartData[i].from,
+            to: this.distributedPlans[i].from,
             color: Colors.mediumGrey,
             title: InnerText.emptyTitle,
             text: InnerText.emptyText,
@@ -62,16 +67,16 @@ class ClockChart extends Clock {
           counter += 1;
         }
       }
-      if (i !== chartData.length - 1) {
+      if (i !== this.distributedPlans.length - 1) {
         const plan2: ChartData = this.returnDataObj(counter, i);
         data.push(plan2);
         counter += 1;
-        if (chartData[i].to !== chartData[i + 1].from) {
+        if (this.distributedPlans[i].to !== this.distributedPlans[i + 1].from) {
           const plan3: ChartData = {
             id: counter,
-            hours: (chartData[i + 1].from - chartData[i].to) / 60,
-            from: chartData[i].to,
-            to: chartData[i + 1].from,
+            hours: (this.distributedPlans[i + 1].from - this.distributedPlans[i].to) / 60,
+            from: this.distributedPlans[i].to,
+            to: this.distributedPlans[i + 1].from,
             color: Colors.mediumGrey,
             title: InnerText.emptyTitle,
             text: InnerText.emptyText,
@@ -83,11 +88,11 @@ class ClockChart extends Clock {
         const plan4: ChartData = this.returnDataObj(counter, i);
         data.push(plan4);
         counter += 1;
-        if (chartData[chartData.length - 1].to !== Values.allDayMinutes) {
+        if (this.distributedPlans[chartData.length - 1].to !== Values.allDayMinutes) {
           const plan5: ChartData = {
             id: counter,
-            hours: (Values.allDayMinutes - chartData[i].to) / 60,
-            from: chartData[i].to,
+            hours: (Values.allDayMinutes - this.distributedPlans[i].to) / 60,
+            from: this.distributedPlans[i].to,
             to: +Values.allDayMinutes,
             color: Colors.mediumGrey,
             title: InnerText.emptyTitle,
@@ -147,7 +152,7 @@ class ClockChart extends Clock {
     this.getCurrData();
     this.setDataByTime();
     setInterval(() => {
-      if (!(window.location.pathname === Path.home) || document.readyState === 'complete') return;
+      if (!(window.location.pathname === Path.home) || !document.querySelector(`.${HomePageClassList.clock}`)) return;
       this.getCurrData();
       const sector = this.chartData.findIndex((el) => el.id === this.currPlanNum);
       // console.log('updData', this.minutes, this.chartData[sector].to);
@@ -175,12 +180,12 @@ class ClockChart extends Clock {
   returnDataObj(counter: number, i: number) {
     return {
       id: counter,
-      hours: (chartData[i].to - chartData[i].from) / 60,
-      from: chartData[i].from,
-      to: chartData[i].to,
-      color: chartData[i].color,
-      title: chartData[i].title,
-      text: chartData[i].text,
+      hours: (this.distributedPlans[i].to - this.distributedPlans[i].from) / 60,
+      from: this.distributedPlans[i].from,
+      to: this.distributedPlans[i].to,
+      color: this.distributedPlans[i].color,
+      title: this.distributedPlans[i].title,
+      text: this.distributedPlans[i].text,
     };
   }
 
@@ -238,6 +243,7 @@ class ClockChart extends Clock {
   }
 
   async draw() {
+    await this.getDistributedPlans();
     this.transformData(); // login && data
     this.updateDataByTime();
     // console.log('!!!', this.chartData);
