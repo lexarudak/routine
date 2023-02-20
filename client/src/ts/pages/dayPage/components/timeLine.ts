@@ -151,7 +151,14 @@ class Timeline {
   private appendDiv(plan: Plan) {
     if (plan.duration >= Values.minPlanDuration) {
       console.log('append plan', plan);
-      const currentDiv = new TimelineDiv(this.width, plan, this.distPlans, this.pushToServer.bind(this), this.goTo);
+      const currentDiv = new TimelineDiv(
+        this.width,
+        plan,
+        this.distPlans,
+        this.pushToServer.bind(this),
+        this.goTo,
+        this.paintRound
+      );
       const newDiv = currentDiv.draw();
       newDiv.classList.add(ClassList.timelineDivFake);
       this.currentDiv = currentDiv;
@@ -286,10 +293,11 @@ class Timeline {
   private paintRound(round: HTMLElement | undefined, plan: Plan) {
     if (round) {
       const allTime = this.allDayPlans.filter((plans) => plans._id === plan._id)[0].duration;
-      const noDistTime = this.notDistPlans.filter((plans) => plans._id === plan._id)[0].duration;
+      const noDistPlan = this.notDistPlans.filter((plans) => plans._id === plan._id)[0];
       const blur = round.childNodes[1];
       if (blur instanceof HTMLElement) {
-        blur.style.height = `${100 * (1 - noDistTime / allTime)}%`;
+        blur.style.height = `${100 * (1 - (noDistPlan ? noDistPlan.duration : plan.duration) / allTime)}%`;
+        console.log(noDistPlan, blur.style.height);
       }
     }
   }
@@ -301,7 +309,6 @@ class Timeline {
   private fillTimeline() {
     this.showLine.innerHTML = '';
     this.distPlans.forEach((distPlan) => {
-      console.log(distPlan);
       const { _id, color, title, text, from, to } = distPlan;
       const p = this.notDistPlans.filter((plan) => plan._id === _id)[0];
       const planDur = to - from;
@@ -312,7 +319,8 @@ class Timeline {
         p || plan,
         this.distPlans,
         this.pushToServer.bind(this),
-        this.goTo
+        this.goTo,
+        this.paintRound.bind(this)
       );
       const newDiv = currentDiv.draw();
       this.showLine.append(newDiv);

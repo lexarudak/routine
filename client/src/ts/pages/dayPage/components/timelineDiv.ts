@@ -22,6 +22,8 @@ class TimelineDiv {
 
   goTo: GoToFn;
 
+  paintRound: (round: HTMLElement | undefined, plan: Plan) => void;
+
   timelineWidthPx: number;
 
   distPlans: DistDayPlan[];
@@ -55,10 +57,12 @@ class TimelineDiv {
     plan: Plan,
     distPlans: DistDayPlan[],
     pushToServer: () => Promise<void>,
-    goTo: GoToFn
+    goTo: GoToFn,
+    paintRound: (round: HTMLElement | undefined, plan: Plan) => void
   ) {
     this.goTo = goTo;
     this.pushToServer = pushToServer;
+    this.paintRound = paintRound;
     this.timelineWidthPx = timelineWidthPx;
     this.distPlans = distPlans;
     this.plan = plan;
@@ -129,6 +133,9 @@ class TimelineDiv {
           });
           this.fromMin = this.newFromMin;
           this.toMin = this.newToMin;
+          const round = document.querySelector(`div[data-plan-id="${this.plan._id}"]`);
+          console.log(round);
+          if (round instanceof HTMLElement) this.paintRound(round, this.plan);
           console.log('for each DIST PLANS', this.plan.duration);
           try {
             await this.pushToServer();
