@@ -94,8 +94,11 @@
 
   &__line {
     height: 40px;
-    padding: 0;
+
+    padding: 0 0 0 5px;
     margin: 0;
+
+    box-sizing: border-box;
 
     &::after {
       content: "|";
@@ -107,6 +110,13 @@
 
   &__time {
     padding: 0 0 0 10px;
+  }
+
+  &__arrows {
+    @include flexbox(space-between, center);
+    flex-grow: 1;
+
+    cursor: pointer;
   }
 }
 

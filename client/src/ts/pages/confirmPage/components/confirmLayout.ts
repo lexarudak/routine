@@ -60,7 +60,12 @@ class ConfirmLayout extends Layout {
 
     container.innerHTML = `
       <span class="confirm-plan__label">${title}</span>
-      <div class="plan-square confirm-plan__line" style="background-color: ${plan.color};">&nbsp</div>
+      <div class="plan-square confirm-plan__line" style="background-color: ${plan.color};">
+        <div class="confirm-plan__arrows">
+          <img class="confirm-plan__arrow-left" src="./assets/svg/arrow-left.svg" alt="Left">
+          <img class="confirm-plan__arrow-right" src="./assets/svg/arrow-right.svg" alt="Right">
+        </div>
+      </div>
       <span class="confirm-plan__time">${helpers.minToHour(plan.duration)}</span>`;
 
     return container;
@@ -80,12 +85,12 @@ class ConfirmLayout extends Layout {
       const classCSS = `.confirm-plan[data-id="${plan[enums.DBAttributes.id]}"]`;
       const uiConfirmPlan = helpers.getExistentElement<HTMLElement>(classCSS);
 
-      const minWidth = 15;
-      const maxWidth = Values.allDayMinutes / 2;
+      const minWidth = 55;
+      const maxWidth = minWidth + Values.allDayMinutes / 2;
       const width = minWidth + Math.round((plan.duration * (maxWidth - minWidth)) / Values.allDayMinutes);
 
-      const uiPlanTime = helpers.getExistentElementByClass('confirm-plan__line', uiConfirmPlan);
-      uiPlanTime.style.width = `${width}px`;
+      const uiPlanLine = helpers.getExistentElementByClass('confirm-plan__line', uiConfirmPlan);
+      uiPlanLine.style.width = `${width}px`;
     });
   }
 }

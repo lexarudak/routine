@@ -44,6 +44,7 @@ class ConfirmPage extends Page {
 
     const uiPlans = helpers.getExistentElementByClass('confirm-plans');
     uiPlans.addEventListener('mousedown', (event) => this.startMove(event));
+    uiPlans.addEventListener('click', (event) => this.changeTime(event));
   }
 
   private startMove(eMouseDown: MouseEvent) {
@@ -56,7 +57,7 @@ class ConfirmPage extends Page {
     const [dayPlans] = [this.dayPlans];
 
     function onMouseMove(eMouseMove: MouseEvent) {
-      const minWidth = 15;
+      const minWidth = 55;
       const maxWidth = minWidth + Values.allDayMinutes / 2;
 
       const uiConfirmPlan = target.closest('.confirm-plan') as HTMLElement;
@@ -87,6 +88,40 @@ class ConfirmPage extends Page {
 
     document.addEventListener('mousemove', onMouseMove);
     document.onmouseup = onMouseUp;
+  }
+
+  private changeTime(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+
+    if (target.classList.contains('confirm-plan__arrow-left')) {
+      this.changePlanTime(target, -1);
+      return;
+    }
+    if (target.classList.contains('confirm-plan__arrow-right')) {
+      this.changePlanTime(target, 1);
+    }
+  }
+
+  private changePlanTime(arrow: HTMLElement, increment: number) {
+    const uiConfirmPlan = arrow.closest('.confirm-plan') as HTMLElement;
+    const plan = this.dayPlans.find((item) => item[enums.DBAttributes.id] === uiConfirmPlan.dataset.id) as Plan;
+
+    const allDuration = this.dayPlans.reduce((sum, item) => sum + item.duration, 0);
+    const maxDuration = Values.allDayMinutes - allDuration + plan.duration;
+
+    plan.duration += increment;
+    plan.duration = plan.duration < 0 ? 0 : plan.duration;
+    plan.duration = plan.duration > maxDuration ? maxDuration : plan.duration;
+
+    const minWidth = 55;
+    const maxWidth = minWidth + Values.allDayMinutes / 2;
+    const width = minWidth + Math.round((plan.duration * (maxWidth - minWidth)) / Values.allDayMinutes);
+
+    const uiPlanLine = arrow.closest('.confirm-plan__line') as HTMLElement;
+    uiPlanLine.style.width = `${width}px`;
+
+    const uiPlanTime = uiPlanLine.nextElementSibling as HTMLElement;
+    uiPlanTime.textContent = helpers.minToHour(plan.duration);
   }
 
   protected async getFilledPage(): Promise<HTMLElement> {
