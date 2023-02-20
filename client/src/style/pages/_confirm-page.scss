@@ -115,7 +115,9 @@
   &__arrows {
     @include flexbox(space-between, center);
     flex-grow: 1;
+  }
 
+  &__arrow {
     cursor: pointer;
   }
 }

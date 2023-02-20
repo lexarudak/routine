@@ -93,12 +93,12 @@ class ConfirmPage extends Page {
   private changeTime(event: MouseEvent) {
     const target = event.target as HTMLElement;
 
-    if (target.classList.contains('confirm-plan__arrow-left')) {
+    if (target.classList.contains('confirm-plan__arrow_left')) {
       this.changePlanTime(target, -1);
       return;
     }
-    if (target.classList.contains('confirm-plan__arrow-right')) {
-      this.changePlanTime(target, 1);
+    if (target.classList.contains('confirm-plan__arrow_right')) {
+      this.changePlanTime(target, +1);
     }
   }
 

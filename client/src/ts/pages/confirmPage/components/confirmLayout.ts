@@ -62,8 +62,8 @@ class ConfirmLayout extends Layout {
       <span class="confirm-plan__label">${title}</span>
       <div class="plan-square confirm-plan__line" style="background-color: ${plan.color};">
         <div class="confirm-plan__arrows">
-          <img class="confirm-plan__arrow-left" src="./assets/svg/arrow-left.svg" alt="Left">
-          <img class="confirm-plan__arrow-right" src="./assets/svg/arrow-right.svg" alt="Right">
+          <img class="confirm-plan__arrow confirm-plan__arrow_left" src="./assets/svg/arrow-left.svg" alt="Left">
+          <img class="confirm-plan__arrow confirm-plan__arrow_right" src="./assets/svg/arrow-right.svg" alt="Right">
         </div>
       </div>
       <span class="confirm-plan__time">${helpers.minToHour(plan.duration)}</span>`;
