@@ -56,6 +56,7 @@ class ClockChart extends Clock {
         if (this.distributedPlans[i].from !== 0) {
           const plan: ChartData = {
             id: counter,
+            _id: '',
             hours: (this.distributedPlans[i].from - 0) / 60,
             from: 0,
             to: this.distributedPlans[i].from,
@@ -74,6 +75,7 @@ class ClockChart extends Clock {
         if (this.distributedPlans[i].to !== this.distributedPlans[i + 1].from) {
           const plan3: ChartData = {
             id: counter,
+            _id: '',
             hours: (this.distributedPlans[i + 1].from - this.distributedPlans[i].to) / 60,
             from: this.distributedPlans[i].to,
             to: this.distributedPlans[i + 1].from,
@@ -91,6 +93,7 @@ class ClockChart extends Clock {
         if (this.distributedPlans[chartData.length - 1].to !== Values.allDayMinutes) {
           const plan5: ChartData = {
             id: counter,
+            _id: '',
             hours: (Values.allDayMinutes - this.distributedPlans[i].to) / 60,
             from: this.distributedPlans[i].to,
             to: +Values.allDayMinutes,
@@ -161,7 +164,7 @@ class ClockChart extends Clock {
         const toDo = getExistentElement(`.${HomePageClassList.toDo}`);
         toDo.style.backgroundColor = this.currColor;
         toDo.innerHTML = '';
-        const toDoList = this.toDoInst.draw(this.currPlanNum, this.chartData);
+        const toDoList = this.toDoInst.draw(this.currPlanNum, this.chartData, this.distributedPlans);
         toDo.append(toDoList);
       }
       if (this.minutes === Values.allDayMinutes) {
@@ -180,6 +183,7 @@ class ClockChart extends Clock {
   returnDataObj(counter: number, i: number) {
     return {
       id: counter,
+      _id: this.distributedPlans[i]._id,
       hours: (this.distributedPlans[i].to - this.distributedPlans[i].from) / 60,
       from: this.distributedPlans[i].from,
       to: this.distributedPlans[i].to,
@@ -199,7 +203,7 @@ class ClockChart extends Clock {
       getExistentElement(`.${HomePageClassList.timeOfDay}`).textContent === InnerText.timeOfDayAM
         ? this.dayData[0]
         : this.dayData[1];
-    const toDoList = this.toDoInst.draw(+e.target.id, data);
+    const toDoList = this.toDoInst.draw(+e.target.id, data, this.distributedPlans);
     toDo.append(toDoList);
   }
 
@@ -209,7 +213,7 @@ class ClockChart extends Clock {
     const toDo = getExistentElement(`.${HomePageClassList.toDo}`);
     toDo.style.backgroundColor = this.currColor;
     toDo.innerHTML = '';
-    const toDoList = this.toDoInst.draw(this.currPlanNum, this.chartData);
+    const toDoList = this.toDoInst.draw(this.currPlanNum, this.chartData, this.distributedPlans);
     toDo.append(toDoList);
   }
 
@@ -262,7 +266,7 @@ class ClockChart extends Clock {
 
     const toDo = createNewElement('div', HomePageClassList.toDo);
     toDo.style.backgroundColor = this.currColor;
-    const toDoWrap = this.toDoInst.draw(this.currPlanNum, this.chartData);
+    const toDoWrap = this.toDoInst.draw(this.currPlanNum, this.chartData, this.distributedPlans);
 
     const timeOfDay = createNewElement('div', HomePageClassList.timeOfDay);
     timeOfDay.innerText = this.getTimeOfDay();

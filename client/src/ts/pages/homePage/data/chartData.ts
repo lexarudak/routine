@@ -64,6 +64,7 @@ const chartData = [
 const emptyData = [
   {
     id: 0,
+    _id: '',
     hours: 24,
     from: 0,
     to: 1440,
