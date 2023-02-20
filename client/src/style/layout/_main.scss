@@ -23,5 +23,10 @@
       opacity: 0;
       visibility: hidden;
     }
+
+    &_no-select {
+      user-select: none;
+      cursor: col-resize;
+    }
   }
 }

@@ -76,7 +76,7 @@ class ProfilePage extends Page {
   protected async getFilledPage(): Promise<HTMLElement> {
     await this.setProfileInfo();
 
-    const container = document.createElement(ProfilePageClassList.section);
+    const container = document.createElement('section');
     container.classList.add(ProfilePageClassList.profile);
 
     const wrapper = document.createElement('div');

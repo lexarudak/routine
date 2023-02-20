@@ -7,10 +7,11 @@ import {
   RegistrationData,
   User,
   Statistics,
+  ConfirmDay,
+  UserSettings,
   DayDist,
   ThoughtsData,
 } from './base/interface';
-import { UserSettings } from './base/types';
 
 class Api {
   public static async registration(body: RegistrationData) {
@@ -48,7 +49,7 @@ class Api {
   }
 
   public static async pushPlanToDay(body: PlanToDay) {
-    console.log(body);
+    // console.log(body);
     return this.post(body, Path.weekDistribution, Path.adjustPlan);
   }
 
@@ -66,6 +67,10 @@ class Api {
 
   public static async getDayDistribution(id: string) {
     return this.get(id, Path.dayDistribution, Path.get);
+  }
+
+  public static async confirmDay(body: ConfirmDay) {
+    return this.post(body, Path.statistics, Path.confirmDay);
   }
 
   public static async pushDayDistribution(body: DayDist) {
@@ -105,7 +110,7 @@ class Api {
   }
 
   private static async post<T>(body: T, ...path: Path[]) {
-    console.log(body, path);
+    // console.log(body, path);
     const options: RequestInit = {
       method: 'POST',
       headers: {
@@ -118,7 +123,7 @@ class Api {
     const response = await fetch(`${Path.origin}${path.join('')}`, options);
     const data = await response.json();
 
-    console.log(response.ok);
+    // console.log(response.ok);
     if (!response.ok) {
       throw new Error(response.status.toString());
     }
@@ -132,7 +137,7 @@ class Api {
       credentials: 'include',
     });
     const data = await response.json();
-    console.log(data);
+    // console.log(data);
     if (!response.ok) throw new Error(response.status.toString());
     return data;
   }

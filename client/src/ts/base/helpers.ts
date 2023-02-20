@@ -135,6 +135,14 @@ function isDayOfWeek(path: string) {
   return '';
 }
 
+function pxToMin(containerWidthPx: number, px: number) {
+  return Math.floor((px / containerWidthPx) * Values.allDayMinutes);
+}
+
+function minToPx(containerWidthPx: number, minutes: number) {
+  return (containerWidthPx / Values.allDayMinutes) * minutes;
+}
+
 function makeRoundIcon(round: HTMLElement) {
   const width = round.clientWidth;
   const icon = round.cloneNode(true);
@@ -156,6 +164,10 @@ function makeRoundIcon(round: HTMLElement) {
   }
   if (!(icon instanceof HTMLElement)) throw new Error(ErrorsList.elementNotFound);
   return { icon, center };
+}
+
+function cutStringLine(str: string, length: number) {
+  return str.length <= length ? str : `${str.slice(0, length - 3)}...`;
 }
 
 export {
@@ -180,4 +192,7 @@ export {
   makeRoundIcon,
   minToHourTimeline,
   sortDistPlans,
+  pxToMin,
+  minToPx,
+  cutStringLine,
 };
