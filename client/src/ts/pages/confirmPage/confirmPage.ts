@@ -53,29 +53,21 @@ class ConfirmPage extends Page {
       return;
     }
 
+    const context = this as ConfirmPage;
     const rect = target.getBoundingClientRect();
-    const [dayPlans] = [this.dayPlans];
 
     function onMouseMove(eMouseMove: MouseEvent) {
-      const minWidth = 55;
-      const maxWidth = minWidth + Values.allDayMinutes / 2;
-
       const uiConfirmPlan = target.closest('.confirm-plan') as HTMLElement;
-      const plan = dayPlans.find((item) => item[enums.DBAttributes.id] === uiConfirmPlan.dataset.id) as Plan;
+      const plan = context.dayPlans.find((item) => item[enums.DBAttributes.id] === uiConfirmPlan.dataset.id) as Plan;
 
       const offsetCursor = 5;
-      const allDuration = dayPlans.reduce((sum, item) => sum + item.duration, 0);
-      const maxDuration = Values.allDayMinutes - allDuration + plan.duration;
-      const maxPossibleWidth = minWidth + Math.round((maxDuration * (maxWidth - minWidth)) / Values.allDayMinutes);
-
       let width = eMouseMove.x - rect.x + offsetCursor;
-      width = width > maxPossibleWidth ? maxPossibleWidth : width;
-      width = width > maxWidth ? maxWidth : width;
-      width = width < minWidth ? minWidth : width;
+
+      width = context.restrictPlanWidth(plan, width);
       target.style.width = `${width}px`;
 
-      const duration = Math.round(((width - minWidth) * Values.allDayMinutes) / (maxWidth - minWidth));
-      plan.duration = duration > maxDuration ? maxDuration : duration;
+      plan.duration = context.getDurationByWidth(width);
+      plan.duration = context.restrictPlanDuration(plan, plan.duration);
 
       const uiPlanLabel = target.nextElementSibling as HTMLElement;
       uiPlanLabel.textContent = helpers.minToHour(plan.duration);
@@ -102,26 +94,81 @@ class ConfirmPage extends Page {
     }
   }
 
+  private getMinMaxWidth() {
+    const minWidth = 55;
+    const maxWidth = minWidth + Values.allDayMinutes / 2;
+
+    return [minWidth, maxWidth];
+  }
+
+  private getPlanMaxDuration(plan: Plan) {
+    const allDuration = this.dayPlans.reduce((sum, item) => sum + item.duration, 0);
+    return Values.allDayMinutes - allDuration + plan.duration;
+  }
+
+  private getWidthByDuration(duration: number) {
+    const [minWidth, maxWidth] = this.getMinMaxWidth();
+    return Math.round((duration * (maxWidth - minWidth)) / Values.allDayMinutes) + minWidth;
+  }
+
+  private restrictPlanWidth(plan: Plan, width: number) {
+    let $width = width;
+
+    const [minWidth, maxWidth] = this.getMinMaxWidth();
+    const maxDuration = this.getPlanMaxDuration(plan);
+    const maxPossibleWidth = minWidth + Math.round((maxDuration * (maxWidth - minWidth)) / Values.allDayMinutes);
+
+    $width = $width > maxPossibleWidth ? maxPossibleWidth : $width;
+    $width = $width > maxWidth ? maxWidth : $width;
+    $width = $width < minWidth ? minWidth : $width;
+
+    return $width;
+  }
+
+  private getDurationByWidth(width: number) {
+    const [minWidth, maxWidth] = this.getMinMaxWidth();
+    return Math.round(((width - minWidth) * Values.allDayMinutes) / (maxWidth - minWidth));
+  }
+
+  private restrictPlanDuration(plan: Plan, duration: number) {
+    let $duration = duration;
+
+    const maxDuration = this.getPlanMaxDuration(plan);
+
+    $duration = $duration < 0 ? 0 : $duration;
+    $duration = $duration > maxDuration ? maxDuration : $duration;
+
+    return $duration;
+  }
+
   private changePlanTime(arrow: HTMLElement, increment: number) {
     const uiConfirmPlan = arrow.closest('.confirm-plan') as HTMLElement;
     const plan = this.dayPlans.find((item) => item[enums.DBAttributes.id] === uiConfirmPlan.dataset.id) as Plan;
 
-    const allDuration = this.dayPlans.reduce((sum, item) => sum + item.duration, 0);
-    const maxDuration = Values.allDayMinutes - allDuration + plan.duration;
-
     plan.duration += increment;
-    plan.duration = plan.duration < 0 ? 0 : plan.duration;
-    plan.duration = plan.duration > maxDuration ? maxDuration : plan.duration;
+    plan.duration = this.restrictPlanDuration(plan, plan.duration);
 
-    const minWidth = 55;
-    const maxWidth = minWidth + Values.allDayMinutes / 2;
-    const width = minWidth + Math.round((plan.duration * (maxWidth - minWidth)) / Values.allDayMinutes);
+    let width = this.getWidthByDuration(plan.duration);
+    width = this.restrictPlanWidth(plan, width);
 
     const uiPlanLine = arrow.closest('.confirm-plan__line') as HTMLElement;
     uiPlanLine.style.width = `${width}px`;
 
     const uiPlanTime = uiPlanLine.nextElementSibling as HTMLElement;
     uiPlanTime.textContent = helpers.minToHour(plan.duration);
+  }
+
+  private setPageElementsParameters() {
+    this.dayPlans.forEach((plan) => {
+      const classCSS = `.confirm-plan[data-id="${plan[enums.DBAttributes.id]}"]`;
+      const uiConfirmPlan = helpers.getExistentElement<HTMLElement>(classCSS);
+
+      let width = this.getWidthByDuration(plan.duration);
+      width = this.restrictPlanWidth(plan, width);
+
+      const uiPlanLine = helpers.getExistentElementByClass('confirm-plan__line', uiConfirmPlan);
+      uiPlanLine.style.width = `${width}px`;
+    });
   }
 
   protected async getFilledPage(): Promise<HTMLElement> {
@@ -142,7 +189,7 @@ class ConfirmPage extends Page {
     try {
       const container = helpers.getExistentElementByClass(ClassList.mainContainer);
       await this.animatedFilledPageAppend(container);
-      this.layout.setPageElementsParameters(this.dayPlans);
+      this.setPageElementsParameters();
       this.setEventLiseners();
     } catch (error) {
       helpers.loginRedirect(error, this.goTo);

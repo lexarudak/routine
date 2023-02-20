@@ -1,8 +1,6 @@
 import Layout from '../../layout';
 
 import { Plan } from '../../../base/interface';
-import Values from '../../../base/enums/values';
-
 import * as helpers from '../../../base/helpers';
 import * as enums from '../../../base/enums/enums';
 
@@ -78,20 +76,6 @@ class ConfirmLayout extends Layout {
     container.innerHTML = `<button class="button confirm__main-button">Confirm!</button>`;
 
     return container;
-  }
-
-  public setPageElementsParameters(dayPlans: Plan[]) {
-    dayPlans.forEach((plan) => {
-      const classCSS = `.confirm-plan[data-id="${plan[enums.DBAttributes.id]}"]`;
-      const uiConfirmPlan = helpers.getExistentElement<HTMLElement>(classCSS);
-
-      const minWidth = 55;
-      const maxWidth = minWidth + Values.allDayMinutes / 2;
-      const width = minWidth + Math.round((plan.duration * (maxWidth - minWidth)) / Values.allDayMinutes);
-
-      const uiPlanLine = helpers.getExistentElementByClass('confirm-plan__line', uiConfirmPlan);
-      uiPlanLine.style.width = `${width}px`;
-    });
   }
 }
 
