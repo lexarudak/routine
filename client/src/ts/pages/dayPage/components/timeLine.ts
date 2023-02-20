@@ -306,21 +306,22 @@ class Timeline {
     this.showLine.innerHTML = '';
     this.distPlans.forEach((distPlan) => {
       const { _id, color, title, text, from, to } = distPlan;
-      const p = this.notDistPlans.filter((plan) => plan._id === _id)[0];
-      const planDur = to - from;
+      const noDistPlan = this.notDistPlans.filter((plan) => plan._id === _id)[0];
       const plan = { _id, color, title, text, duration: 0 };
-      if (!p) this.notDistPlans.push(plan);
+      if (!noDistPlan) this.notDistPlans.push(plan);
 
       const currentDiv = new TimelineDiv(
         this.width,
-        p || plan,
+        noDistPlan || plan,
         this.distPlans,
         this.pushToServer.bind(this),
         this.goTo,
         this.paintRound.bind(this)
       );
+
       const newDiv = currentDiv.draw();
       this.showLine.append(newDiv);
+      const planDur = to - from;
       currentDiv.showDiv(from, planDur);
       currentDiv.showTimeInterval(from, planDur);
       newDiv.setAttribute(SetAttribute.from, from.toString());
