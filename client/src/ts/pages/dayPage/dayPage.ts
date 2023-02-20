@@ -23,7 +23,6 @@ import Page from '../page';
 import PlanEditor from '../planPage/components/planEditor';
 import PlanLayout from '../planPage/components/planLayout';
 import Timeline from './components/timeLine';
-import TimelineMode from './components/timelineMode';
 
 class DayPage extends Page {
   popup: Popup;
@@ -154,7 +153,6 @@ class DayPage extends Page {
         this.timeLine.getPlanFromDiv(e.target);
         this.timeLine.round = e.target;
       }
-      this.timeLine.mode = TimelineMode.addMode;
     });
 
     roundDiv.addEventListener('dragstart', function dragstart(e) {
@@ -164,10 +162,6 @@ class DayPage extends Page {
       this.classList.add(ClassList.planRoundDrag);
       returnZone.classList.add(ClassList.planRemoveZoneDrag);
       timeline.classList.add(ClassList.timelineDrag);
-    });
-
-    roundDiv.addEventListener('dragend', () => {
-      this.timeLine.mode = TimelineMode.noMode;
     });
 
     roundDiv.addEventListener('dragend', function dragend() {

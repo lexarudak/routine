@@ -1,4 +1,5 @@
 /* eslint-disable no-underscore-dangle */
+import { SetAttribute } from '../../../base/enums/attributes';
 import { ClassList } from '../../../base/enums/classList';
 import Values from '../../../base/enums/values';
 import {
@@ -171,11 +172,14 @@ class TimelineDiv {
     });
     this.fromMin = this.newFromMin;
     this.toMin = this.newToMin;
+    this.div.setAttribute(SetAttribute.from, this.fromMin.toString());
+    console.log('from after resize', this.fromMin);
   }
 
   private makeDiv() {
     const div: HTMLDivElement = createNewElement('div', ClassList.timelineDiv);
     div.setAttribute('draggable', 'true');
+    div.setAttribute(SetAttribute.planTimelineId, this.plan._id);
     const left = createNewElement('div', ClassList.timelineDivLeft);
     left.innerText = '<';
     const right = createNewElement('div', ClassList.timelineDivRight);
@@ -183,11 +187,11 @@ class TimelineDiv {
 
     this.addSizeListener(left, this.leftButtonResize.bind(this), this.setZoneStart.bind(this));
     this.addSizeListener(right, this.rightButtonResize.bind(this), this.setZoneEnd.bind(this));
-    div.style.backgroundColor = this.plan.color;
     const textColor = colorsAndFonts.get(this.plan.color);
     if (textColor) div.style.color = textColor;
 
     const body = createNewElement('div', ClassList.timelineDivBody);
+    body.style.backgroundColor = this.plan.color;
     body.append(left, this.name, right);
 
     div.append(this.from, body, this.to);

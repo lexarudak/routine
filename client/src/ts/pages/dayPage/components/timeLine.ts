@@ -5,12 +5,18 @@ import { GetAttribute, SetAttribute } from '../../../base/enums/attributes';
 import { ClassList } from '../../../base/enums/classList';
 import ErrorsList from '../../../base/enums/errorsList';
 import Values from '../../../base/enums/values';
-import { createNewElement, loginRedirect, minToPx, pxToMin } from '../../../base/helpers';
+import {
+  createNewElement,
+  getExistentElementByClass,
+  loginRedirect,
+  makeRoundIcon,
+  minToPx,
+  pxToMin,
+} from '../../../base/helpers';
 import { DistDayPlan, Plan } from '../../../base/interface';
 import { GoToFn } from '../../../base/types';
 import defaultPlan from '../../planPage/components/defaultPlan';
 import TimelineDiv from './timelineDiv';
-import TimelineMode from './timelineMode';
 
 class Timeline {
   goTo: GoToFn;
@@ -26,10 +32,6 @@ class Timeline {
   plan: Plan = defaultPlan;
 
   round: HTMLDivElement | undefined;
-
-  mode = TimelineMode.noMode;
-
-  minPlanInPx = 0;
 
   currentDiv: TimelineDiv | undefined;
 
@@ -58,10 +60,6 @@ class Timeline {
     this.goTo = goTo;
     this.sensor = this.makeSensor();
     this.showLine = createNewElement('div', ClassList.timelineShow);
-  }
-
-  public set value(mode: TimelineMode) {
-    this.mode = mode;
   }
 
   private makeSensor() {
@@ -158,10 +156,24 @@ class Timeline {
         this.goTo,
         this.paintRound.bind(this)
       );
+
       const newDiv = currentDiv.draw();
+
+      newDiv.addEventListener('dragstart', (e) => {
+        console.log(currentDiv);
+        this.startMove(e, currentDiv.fromMin, currentDiv.toMin);
+      });
+
+      newDiv.addEventListener('dragend', async (e) => {
+        await this.stopMove(e);
+      });
+
       newDiv.classList.add(ClassList.timelineDivFake);
       this.currentDiv = currentDiv;
       this.currentDivHTML = newDiv;
+
+      const old = this.showLine.querySelector(`.${ClassList.timelineDivFake}`);
+      if (old) old.remove();
       this.showLine.append(this.currentDivHTML);
     }
   }
@@ -180,6 +192,7 @@ class Timeline {
 
   private addListenerEnter(timelineDiv: HTMLDivElement) {
     timelineDiv.addEventListener('dragenter', (e) => {
+      console.log('enter');
       e.preventDefault();
       e.stopPropagation();
       const cursor = this.getCursorX(e);
@@ -302,6 +315,10 @@ class Timeline {
     this.plan.duration -= this.dragInfo.currentDiv.toMin - this.dragInfo.currentDiv.fromMin;
   }
 
+  private increaseNoDistPlan() {
+    this.plan.duration += this.dragInfo.currentDiv.toMin - this.dragInfo.currentDiv.fromMin;
+  }
+
   private fillTimeline() {
     this.showLine.innerHTML = '';
     this.distPlans.forEach((distPlan) => {
@@ -320,6 +337,15 @@ class Timeline {
       );
 
       const newDiv = currentDiv.draw();
+
+      newDiv.addEventListener('dragstart', (e) => {
+        this.startMove(e, currentDiv.fromMin, currentDiv.toMin);
+      });
+
+      newDiv.addEventListener('dragend', async (e) => {
+        await this.stopMove(e);
+      });
+
       this.showLine.append(newDiv);
       const planDur = to - from;
       currentDiv.showDiv(from, planDur);
@@ -328,13 +354,63 @@ class Timeline {
     });
   }
 
+  private startMove(e: DragEvent, from: number, to: number) {
+    const { target } = e;
+    if (!(target instanceof HTMLDivElement)) return;
+    this.setRoundForDrag(e, target);
+    console.log('FROM WORKS', from);
+    this.setDragInfoCurrentDiv(from, to);
+    this.increaseNoDistPlan();
+    this.deleteFromDistPlan(target.dataset[GetAttribute.from]);
+
+    setTimeout(() => {
+      this.sensor.classList.add(ClassList.timelineSensorActive);
+      target.style.display = 'none';
+    }, 0);
+  }
+
+  private async stopMove(e: DragEvent) {
+    const { target } = e;
+    this.sensor.classList.remove(ClassList.timelineSensorActive);
+    getExistentElementByClass(ClassList.planRoundDrag).classList.remove(ClassList.planRoundDrag);
+    if (target instanceof HTMLElement) {
+      target.remove();
+    }
+    this.paintRound(this.round, this.plan);
+    if (e.dataTransfer) {
+      if (e.dataTransfer.dropEffect === 'none') {
+        await this.pushToServer();
+      }
+    }
+  }
+
+  private setRoundForDrag(e: DragEvent, target: HTMLElement) {
+    const roundId = target.dataset[GetAttribute.planTimelineId];
+    const round = document.querySelector(`div[data-plan-id="${roundId}"]`);
+    if (!(round instanceof HTMLDivElement)) return;
+    this.getPlanFromDiv(round);
+    this.round = round;
+    const { icon, center } = makeRoundIcon(round);
+    if (e.dataTransfer) e.dataTransfer.setDragImage(icon, center, center);
+    round.classList.add(ClassList.planRoundDrag);
+  }
+
+  private setDragInfoCurrentDiv(from: number, to: number) {
+    console.log('from and to', from, to);
+    this.dragInfo.currentDiv.fromMin = from;
+    this.dragInfo.currentDiv.toMin = to;
+  }
+
+  private deleteFromDistPlan(fromId: string | undefined) {
+    if (fromId) this.distPlans = this.distPlans.filter((disPlan) => disPlan.from.toString() !== fromId);
+  }
+
   public setTimeline(notDistPlans: Plan[], distPlans: DistDayPlan[], allDayPlans: Plan[], dayId: string) {
     this.width = this.sensor.clientWidth;
     this.notDistPlans = notDistPlans;
     this.distPlans = distPlans;
     this.allDayPlans = allDayPlans;
     this.dayId = dayId;
-    this.minPlanInPx = minToPx(this.width, Values.minPlanDuration);
     this.fillTimeline();
   }
 
