@@ -5,8 +5,8 @@ import { ThoughtsData } from '../../../base/interface';
 import { SetAttribute, GetAttribute } from '../../../base/enums/attributes';
 import FlyingThought from './flyingThought';
 import { GoToFn } from '../../../base/types';
-import RoutsList from '../../../base/enums/routsList';
-import Path from '../../../base/enums/path';
+// import RoutsList from '../../../base/enums/routsList';
+// import Path from '../../../base/enums/path';
 import PlanEditor from '../../planPage/components/planEditor';
 // import Values from '../../../base/enums/values';
 // import EditorMode from '../../../base/enums/editorMode';
@@ -20,14 +20,25 @@ class Thought {
 
   thoughtId: string | undefined;
 
-  thoughtsDataList: ThoughtsData[] | undefined;
-
   constructor(goTo: GoToFn, editor: PlanEditor, text: string, id?: string) {
     this.goTo = goTo;
     this.editor = editor;
     this.thoughtText = text;
     this.thoughtId = id;
-    this.thoughtsDataList = undefined;
+  }
+
+  async createThought(thoughtText: string) {
+    if (!thoughtText) return;
+
+    await Api.createThoughts({ title: thoughtText });
+
+    this.createThoughtsList(getExistentElement(`.${HomePageClassList.thoughtContainer}`));
+
+    this.thoughtText = '';
+    getExistentElement<HTMLInputElement>(`.${HomePageClassList.thoughtInput}`).value = this.thoughtText;
+    getExistentElement(`.${HomePageClassList.thoughtAdd}`).classList.remove(HomePageClassList.open);
+    await this.createFlyingThought(getExistentElement(`.${HomePageClassList.canvas}`));
+    getExistentElement(`.${HomePageClassList.canvas}`).classList.remove(HomePageClassList.none);
   }
 
   async convertToPlan(thoughtText: string, e: Event) {
@@ -37,11 +48,11 @@ class Thought {
   async updateThought(thoughtText: string, e: Event) {
     if (!isHTMLElement(e.target) || !e.target.parentElement) return;
     const thoughtId = e.target.parentElement.dataset[GetAttribute.thoughtId];
-    console.log(thoughtId, thoughtText, e);
+
     if (thoughtId) await Api.updateThought({ _id: thoughtId, title: thoughtText });
   }
 
-  async deleteThought(thoughtText: string, e: Event) {
+  async deleteThought(e: Event) {
     if (!isHTMLElement(e.target) || !e.target.parentElement) return;
     const thought = e.target.parentElement;
     const thoughtId = e.target.parentElement.dataset[GetAttribute.thoughtId];
@@ -49,8 +60,9 @@ class Thought {
     thought.classList.add(HomePageClassList.none);
     setTimeout(() => thought.parentElement?.removeChild(thought), 350);
 
-    if (thoughtId) await Api.deleteThought(thoughtId);
-    console.log(thoughtText, thoughtId);
+    if (!thoughtId) return;
+    const deletedThought = await Api.deleteThought(thoughtId);
+    console.log('deletedThought', deletedThought);
     this.createFlyingThought(getExistentElement(`.${HomePageClassList.canvas}`));
   }
 
@@ -58,20 +70,29 @@ class Thought {
     if (!isHTMLElement(e.target)) return;
     if (e.target.closest(`.${HomePageClassList.open}`)) {
       thoughtAdd.classList.remove(HomePageClassList.open);
+      if (e.target.closest(`.${HomePageClassList.thoughtAdd}`))
+        getExistentElement(`.${HomePageClassList.canvas}`).classList.remove(HomePageClassList.none);
     } else {
       thoughtAdd.classList.add(HomePageClassList.open);
+      if (e.target.closest(`.${HomePageClassList.thoughtAdd}`))
+        getExistentElement(`.${HomePageClassList.canvas}`).classList.add(HomePageClassList.none);
     }
   }
 
-  async createThought(thoughtText: string) {
-    if (!thoughtText) return;
+  openCloseThoughtList(thoughtAdd: HTMLElement, popup: HTMLElement) {
+    thoughtAdd.classList.toggle(HomePageClassList.none);
+    popup.classList.toggle(HomePageClassList.none);
 
-    await Api.createThoughts({ title: thoughtText });
-    this.createFlyingThought(getExistentElement(`.${HomePageClassList.canvas}`));
-    this.createThoughtsList(getExistentElement(`.${HomePageClassList.thoughtContainer}`));
-    console.log('create:', thoughtText);
-    this.thoughtText = '';
-    getExistentElement<HTMLInputElement>(`.${HomePageClassList.thoughtInput}`).value = this.thoughtText;
+    document.querySelectorAll(`.${HomePageClassList.thoughtItem}`).forEach((el) => {
+      if (thoughtAdd.classList.contains('none')) {
+        el.classList.add(HomePageClassList.open);
+        thoughtAdd.classList.remove(HomePageClassList.open);
+        getExistentElement(`.${HomePageClassList.canvas}`).classList.add(HomePageClassList.none);
+      } else {
+        getExistentElement(`.${HomePageClassList.canvas}`).classList.remove(HomePageClassList.none);
+      }
+      el.classList.toggle(HomePageClassList.none);
+    });
   }
 
   async createThoughtsList(thoughtContainer: HTMLElement) {
@@ -79,6 +100,7 @@ class Thought {
     const thoughtsArr: Thought[] = [];
     try {
       const thoughtsDataList = await Api.getThoughts();
+
       thoughtsDataList.forEach((thoughtDataEl: ThoughtsData) => {
         thoughtsArr.push(new Thought(this.goTo, this.editor, thoughtDataEl.title, thoughtDataEl._id));
       });
@@ -89,33 +111,16 @@ class Thought {
       }
     } catch (error) {
       console.log(error);
-      this.goTo(RoutsList.loginPage);
     }
-  }
-
-  private updateHeight() {
-    const documentHeight = document.documentElement.clientHeight;
-    client.height = documentHeight;
-    client.planPosHeight = documentHeight / 2 - 15;
-    client.clockPosHeight = documentHeight / 2 - 15;
-  }
-
-  private checkResize(canvas: HTMLCanvasElement) {
-    canvas.height = client.height;
-    this.createFlyingThought(canvas);
   }
 
   async createFlyingThought(canvas: HTMLCanvasElement) {
     const ctx = canvas.getContext('2d');
     const thoughtsArray: FlyingThought[] = [];
     try {
-      if (this.thoughtsDataList === undefined) {
-        this.thoughtsDataList = await Api.getThoughts();
-      }
+      const thoughtsDataList = await Api.getThoughts();
 
-      if (this.thoughtsDataList === undefined) return;
-
-      this.thoughtsDataList.forEach((thought: ThoughtsData) => {
+      thoughtsDataList.forEach((thought: ThoughtsData) => {
         const radius = 20;
         const id = thought._id;
         if (!id) return;
@@ -145,9 +150,16 @@ class Thought {
         };
         animate();
       }
-    } catch {
-      this.goTo(RoutsList.loginPage);
+    } catch (error) {
+      console.log(error);
     }
+  }
+
+  private updateHeight() {
+    const documentHeight = document.documentElement.clientHeight;
+    client.height = documentHeight;
+    client.planPosHeight = documentHeight / 2 - 15;
+    client.clockPosHeight = documentHeight / 2 - 15;
   }
 
   draw(elClass: string) {
@@ -157,7 +169,9 @@ class Thought {
 
     const thoughtInput = createNewElement<HTMLInputElement>('input', HomePageClassList.thoughtInput);
     thoughtInput.value = this.thoughtText;
+
     if (this.thoughtId !== undefined) thoughtAdd.setAttribute(SetAttribute.thoughtId, this.thoughtId.toString());
+
     thoughtInput.addEventListener('blur', (e) => {
       if (!thoughtInput.value) return;
       this.thoughtText = thoughtInput.value;
@@ -180,24 +194,9 @@ class Thought {
     if (elClass === HomePageClassList.thoughtItem) {
       const thoughtRemove = createNewElement('div', HomePageClassList.thoughtRemoveBtn);
 
-      thoughtRemove.addEventListener('click', (e) => {
-        this.deleteThought(this.thoughtText, e);
-      });
+      thoughtRemove.addEventListener('click', (e) => this.deleteThought(e));
       thoughtAdd.append(thoughtRemove);
     }
-
-    let isEvent = false;
-
-    window.addEventListener('resize', () => {
-      if (!(window.location.pathname === Path.home)) return;
-      if (!isEvent) {
-        this.checkResize(getExistentElement(`.${HomePageClassList.canvas}`));
-        isEvent = true;
-        setTimeout(() => {
-          isEvent = false;
-        }, 1000);
-      }
-    });
 
     thoughtAdd.append(thoughtCreate, thoughtAddBtn);
     return thoughtAdd;

@@ -65,6 +65,10 @@ class Api {
     return this.get(false, Path.statistics, Path.get);
   }
 
+  public static async getConfirmDayInfo(): Promise<boolean> {
+    return this.get(false, Path.statistics, Path.isDayConfirmed);
+  }
+
   public static async getDayDistribution(id: string) {
     return this.get(id, Path.dayDistribution, Path.get);
   }
