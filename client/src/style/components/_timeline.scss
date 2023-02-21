@@ -67,6 +67,74 @@
   background-clip: border-box;
   border: 3px solid rgba(255, 255, 255, 0);
   cursor: pointer;
+  display: flex;
+  justify-content: center;
+
+  &_hide {
+      .timeline-div__name,
+      .timeline-div__from,
+      .timeline-div__to {
+        opacity: 0;
+        visibility: hidden;
+        font-size: 14px;
+        z-index: 10;
+        transition: .2s;
+      }
+
+    &:hover  {
+
+      .timeline-div__name,
+      .timeline-div__from,
+      .timeline-div__to {
+        opacity: 1;
+        visibility: visible;
+      }
+        
+    }
+
+    .timeline-div__name {
+      width: 70px;
+      position: absolute;
+      bottom: -35px;
+      text-align: center;
+      padding: 5px;
+      border-radius: 10px;
+      -webkit-line-clamp: 1;
+      background-color: inherit;
+    }
+
+    .timeline-div__from {
+      left: auto;
+      width: 67px;
+      bottom: -55px;
+      padding-left: 3px;
+      background-color: $background-color;
+
+      &::after {
+          content: '';
+          z-index: 1;
+          display: block;
+          position: absolute;
+          top: -35px;
+          left: -10px;
+          width: 85px;
+          height: 35px;
+          border-radius: 10px;
+          background-color: $background-color;
+        }
+    }
+
+    .timeline-div__to {
+      right: auto;
+      z-index: 6;
+      height: 35px;
+      width: 70px;
+      bottom: -75px;
+      padding-right: 3px;
+      background-color: $background-color;
+    }
+
+  }
 
   &:hover {
     z-index: 100;
@@ -144,11 +212,12 @@
   }
 
   &__name {
-    padding: 7px;
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
     -webkit-line-clamp: 2;
+    text-align: center;
+    width: 70%;
   }
 
   &__left,

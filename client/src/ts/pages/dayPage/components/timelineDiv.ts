@@ -230,13 +230,15 @@ class TimelineDiv {
 
   private updateInfoView(durMin: number) {
     if (this.minToPx(durMin) > Values.minTimelineBlockWithText) {
-      this.from.style.display = 'flex';
-      this.to.style.display = 'flex';
-      this.name.style.display = 'flex';
+      this.div.classList.remove(ClassList.timelineDivHide);
+      // this.from.style.display = 'flex';
+      // this.to.style.display = 'flex';
+      // this.name.style.display = 'flex';
     } else {
-      this.from.style.display = 'none';
-      this.to.style.display = 'none';
-      this.name.style.display = 'none';
+      this.div.classList.add(ClassList.timelineDivHide);
+      // this.from.style.display = 'none';
+      // this.to.style.display = 'none';
+      // this.name.style.display = 'none';
     }
   }
 
