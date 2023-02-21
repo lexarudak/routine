@@ -127,6 +127,7 @@ const enum HomePageClassList {
   thoughtTitle = 'thought__title',
   thoughtContainer = 'thought__container',
   thoughtAdd = 'thought__add',
+  thoughtAddHold = 'thought__add_hold',
   thoughtItem = 'thought__item',
   thoughtAddBtn = 'thought__add-btn',
   thoughtCreateBtn = 'thought__create-btn',

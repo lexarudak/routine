@@ -7,6 +7,7 @@ import {
   buttonOff,
   createNewElement,
   getExistentElementByClass,
+  makeBanner,
   makeRoundIcon,
   minToHour,
   sortAllPlans,
@@ -171,9 +172,9 @@ class PlanPage extends Page {
 
       this.popup.editorMode();
       if (!this.ifFreeTimeInDay(freeDayMinutes)) {
-        this.popup.open(this.layout.makeBanner(ErrorsList.freeYourWeekTime));
+        this.popup.open(makeBanner(ErrorsList.freeYourWeekTime));
       } else if (!this.ifFreeTimeInPlan(freePlanMinutes)) {
-        this.popup.open(this.layout.makeBanner(ErrorsList.thisPlanIsDist));
+        this.popup.open(makeBanner(ErrorsList.thisPlanIsDist));
       } else {
         this.popup.open(this.makeSliderForDay(dayId, plan, freeDayMinutes, freePlanMinutes));
       }
@@ -186,7 +187,7 @@ class PlanPage extends Page {
         this.editor.open(Values.minPlanDuration, Values.allWeekMinutes - this.fillWeekTime, EditorMode.newPlan);
       } else {
         this.popup.editorMode();
-        this.popup.open(this.layout.makeBanner(ErrorsList.freeYourWeekTime));
+        this.popup.open(makeBanner(ErrorsList.freeYourWeekTime));
       }
     });
   }

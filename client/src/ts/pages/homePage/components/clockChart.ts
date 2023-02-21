@@ -6,11 +6,10 @@ import Colors from '../../../base/enums/colors';
 import InnerText from '../../../base/enums/innerText';
 import { ChartData } from '../../../base/interfaces';
 import { DistDayPlan } from '../../../base/interface';
-import Api from '../../../api';
 import Clock from './clock';
 import Chart from './chart';
 import ToDo from './toDo';
-import { chartData, emptyData } from '../data/chartData';
+import { emptyData } from '../data/chartData';
 import Path from '../../../base/enums/path';
 
 class ClockChart extends Clock {
@@ -45,71 +44,73 @@ class ClockChart extends Clock {
     this.dayOfWeek = 0;
   }
 
-  async getDistributedPlans() {
-    const date = new Date();
-    this.dayOfWeek = date.getDay() - 1;
-    const plans = await Api.getDayDistribution(this.dayOfWeek.toString());
-    this.distributedPlans = plans.distributedPlans;
+  setDistributedPlans(distributedPlans: DistDayPlan[], dayNum: number) {
+    this.dayOfWeek = dayNum;
+    this.distributedPlans = distributedPlans;
   }
 
   transformData() {
     const data: ChartData[] = [];
     let counter = 0;
-    this.distributedPlans.forEach((_, i) => {
-      if (i === 0) {
-        if (this.distributedPlans[i].from !== 0) {
-          const plan: ChartData = {
-            id: counter,
-            _id: '',
-            hours: (this.distributedPlans[i].from - 0) / 60,
-            from: 0,
-            to: this.distributedPlans[i].from,
-            color: Colors.mediumGrey,
-            title: InnerText.emptyTitle,
-            text: InnerText.emptyText,
-          };
-          data.push(plan);
-          counter += 1;
+    if (this.distributedPlans.length === 0) {
+      data.push(emptyData[0]);
+    } else {
+      this.distributedPlans.forEach((_, i, arr) => {
+        if (i === 0) {
+          if (this.distributedPlans[i].from !== 0) {
+            const plan: ChartData = {
+              id: counter,
+              _id: '',
+              hours: (this.distributedPlans[i].from - 0) / 60,
+              from: 0,
+              to: this.distributedPlans[i].from,
+              color: Colors.mediumGrey,
+              title: InnerText.emptyTitle,
+              text: InnerText.emptyText,
+            };
+            data.push(plan);
+            counter += 1;
+          }
         }
-      }
-      if (i !== this.distributedPlans.length - 1) {
-        const plan2: ChartData = this.returnDataObj(counter, i);
-        data.push(plan2);
-        counter += 1;
-        if (this.distributedPlans[i].to !== this.distributedPlans[i + 1].from) {
-          const plan3: ChartData = {
-            id: counter,
-            _id: '',
-            hours: (this.distributedPlans[i + 1].from - this.distributedPlans[i].to) / 60,
-            from: this.distributedPlans[i].to,
-            to: this.distributedPlans[i + 1].from,
-            color: Colors.mediumGrey,
-            title: InnerText.emptyTitle,
-            text: InnerText.emptyText,
-          };
-          data.push(plan3);
+        if (i !== this.distributedPlans.length - 1) {
+          const plan2: ChartData = this.returnDataObj(counter, i);
+          data.push(plan2);
           counter += 1;
-        }
-      } else {
-        const plan4: ChartData = this.returnDataObj(counter, i);
-        data.push(plan4);
-        counter += 1;
-        if (this.distributedPlans[chartData.length - 1].to !== Values.allDayMinutes) {
-          const plan5: ChartData = {
-            id: counter,
-            _id: '',
-            hours: (Values.allDayMinutes - this.distributedPlans[i].to) / 60,
-            from: this.distributedPlans[i].to,
-            to: +Values.allDayMinutes,
-            color: Colors.mediumGrey,
-            title: InnerText.emptyTitle,
-            text: InnerText.emptyText,
-          };
-          data.push(plan5);
+          if (this.distributedPlans[i].to !== this.distributedPlans[i + 1].from) {
+            const plan3: ChartData = {
+              id: counter,
+              _id: '',
+              hours: (this.distributedPlans[i + 1].from - this.distributedPlans[i].to) / 60,
+              from: this.distributedPlans[i].to,
+              to: this.distributedPlans[i + 1].from,
+              color: Colors.mediumGrey,
+              title: InnerText.emptyTitle,
+              text: InnerText.emptyText,
+            };
+            data.push(plan3);
+            counter += 1;
+          }
+        } else {
+          const plan4: ChartData = this.returnDataObj(counter, i);
+          data.push(plan4);
           counter += 1;
+          if (this.distributedPlans[arr.length - 1].to !== Values.allDayMinutes) {
+            const plan5: ChartData = {
+              id: counter,
+              _id: '',
+              hours: (Values.allDayMinutes - this.distributedPlans[i].to) / 60,
+              from: this.distributedPlans[i].to,
+              to: +Values.allDayMinutes,
+              color: Colors.mediumGrey,
+              title: InnerText.emptyTitle,
+              text: InnerText.emptyText,
+            };
+            data.push(plan5);
+            counter += 1;
+          }
         }
-      }
-    });
+      });
+    }
     this.splitData(data);
   }
 
@@ -142,7 +143,6 @@ class ClockChart extends Clock {
     const [hours] = this.getCurrTime();
     // const [hours, , s] = this.getCurrTime();
     // if (s === 0) {
-    //   console.log('Запрос', s);
     //   this.getDistributedPlans();
     //   this.transformData();
     // }
@@ -268,8 +268,9 @@ class ClockChart extends Clock {
     return this.hours < Values.clockHours ? InnerText.timeOfDayAM : InnerText.timeOfDayPM;
   }
 
-  async draw() {
-    await this.getDistributedPlans();
+  draw(distributedPlans: DistDayPlan[], dayNum: number) {
+    this.setDistributedPlans(distributedPlans, dayNum);
+    console.log(this.distributedPlans);
     this.transformData(); // login && data
     this.updateDataByTime();
     const clock = createNewElement('div', HomePageClassList.clock);

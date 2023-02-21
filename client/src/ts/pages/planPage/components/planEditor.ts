@@ -39,6 +39,8 @@ class PlanEditor {
 
   dayId = '';
 
+  thoughtId = '';
+
   oldDur = 0;
 
   constructor(popup: Popup, goTo: GoToFn) {
@@ -52,7 +54,15 @@ class PlanEditor {
     this.sendPlan = this.sendPlan.bind(this);
   }
 
-  public open(minTime: number, maxTime: number, mode: EditorMode, plan?: Plan, dayId?: string) {
+  public open(
+    minTime: number,
+    maxTime: number,
+    mode: EditorMode,
+    plan?: Plan,
+    dayId?: string,
+    thoughtId?: string,
+    title?: string
+  ) {
     this.mode = mode;
     this.dayId = '';
     this.slider.setTimer(minTime, maxTime, plan?.duration);
@@ -73,6 +83,13 @@ class PlanEditor {
       case EditorMode.newPlan:
         this.popup.editorMode(this.saveToLocalStorage);
         this.loadToLocalStorage();
+        break;
+
+      case EditorMode.newPlanFromThought:
+        this.popup.editorMode();
+        this.loadToLocalStorage();
+        if (title) this.plan.title = title;
+        if (thoughtId) this.thoughtId = thoughtId;
         break;
 
       case EditorMode.newPlanDay:
@@ -110,6 +127,10 @@ class PlanEditor {
       case EditorMode.newPlan:
         await Api.createNewPlan({ title, text, color, duration });
         localStorage.removeItem(`${Values.newPlanSave}/${this.dayId}`);
+        break;
+
+      case EditorMode.newPlanFromThought:
+        await Api.convertToPlan({ title, text, color, duration }, this.thoughtId);
         break;
 
       case EditorMode.editPlan:
