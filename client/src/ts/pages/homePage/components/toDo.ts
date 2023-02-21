@@ -8,8 +8,8 @@ class ToDo {
   async updateToDoText(distDayPlans: DistDayPlan[], chartPlan: ChartData, toDoText: string) {
     console.log('!!!', distDayPlans, chartPlan._id, toDoText);
     const planIndex = distDayPlans.findIndex((pl) => pl._id === chartPlan._id);
-    distDayPlans[planIndex].text = toDoText;
-    chartPlan.text = toDoText;
+    if (distDayPlans[planIndex]) distDayPlans[planIndex].text = toDoText;
+    if (distDayPlans[planIndex]) chartPlan.text = toDoText;
 
     //  await Api.pushDayDistribution(distDayPlans);
   }

@@ -198,6 +198,7 @@ section {
   bottom: 140px;
   color: $background-color;
   z-index: 101;
+  transition: .3;
 
   &__icon {
     display: block;
@@ -208,6 +209,7 @@ section {
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
+    transition: .3;
   }
 
   &__date {

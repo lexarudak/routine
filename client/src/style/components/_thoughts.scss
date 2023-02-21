@@ -53,6 +53,10 @@
     &.open {
       background-color: $thought-color;
     }
+
+    &_hold {
+      background-color: $font-medium-light;
+    }
   }
 
   &__add-btn {

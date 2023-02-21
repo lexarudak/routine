@@ -32,7 +32,7 @@ class HomePage extends Page {
     return canvas;
   }
 
-  private createThought(canvas: HTMLCanvasElement) {
+  private async createThought(canvas: HTMLCanvasElement) {
     const thought = createElement('div', HomePageClassList.thought);
     const thoughtContainer = createElement('div', HomePageClassList.thoughtContainer);
     const thoughtTitle = createElement('h3', HomePageClassList.thoughtTitle);
@@ -43,8 +43,9 @@ class HomePage extends Page {
     thoughtAdd.classList.remove(HomePageClassList.none);
     thought.append(thoughtTitle, thoughtAdd, thoughtContainer);
 
-    thoughtAddInst.createThoughtsList(thoughtContainer);
-    thoughtAddInst.createFlyingThought(canvas);
+    const thoughtsDataList = await Api.getThoughts();
+    thoughtAddInst.createThoughtsList(thoughtContainer, thoughtsDataList);
+    thoughtAddInst.createFlyingThought(canvas, thoughtsDataList);
 
     const popup = createNewElement('div', HomePageClassList.blur);
     popup.classList.add(HomePageClassList.none);
@@ -59,7 +60,7 @@ class HomePage extends Page {
   private async setUserInfo() {
     try {
       console.log('setUserInfo');
-      const userInfo = await Promise.all([await Api.getUserProfile(), await Api.getConfirmDayInfo()]);
+      const userInfo = await Promise.all([Api.getUserProfile(), Api.getConfirmDayInfo()]);
       const [userProfile, confirmDayInfo] = userInfo;
       this.userName = userProfile.name;
       this.confirmDayInfo = confirmDayInfo;
@@ -80,17 +81,24 @@ class HomePage extends Page {
     }, 1000);
   }
 
+  private getCurrentDayNum() {
+    const date = new Date();
+    return date.getDay() - 1;
+  }
+
   protected async getFilledPage(): Promise<HTMLElement> {
     const page = document.createElement(HomePageClassList.section);
     try {
-      await this.setUserInfo();
+      const currentDayNum = this.getCurrentDayNum();
+      const canvas = this.createCanvas();
+      const [, thought, dayPlans] = await Promise.all([
+        this.setUserInfo(),
+        this.createThought(canvas),
+        Api.getDayDistribution(currentDayNum.toString()),
+      ]);
       const confirmDay = createElement('div', HomePageClassList.confirmDay);
       confirmDay.addEventListener('click', () => this.goTo(RoutsList.confirmPage));
       this.checkConfirmTime(confirmDay);
-
-      const canvas = this.createCanvas();
-
-      const thought = this.createThought(canvas);
 
       const plan = createElement('div', HomePageClassList.plan);
       plan.textContent = InnerText.planText;
@@ -101,11 +109,13 @@ class HomePage extends Page {
 
       profile.textContent = this.userName;
 
-      const clock = await this.clockChartInst.draw();
+      const clock = await this.clockChartInst.draw(dayPlans.distributedPlans, currentDayNum);
 
       page.append(canvas, thought, profile, plan, confirmDay, clock);
 
-      setTimeout(() => this.clockChartInst.getTime());
+      setTimeout(() => {
+        this.clockChartInst.getTime();
+      });
     } catch (error) {
       this.goTo(RoutsList.loginPage);
       console.log(error);

@@ -39,6 +39,28 @@ class Clock {
     </div>`;
   }
 
+  private showTime(
+    deg: number,
+    hourDeg: number,
+    hourCount: number,
+    hr: HTMLElement,
+    min: HTMLElement,
+    dayInfoHTML: HTMLElement,
+    dayIcon: HTMLElement
+  ) {
+    if (!(window.location.pathname === Path.home) || !document.querySelector(`.${HomePageClassList.clock}`)) return;
+    const date = new Date();
+    const hours = date.getHours() * hourDeg;
+    const minutes = date.getMinutes() * deg;
+    dayInfoHTML.innerHTML = this.getDay(date);
+    dayIcon.style.backgroundImage = this.getIcon(date);
+    dayInfoHTML.prepend(dayIcon);
+    getExistentElement(`.${HomePageClassList.clock}`).append(dayInfoHTML);
+
+    hr.style.transform = `rotateZ(${hours + minutes / hourCount}deg)`;
+    min.style.transform = `rotateZ(${minutes}deg)`;
+  }
+
   getTime() {
     const deg = 6;
     const hourDeg = 30;
@@ -49,18 +71,9 @@ class Clock {
     const dayInfoHTML = createElement('div', HomePageClassList.dayInfo);
     const dayIcon = createElement('div', HomePageClassList.dayIcon);
 
+    this.showTime(deg, hourDeg, hourCount, hr, min, dayInfoHTML, dayIcon);
     setInterval(() => {
-      if (!(window.location.pathname === Path.home) || !document.querySelector(`.${HomePageClassList.clock}`)) return;
-      const date = new Date();
-      const hours = date.getHours() * hourDeg;
-      const minutes = date.getMinutes() * deg;
-      dayInfoHTML.innerHTML = this.getDay(date);
-      dayIcon.style.backgroundImage = this.getIcon(date);
-      dayInfoHTML.prepend(dayIcon);
-      getExistentElement(`.${HomePageClassList.clock}`).append(dayInfoHTML);
-
-      hr.style.transform = `rotateZ(${hours + minutes / hourCount}deg)`;
-      min.style.transform = `rotateZ(${minutes}deg)`;
+      this.showTime(deg, hourDeg, hourCount, hr, min, dayInfoHTML, dayIcon);
     }, 1000);
   }
 }
