@@ -29,7 +29,7 @@ class Router {
 
   constructor(popup: Popup) {
     this.editor = new PlanEditor(popup, this.goTo);
-    Router.homePage = new HomePage(this.goTo, this.editor);
+    Router.homePage = new HomePage(this.goTo, this.editor, popup);
     Router.planPage = new PlanPage(this.goTo, popup, this.editor);
     Router.loginPage = new LoginPage(this.goTo, this.editor);
     Router.dayPage = new DayPage(this.goTo, popup, this.editor);

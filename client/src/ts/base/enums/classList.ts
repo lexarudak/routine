@@ -103,6 +103,7 @@ const enum ClassList {
   timelineSensor = 'timeline__sensor',
   timelineSensorActive = 'timeline__sensor_active',
   timelineDivFake = 'timeline-div_fake',
+  timelineDivHide = 'timeline-div_hide',
   timelineDivFrom = 'timeline-div__from',
   timelineDivTo = 'timeline-div__to',
   timelineDivLeft = 'timeline-div__left',
@@ -126,6 +127,7 @@ const enum HomePageClassList {
   thoughtTitle = 'thought__title',
   thoughtContainer = 'thought__container',
   thoughtAdd = 'thought__add',
+  thoughtAddHold = 'thought__add_hold',
   thoughtItem = 'thought__item',
   thoughtAddBtn = 'thought__add-btn',
   thoughtCreateBtn = 'thought__create-btn',
@@ -133,7 +135,7 @@ const enum HomePageClassList {
   thoughtInput = 'thought__input',
 
   plan = 'plan-btn',
-  signIn = 'sign-in',
+  profile = 'profile-btn',
   confirmDay = 'confirm-day',
   // to-do
   toDo = 'to-do',

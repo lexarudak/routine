@@ -170,6 +170,13 @@ function cutStringLine(str: string, length: number) {
   return str.length <= length ? str : `${str.slice(0, length - 3)}...`;
 }
 
+function makeBanner(bannerText: string) {
+  const banner = document.createElement('h2');
+  banner.classList.add(ClassList.banner);
+  banner.innerText = bannerText;
+  return banner;
+}
+
 export {
   isHTMLElement,
   getExistentElement,
@@ -195,4 +202,5 @@ export {
   pxToMin,
   minToPx,
   cutStringLine,
+  makeBanner,
 };

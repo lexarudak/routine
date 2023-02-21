@@ -1,5 +1,6 @@
 interface ChartData {
   id: number;
+  _id: string;
   hours: number;
   from: number;
   to: number;

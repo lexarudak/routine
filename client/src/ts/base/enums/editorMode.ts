@@ -4,6 +4,7 @@ const enum EditorMode {
   planFromThought,
   day,
   newPlanDay,
+  newPlanFromThought,
 }
 
 export default EditorMode;

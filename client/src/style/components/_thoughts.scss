@@ -9,7 +9,7 @@
     flex-direction: column;
     flex-wrap: wrap;
     gap: 10px;
-    height: calc(100vh - 50px);
+    max-height: calc(100vh - 50px);
     margin-top: -40px;
   }
 
@@ -52,6 +52,10 @@
     background-color: $thought-color;
     &.open {
       background-color: $thought-color;
+    }
+
+    &_hold {
+      background-color: $font-medium-light;
     }
   }
 

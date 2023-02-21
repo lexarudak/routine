@@ -65,6 +65,10 @@ class Api {
     return this.get(false, Path.statistics, Path.get);
   }
 
+  public static async getConfirmDayInfo(): Promise<boolean> {
+    return this.get(false, Path.statistics, Path.isDayConfirmed);
+  }
+
   public static async getDayDistribution(id: string) {
     return this.get(id, Path.dayDistribution, Path.get);
   }
@@ -93,6 +97,10 @@ class Api {
     return this.delete(id, Path.thoughts);
   }
 
+  public static async convertToPlan(body: NewPlanData, id: string) {
+    return this.post(body, Path.thoughts, Path.convertToPlan, `/${id}`);
+  }
+
   private static async get(id: string | false, ...path: Path[]) {
     let url = `${Path.origin}${path.join('')}`;
     if (id) url = `${url}/${id}`;
@@ -109,7 +117,7 @@ class Api {
     return data;
   }
 
-  private static async post<T>(body: T, ...path: Path[]) {
+  private static async post<T>(body: T, ...path: Path[] | string[]) {
     // console.log(body, path);
     const options: RequestInit = {
       method: 'POST',

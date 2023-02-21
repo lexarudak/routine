@@ -177,13 +177,6 @@ class PlanLayout extends Layout {
     return remove;
   }
 
-  public makeBanner(bannerText: string) {
-    const banner = document.createElement('h2');
-    banner.classList.add(ClassList.banner);
-    banner.innerText = bannerText;
-    return banner;
-  }
-
   public makePlanBody() {
     const planBody = document.createElement('div');
     planBody.classList.add(ClassList.planBody);

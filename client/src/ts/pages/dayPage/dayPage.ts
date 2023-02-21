@@ -10,6 +10,7 @@ import Values from '../../base/enums/values';
 import {
   createNewElement,
   getExistentElementByClass,
+  makeBanner,
   makeRoundIcon,
   minToHour,
   sortAllPlans,
@@ -95,13 +96,13 @@ class DayPage extends Page {
 
       const freeDayTime = Values.allDayMinutes - this.getDayDistTime();
       if (freeDayTime < Values.minPlanDuration) {
-        this.popup.open(this.layout.makeBanner(ErrorsList.freeYourDayTime));
+        this.popup.open(makeBanner(ErrorsList.freeYourDayTime));
         return;
       }
 
       const freeWeekTime = Values.allWeekMinutes - this.getFilledWeekTime();
       if (freeWeekTime < Values.minPlanDuration) {
-        this.popup.open(this.layout.makeBanner(ErrorsList.freeYourWeekTime));
+        this.popup.open(makeBanner(ErrorsList.freeYourWeekTime));
         return;
       }
 
