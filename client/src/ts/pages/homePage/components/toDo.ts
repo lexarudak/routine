@@ -15,27 +15,29 @@ class ToDo {
   }
 
   draw(currSector: number, chartPlans: ChartData[], distributedPlans: DistDayPlan[]) {
-    // console.log('sector',chartPlans, currSector);
-    const sector = chartPlans.findIndex((el) => el.id === currSector);
-
     const toDoWrap = createNewElement('div', HomePageClassList.toDoWrap);
     const toDoTitle = createNewElement('h2', HomePageClassList.toDoTitle);
-    toDoTitle.textContent = chartPlans[sector].title;
-    console.log(chartPlans[sector]._id);
+    try {
+      const sector = chartPlans.findIndex((el) => el.id === currSector);
 
-    toDoWrap.append(toDoTitle);
-    if (chartPlans[sector].text) {
-      const toDoTextarea = createNewElement<HTMLTextAreaElement>('textarea', HomePageClassList.toDoTextarea);
-      toDoTextarea.textContent = chartPlans[sector].text;
-      toDoTextarea.spellcheck = false;
-      toDoWrap.append(toDoTextarea);
-      toDoTextarea.addEventListener('blur', () =>
-        this.updateToDoText(distributedPlans, chartPlans[sector], toDoTextarea.value)
-      );
-    } else {
-      const toDoText = createNewElement('div', HomePageClassList.toDoText);
-      toDoText.textContent = 'There are no plans at this time.';
-      toDoWrap.append(toDoText);
+      toDoTitle.textContent = chartPlans[sector].title;
+      toDoWrap.append(toDoTitle);
+
+      if (chartPlans[sector].text) {
+        const toDoTextarea = createNewElement<HTMLTextAreaElement>('textarea', HomePageClassList.toDoTextarea);
+        toDoTextarea.textContent = chartPlans[sector].text;
+        toDoTextarea.spellcheck = false;
+        toDoWrap.append(toDoTextarea);
+        toDoTextarea.addEventListener('blur', () =>
+          this.updateToDoText(distributedPlans, chartPlans[sector], toDoTextarea.value)
+        );
+      } else {
+        const toDoText = createNewElement('div', HomePageClassList.toDoText);
+        toDoText.textContent = 'There are no plans at this time.';
+        toDoWrap.append(toDoText);
+      }
+    } catch {
+      console.log('fix');
     }
 
     return toDoWrap;
