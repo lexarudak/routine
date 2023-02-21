@@ -19,10 +19,9 @@ import * as enums from '../../base/enums/enums';
 
 class ConfirmPage extends Page {
   layout: ConfirmLayout;
-
   dayPlans: Plan[] = [];
-
   dayOfWeek = 0;
+  isDayConfirmed = false;
 
   constructor(goTo: GoToFn, editor: PlanEditor) {
     super(PagesList.confirmPage, goTo, editor);
@@ -33,7 +32,11 @@ class ConfirmPage extends Page {
     let profile: User = {} as User;
     let weekDistribution: Plan[][] = [];
 
-    [profile, weekDistribution] = await Promise.all([Api.getUserProfile(), Api.getWeekDistribution()]);
+    [profile, weekDistribution, this.isDayConfirmed] = await Promise.all([
+      Api.getUserProfile(),
+      Api.getWeekDistribution(),
+      Api.getConfirmDayInfo(),
+    ]);
 
     this.dayOfWeek = this.getDayOfWeekByConfirmationDay(profile.confirmationDay);
     this.dayPlans = weekDistribution[this.dayOfWeek];
@@ -198,18 +201,39 @@ class ConfirmPage extends Page {
   }
 
   private confirm() {
-    const context = this as ConfirmPage;
-
     const popup = new Popup();
     popup.editorMode();
 
-    function yes() {
-      popup.easyClose();
-      context.confirmDay();
-    }
+    const ok = async () => {
+      const uiConfirm = helpers.getExistentElementByClass<HTMLButtonElement>('confirm__main-button');
+      helpers.buttonOff(uiConfirm);
 
-    const banner = this.layout.makeConfirmationBanner(yes, popup.easyClose.bind(popup));
-    popup.open(banner);
+      try {
+        if (this.isDayConfirmed) {
+          popup.easyClose();
+        }
+        await this.confirmDay();
+        this.isDayConfirmed = true;
+        this.openPopup(enums.MessageType.success, 'Confirmed!');
+      } catch (error) {
+        this.openPopup(enums.MessageType.error, 'Ooops! Something went wrong...');
+      }
+
+      helpers.buttonOn(uiConfirm);
+    };
+
+    if (!this.isDayConfirmed) {
+      ok();
+    } else {
+      const banner = this.layout.makeConfirmationBanner(ok, popup.easyClose.bind(popup));
+      popup.open(banner);
+    }
+  }
+
+  private openPopup(type: enums.MessageType, text: string) {
+    const popup = new Popup();
+    popup.editorMode();
+    popup.open(this.layout.makeBanner(type, text));
   }
 
   private async confirmDay() {

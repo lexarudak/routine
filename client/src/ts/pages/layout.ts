@@ -2,14 +2,31 @@ import ButtonClasses from '../base/enums/buttonClasses';
 import RoutsList from '../base/enums/routsList';
 
 import { GoToFn } from '../base/types';
+import { ClassList } from '../base/enums/classList';
 import { createNewElement, getExistentElementByClass } from '../base/helpers';
+
+import * as enums from '../base/enums/enums';
 
 class Layout {
   public makeNavButton(name: string, routPath: RoutsList, callback: GoToFn) {
     const btn: HTMLButtonElement = createNewElement('button', ButtonClasses.navButton);
+
     btn.innerText = name;
     btn.addEventListener('click', () => callback(routPath));
+
     return btn;
+  }
+
+  public makeBanner(type: enums.MessageType, text: string) {
+    const uiBanner = document.createElement('div');
+    uiBanner.classList.add(ClassList.banner, `banner_${type}`);
+
+    const uiTitle = document.createElement('h2');
+    uiTitle.classList.add('banner__title');
+    uiTitle.innerText = text;
+    uiBanner.append(uiTitle);
+
+    return uiBanner;
   }
 
   public makeSaveButton(save: () => void) {

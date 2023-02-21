@@ -22,3 +22,9 @@ export enum DaysOfWeek {
 export enum DBAttributes {
   id = '_id',
 }
+
+export enum MessageType {
+  error = 'error',
+  warning = 'warning',
+  success = 'success',
+}
