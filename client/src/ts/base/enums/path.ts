@@ -15,6 +15,7 @@ const enum Path {
   thoughts = '/thoughts',
   home = '/',
   confirmDay = '/confirmDay',
+  isDayConfirmed = '/isDayConfirmed',
 }
 
 export default Path;

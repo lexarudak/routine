@@ -171,7 +171,7 @@ class ClockChart extends Clock {
       if (!(window.location.pathname === Path.home) || !document.querySelector(`.${HomePageClassList.clock}`)) return;
       this.getCurrData();
       const sector = this.chartData.findIndex((el) => el.id === this.currPlanNum);
-      console.log('updData', this.minutes, this.chartData[sector].to);
+      // console.log('updData', this.minutes, this.chartData[sector].to);
       if (this.minutes === this.chartData[sector].to) {
         this.setDataByTime();
         const toDo = getExistentElement(`.${HomePageClassList.toDo}`);

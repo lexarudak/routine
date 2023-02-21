@@ -106,7 +106,6 @@ section {
     text-align: center;
   }
 
-
   &__textarea {
     position: relative;
     padding-right: 10px;
@@ -246,12 +245,19 @@ canvas {
   top: 10%;
   left: 35%;
   border-radius: 50%;
-  background: $color-background-1 url('./assets/svg/star.svg') center 13px/contain no-repeat;
+  background: $color-background-1 url('./assets/svg/star.svg') center 13px / contain no-repeat;
   background-size: 60%;
   filter: drop-shadow(0px 4px 4px $shadow-dark);
-  visibility: hidden;
-  transition: 0.5s;
-  &:hover {
-    transform: scale(1.2);
+  transform: translateY(-200%);
+  opacity: 0;
+  transition: 1s;
+  cursor: pointer;
+
+  &.show {
+    transform: translateY(0%);
+    opacity: 1;
+    &:hover {
+      transform: scale(1.2);
+    }
   }
 }
