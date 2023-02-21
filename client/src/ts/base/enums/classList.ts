@@ -134,7 +134,7 @@ const enum HomePageClassList {
   thoughtInput = 'thought__input',
 
   plan = 'plan-btn',
-  profile = 'profile',
+  profile = 'profile-btn',
   confirmDay = 'confirm-day',
   // to-do
   toDo = 'to-do',
