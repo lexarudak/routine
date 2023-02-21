@@ -1,6 +1,7 @@
 import Page from '../page';
 import Api from '../../api';
 
+import Popup from '../../components/popup';
 import ConfirmLayout from './components/confirmLayout';
 import PlanEditor from '../planPage/components/planEditor';
 
@@ -196,7 +197,22 @@ class ConfirmPage extends Page {
     }
   }
 
-  private async confirm() {
+  private confirm() {
+    const context = this as ConfirmPage;
+
+    const popup = new Popup();
+    popup.editorMode();
+
+    function yes() {
+      popup.easyClose();
+      context.confirmDay();
+    }
+
+    const banner = this.layout.makeConfirmationBanner(yes, popup.easyClose.bind(popup));
+    popup.open(banner);
+  }
+
+  private async confirmDay() {
     const body: ConfirmDay = {
       dayOfWeek: this.dayOfWeek,
       dayDistribution: [],

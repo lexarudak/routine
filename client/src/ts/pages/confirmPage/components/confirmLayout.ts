@@ -1,5 +1,7 @@
 import Layout from '../../layout';
 
+import { ClassList } from '../../../base/enums/classList';
+
 import { Plan } from '../../../base/interface';
 import * as helpers from '../../../base/helpers';
 import * as enums from '../../../base/enums/enums';
@@ -76,6 +78,33 @@ class ConfirmLayout extends Layout {
     container.innerHTML = `<button class="button confirm__main-button">Confirm!</button>`;
 
     return container;
+  }
+
+  public makeConfirmationBanner(yes: () => void, cancel: () => void) {
+    const uiBanner = document.createElement('div');
+    uiBanner.classList.add(ClassList.banner);
+
+    const uiQuestion = document.createElement('h2');
+    uiQuestion.innerText = 'This day has already been confirmed.\nDo you want to confirm it again?';
+    uiBanner.append(uiQuestion);
+
+    const uiButtons = document.createElement('div');
+
+    const uiYes = document.createElement('button');
+    uiYes.classList.add('button');
+    uiYes.innerHTML = 'Yes';
+    uiYes.addEventListener('click', () => yes());
+    uiButtons.append(uiYes);
+
+    const uiCancel = document.createElement('button');
+    uiCancel.classList.add('button');
+    uiCancel.innerHTML = 'Cancel';
+    uiCancel.addEventListener('click', () => cancel());
+    uiButtons.append(uiCancel);
+
+    uiBanner.append(uiButtons);
+
+    return uiBanner;
   }
 }
 
