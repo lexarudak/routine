@@ -10,19 +10,23 @@ import RoutsList from '../../base/enums/routsList';
 import Path from '../../base/enums/path';
 import InnerText from '../../base/enums/innerText';
 import PlanEditor from '../planPage/components/planEditor';
+import Popup from '../../components/popup';
+import { Plan, ThoughtsData } from '../../base/interface';
 
 class HomePage extends Page {
   clockChartInst: ClockChart;
   userName: string;
   confirmDayInfo: boolean;
   confirmationTime: number;
+  commonPopup: Popup;
 
-  constructor(goTo: GoToFn, editor: PlanEditor) {
+  constructor(goTo: GoToFn, editor: PlanEditor, commonPopup: Popup) {
     super(PageList.homePage, goTo, editor);
     this.clockChartInst = new ClockChart();
     this.userName = '';
     this.confirmDayInfo = false;
     this.confirmationTime = 660;
+    this.commonPopup = commonPopup;
   }
 
   private createCanvas() {
@@ -37,22 +41,33 @@ class HomePage extends Page {
     const thoughtContainer = createElement('div', HomePageClassList.thoughtContainer);
     const thoughtTitle = createElement('h3', HomePageClassList.thoughtTitle);
     thoughtTitle.textContent = InnerText.thoughtText;
+    const [thoughtsDataList, allPlans]: [ThoughtsData[], Plan[]] = await Promise.all([
+      Api.getThoughts(),
+      Api.getAllPlans(),
+    ]);
 
-    const thoughtAddInst = new Thought(this.goTo, this.editor, '');
+    const fillWeekTime = allPlans.reduce((acc, plan) => {
+      return acc + plan.duration;
+    }, 0);
+
+    const thoughtAddInst = new Thought(this.goTo, this.editor, this.commonPopup, fillWeekTime, '');
     const thoughtAdd = thoughtAddInst.draw(HomePageClassList.thoughtAdd);
     thoughtAdd.classList.remove(HomePageClassList.none);
     thought.append(thoughtTitle, thoughtAdd, thoughtContainer);
 
-    const thoughtsDataList = await Api.getThoughts();
     thoughtAddInst.createThoughtsList(thoughtContainer, thoughtsDataList);
     thoughtAddInst.createFlyingThought(canvas, thoughtsDataList);
 
-    const popup = createNewElement('div', HomePageClassList.blur);
-    popup.classList.add(HomePageClassList.none);
-    document.body.append(popup);
-
-    thoughtTitle.addEventListener('click', () => thoughtAddInst.openCloseThoughtList(thoughtAdd, popup));
-    popup.addEventListener('click', () => thoughtAddInst.openCloseThoughtList(thoughtAdd, popup));
+    const oldPopup = document.querySelector(`.${HomePageClassList.blur}`);
+    if (oldPopup instanceof HTMLElement) {
+      thoughtTitle.addEventListener('click', () => thoughtAddInst.openCloseThoughtList(thoughtAdd, oldPopup));
+    } else {
+      const popup = createNewElement('div', HomePageClassList.blur);
+      popup.classList.add(HomePageClassList.none);
+      document.body.append(popup);
+      thoughtTitle.addEventListener('click', () => thoughtAddInst.openCloseThoughtList(thoughtAdd, popup));
+      popup.addEventListener('click', () => thoughtAddInst.openCloseThoughtList(thoughtAdd, popup));
+    }
 
     return thought;
   }

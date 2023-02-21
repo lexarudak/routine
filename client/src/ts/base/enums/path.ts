@@ -16,6 +16,7 @@ const enum Path {
   home = '/',
   confirmDay = '/confirmDay',
   isDayConfirmed = '/isDayConfirmed',
+  convertToPlan = '/convertToPlan',
 }
 
 export default Path;

@@ -5,6 +5,7 @@ import {
   getExistentElement,
   client,
   getExistentElementByClass,
+  makeBanner,
 } from '../../../base/helpers';
 import { HomePageClassList } from '../../../base/enums/classList';
 import Api from '../../../api';
@@ -15,6 +16,10 @@ import { GoToFn } from '../../../base/types';
 // import RoutsList from '../../../base/enums/routsList';
 // import Path from '../../../base/enums/path';
 import PlanEditor from '../../planPage/components/planEditor';
+import Popup from '../../../components/popup';
+import Values from '../../../base/enums/values';
+import EditorMode from '../../../base/enums/editorMode';
+import ErrorsList from '../../../base/enums/errorsList';
 // import Values from '../../../base/enums/values';
 // import EditorMode from '../../../base/enums/editorMode';
 
@@ -23,15 +28,21 @@ class Thought {
 
   protected editor: PlanEditor;
 
+  fillWeekTime: number;
+
   thoughtText: string;
+
+  popup: Popup;
 
   thoughtId: string | undefined;
 
   canCreate = true;
 
-  constructor(goTo: GoToFn, editor: PlanEditor, text: string, id?: string) {
+  constructor(goTo: GoToFn, editor: PlanEditor, popup: Popup, fillWeekTime: number, text: string, id?: string) {
     this.goTo = goTo;
     this.editor = editor;
+    this.popup = popup;
+    this.fillWeekTime = fillWeekTime;
     this.thoughtText = text;
     this.thoughtId = id;
   }
@@ -58,8 +69,25 @@ class Thought {
     this.canCreate = true;
   }
 
-  async convertToPlan(thoughtText: string, e: Event) {
-    console.log(thoughtText, e);
+  async convertToPlan(thoughtText: string) {
+    this.openCloseThoughtList(
+      getExistentElementByClass(HomePageClassList.thoughtAdd),
+      getExistentElementByClass(HomePageClassList.blur)
+    );
+    if (this.fillWeekTime + Values.minPlanDuration <= Values.allWeekMinutes) {
+      this.editor.open(
+        Values.minPlanDuration,
+        Values.allWeekMinutes - this.fillWeekTime,
+        EditorMode.newPlanFromThought,
+        undefined,
+        undefined,
+        this.thoughtId,
+        thoughtText
+      );
+    } else {
+      this.popup.editorMode();
+      this.popup.open(makeBanner(ErrorsList.freeYourWeekTime));
+    }
   }
 
   async updateThought(thoughtText: string, e: Event) {
@@ -124,7 +152,9 @@ class Thought {
     thoughtContainer.innerHTML = '';
     const thoughtsArr: Thought[] = [];
     thoughtsDataList.forEach((thoughtDataEl: ThoughtsData) => {
-      thoughtsArr.push(new Thought(this.goTo, this.editor, thoughtDataEl.title, thoughtDataEl._id));
+      thoughtsArr.push(
+        new Thought(this.goTo, this.editor, this.popup, this.fillWeekTime, thoughtDataEl.title, thoughtDataEl._id)
+      );
     });
 
     for (let i = 0; i < thoughtsArr.length; i += 1) {
@@ -194,9 +224,9 @@ class Thought {
 
     const thoughtCreate = createNewElement('div', HomePageClassList.thoughtCreateBtn);
 
-    thoughtCreate.addEventListener('click', (e) => {
+    thoughtCreate.addEventListener('click', () => {
       if (elClass === HomePageClassList.thoughtItem) {
-        this.convertToPlan(this.thoughtText, e);
+        this.convertToPlan(this.thoughtText);
       } else {
         this.createThought(this.thoughtText);
       }
