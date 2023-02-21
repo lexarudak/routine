@@ -1,8 +1,8 @@
 import Layout from '../../layout';
 
-import { Plan } from '../../../base/interface';
-import Values from '../../../base/enums/values';
+import { ClassList } from '../../../base/enums/classList';
 
+import { Plan } from '../../../base/interface';
 import * as helpers from '../../../base/helpers';
 import * as enums from '../../../base/enums/enums';
 
@@ -60,7 +60,12 @@ class ConfirmLayout extends Layout {
 
     container.innerHTML = `
       <span class="confirm-plan__label">${title}</span>
-      <div class="plan-square confirm-plan__line" style="background-color: ${plan.color};">&nbsp</div>
+      <div class="plan-square confirm-plan__line" style="background-color: ${plan.color};">
+        <div class="confirm-plan__arrows">
+          <img class="confirm-plan__arrow confirm-plan__arrow_left" src="./assets/svg/arrow-left.svg" alt="Left">
+          <img class="confirm-plan__arrow confirm-plan__arrow_right" src="./assets/svg/arrow-right.svg" alt="Right">
+        </div>
+      </div>
       <span class="confirm-plan__time">${helpers.minToHour(plan.duration)}</span>`;
 
     return container;
@@ -75,18 +80,32 @@ class ConfirmLayout extends Layout {
     return container;
   }
 
-  public setPageElementsParameters(dayPlans: Plan[]) {
-    dayPlans.forEach((plan) => {
-      const classCSS = `.confirm-plan[data-id="${plan[enums.DBAttributes.id]}"]`;
-      const uiConfirmPlan = helpers.getExistentElement<HTMLElement>(classCSS);
+  public makeConfirmationBanner(yes: () => void, cancel: () => void) {
+    const uiBanner = document.createElement('div');
+    uiBanner.classList.add(ClassList.banner, 'banner_warning');
 
-      const minWidth = 15;
-      const maxWidth = Values.allDayMinutes / 2;
-      const width = minWidth + Math.round((plan.duration * (maxWidth - minWidth)) / Values.allDayMinutes);
+    const uiQuestion = document.createElement('h2');
+    uiQuestion.classList.add('banner__title');
+    uiQuestion.innerText = 'This day has already been confirmed.\nDo you want to confirm it again?';
+    uiBanner.append(uiQuestion);
 
-      const uiPlanTime = helpers.getExistentElementByClass('confirm-plan__line', uiConfirmPlan);
-      uiPlanTime.style.width = `${width}px`;
-    });
+    const uiButtons = document.createElement('div');
+    uiButtons.classList.add('banner__buttons');
+
+    const uiYes = document.createElement('button');
+    uiYes.classList.add('button', 'banner__button');
+    uiYes.innerHTML = 'Yes';
+    uiYes.addEventListener('click', () => yes());
+    uiButtons.append(uiYes);
+
+    const uiCancel = document.createElement('button');
+    uiCancel.classList.add('button', 'banner__button');
+    uiCancel.innerHTML = 'Cancel';
+    uiCancel.addEventListener('click', () => cancel());
+    uiButtons.append(uiCancel);
+
+    uiBanner.append(uiButtons);
+    return uiBanner;
   }
 }
 

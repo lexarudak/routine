@@ -21,3 +21,44 @@
     background: $popup-background;
   }
 }
+
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  color: $font-light;
+  background-color: $color-background-2;
+  padding: 50px;
+  width: 500px;
+  height: 500px;
+  border-radius: 100%;
+  box-shadow: $shadow;
+
+  &_error {
+    background-color: $error;
+  }
+
+  &_warning {
+    background-color: $warning;
+  }
+
+  &_success {
+    background-color: $success;
+  }
+
+  &__title {
+    text-align: center;
+  }
+
+  &__buttons {
+    @include flexbox();
+    width: 70%;
+    padding: 20px 0 0 0;
+  }
+
+  &__button {
+    width: 100px;
+    margin: 0 5px;
+  }
+}
