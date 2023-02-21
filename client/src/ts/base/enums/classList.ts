@@ -103,6 +103,7 @@ const enum ClassList {
   timelineSensor = 'timeline__sensor',
   timelineSensorActive = 'timeline__sensor_active',
   timelineDivFake = 'timeline-div_fake',
+  timelineDivHide = 'timeline-div_hide',
   timelineDivFrom = 'timeline-div__from',
   timelineDivTo = 'timeline-div__to',
   timelineDivLeft = 'timeline-div__left',
