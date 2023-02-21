@@ -58,6 +58,7 @@ class HomePage extends Page {
 
   private async setUserInfo() {
     try {
+      console.log('setUserInfo');
       const userInfo = await Promise.all([await Api.getUserProfile(), await Api.getConfirmDayInfo()]);
       const [userProfile, confirmDayInfo] = userInfo;
       this.userName = userProfile.name;
