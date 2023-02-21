@@ -63,7 +63,6 @@ class HomePage extends Page {
       this.userName = userProfile.name;
       this.confirmDayInfo = confirmDayInfo;
       this.confirmationTime = userProfile.confirmationTime;
-      console.log(userProfile.name, confirmDayInfo, userProfile.confirmationTime);
     } catch (error) {
       console.log(error);
     }
@@ -83,7 +82,7 @@ class HomePage extends Page {
   protected async getFilledPage(): Promise<HTMLElement> {
     const page = document.createElement(HomePageClassList.section);
     try {
-      this.setUserInfo();
+      await this.setUserInfo();
       const confirmDay = createElement('div', HomePageClassList.confirmDay);
       confirmDay.addEventListener('click', () => this.goTo(RoutsList.confirmPage));
       this.checkConfirmTime(confirmDay);
@@ -99,8 +98,7 @@ class HomePage extends Page {
       const profile = createElement('div', HomePageClassList.profile);
       profile.addEventListener('click', () => this.goTo(RoutsList.profilePage));
 
-      const userName = await Api.getUserProfile();
-      profile.textContent = userName.name;
+      profile.textContent = this.userName;
 
       const clock = await this.clockChartInst.draw();
 
