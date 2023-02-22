@@ -108,8 +108,9 @@ class ProfileLayout extends Layout {
     const title = helpers.cutStringLine(statistics.title, 20);
 
     const container = document.createElement('div');
+    const [bgColor] = helpers.getColors(statistics.color);
     container.classList.add(ProfilePageClassList.planSquare);
-    container.style.backgroundColor = statistics.color;
+    container.style.backgroundColor = bgColor;
 
     container.innerHTML = `
       <div class="${ProfilePageClassList.planSquareName}">${title}</div>

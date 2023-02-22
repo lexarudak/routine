@@ -1,3 +1,4 @@
+import { colorsAndFonts, defaultColors } from '../components/colorsAndFonts';
 import PlanRoundConfig from '../components/planRoundConfig';
 import { ClassList } from './enums/classList';
 import Days from './enums/days';
@@ -160,6 +161,18 @@ function makeBanner(bannerText: string) {
   return banner;
 }
 
+function getCurrentDayNum() {
+  const date = new Date();
+  return date.getDay() - 1;
+}
+
+function getColors(colorId: string): string[] {
+  const id = Number(colorId);
+  const colors = colorsAndFonts[id];
+  if (colors) return colors;
+  return defaultColors;
+}
+
 export {
   isHTMLElement,
   getExistentElement,
@@ -184,4 +197,6 @@ export {
   minToPx,
   cutStringLine,
   makeBanner,
+  getCurrentDayNum,
+  getColors,
 };

@@ -11,21 +11,23 @@ import { ClassList, ConfirmPageClassList } from '../../base/enums/classList';
 
 import Values from '../../base/enums/values';
 import PagesList from '../../base/enums/pageList';
-import ButtonNames from '../../base/enums/buttonNames';
-import RoutsList from '../../base/enums/routsList';
 
 import * as helpers from '../../base/helpers';
 import * as enums from '../../base/enums/enums';
+import Header from '../../components/header';
+import NavButtons from '../../base/enums/navButtons';
 
 class ConfirmPage extends Page {
   layout: ConfirmLayout;
   dayPlans: Plan[] = [];
   dayOfWeek = 0;
   isDayConfirmed = false;
+  header: Header;
 
   constructor(goTo: GoToFn, editor: PlanEditor) {
     super(PagesList.confirmPage, goTo, editor);
     this.layout = new ConfirmLayout();
+    this.header = new Header(goTo);
   }
 
   private async setConfirmInfo() {
@@ -185,7 +187,7 @@ class ConfirmPage extends Page {
     wrapper.classList.add(ConfirmPageClassList.confirmWrapper);
 
     wrapper.append(this.layout.makeHeader(this.dayOfWeek), this.layout.makeConfirmContent(this.dayPlans));
-    container.append(this.layout.makeNavButton(ButtonNames.home, RoutsList.homePage, this.goTo), wrapper);
+    container.append(this.header.draw(PagesList.confirmPage, NavButtons.confirm), wrapper);
     return container;
   }
 

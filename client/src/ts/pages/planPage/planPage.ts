@@ -6,6 +6,7 @@ import Values from '../../base/enums/values';
 import {
   buttonOff,
   createNewElement,
+  getColors,
   getExistentElementByClass,
   makeBanner,
   makeRoundIcon,
@@ -23,12 +24,12 @@ import PlanEditor from './components/planEditor';
 import Api from '../../api';
 import { GetAttribute } from '../../base/enums/attributes';
 import TimeSlider from './components/timeSlider';
-import colorsAndFonts from '../../components/colorsAndFonts';
 import savePlanIcon from './components/savePlanIcon';
 import RoutsList from '../../base/enums/routsList';
-import ButtonNames from '../../base/enums/buttonNames';
 import InnerText from '../../base/enums/innerText';
 import EditorMode from '../../base/enums/editorMode';
+import Header from '../../components/header';
+import NavButtons from '../../base/enums/navButtons';
 
 class PlanPage extends Page {
   layout: PlanLayout;
@@ -43,6 +44,8 @@ class PlanPage extends Page {
 
   popup: Popup;
 
+  header: Header;
+
   fillWeekTime;
 
   constructor(goTo: GoToFn, popup: Popup, editor: PlanEditor) {
@@ -53,6 +56,7 @@ class PlanPage extends Page {
     this.allPlansDist = {};
     this.weekDistribution = [[]];
     this.layout = new PlanLayout(goTo);
+    this.header = new Header(goTo);
     this.fillWeekTime = 0;
     this.addDayListener = this.addDayListener.bind(this);
   }
@@ -123,15 +127,13 @@ class PlanPage extends Page {
   }
 
   private makeSliderForDay(dayId: string, plan: Plan, freeDayMinutes: number, freePlanMinutes: number) {
+    const [bgColor, fontColor] = getColors(plan.color);
     const container = createNewElement('div', ClassList.sliderPopup);
-    const secColor = colorsAndFonts.get(plan.color);
-    container.style.background = plan.color;
+    container.style.background = bgColor;
     const button = document.createElement('button');
     button.classList.add(ClassList.editorButton);
-    if (secColor) {
-      container.style.color = secColor;
-      button.innerHTML = savePlanIcon(secColor, ClassList.editorSaveIcon);
-    }
+    container.style.color = fontColor;
+    button.innerHTML = savePlanIcon(fontColor, ClassList.editorSaveIcon);
 
     const slider = new TimeSlider();
     slider.setTimer(Values.minPlanDuration, Math.min(freeDayMinutes, freePlanMinutes));
@@ -244,6 +246,7 @@ class PlanPage extends Page {
       if (width < PlanRoundConfig.minRoundSize) width = PlanRoundConfig.minRoundSize;
       if (width > maxRoundSize) width = maxRoundSize;
 
+      console.log(bigZone.clientWidth * PlanRoundConfig.maxSizeK);
       round.setWidth(width);
       const roundDiv = this.addRoundListener(round);
 
@@ -301,7 +304,7 @@ class PlanPage extends Page {
       const section = document.createElement('div');
       section.style.height = isVertical ? `${val.duration * k}px` : `100%`;
       section.style.width = isVertical ? `100%` : `${val.duration * k}px`;
-      section.style.backgroundColor = val.color;
+      [section.style.backgroundColor] = getColors(val.color);
       line.append(section);
       return acc + val.duration;
     }, 0);
@@ -331,8 +334,7 @@ class PlanPage extends Page {
     const container = createNewElement('section', ClassList.planContainer);
 
     container.append(
-      this.layout.makeNavButton(ButtonNames.home, RoutsList.homePage, this.goTo),
-      this.layout.makeInfoText(InnerText.allWeekHours),
+      this.header.draw(PagesList.planPage, NavButtons.week, this.layout.makeInfoText(InnerText.allWeekHours)),
       this.layout.makeWeekLine(),
       this.layout.makePlanBody()
     );
