@@ -6,7 +6,7 @@
   font-weight: normal;
   padding: 20px;
   padding-bottom: 5px;
-  
+
 
   &__text-container {
     display: flex;
@@ -29,7 +29,7 @@
     display: flex;
     box-shadow: $shadow;
 
-    & > * {
+    &>* {
       transition: .3s;
       transform: scale(0) translateX(-1000px);
     }
@@ -73,16 +73,17 @@
     padding: 20px 0px;
 
     &_drag {
-        border-width: 3px;
-      }
-    
-      &_over {
-        background-color: $success-trans;
-      }
+      border-width: 3px;
+    }
+
+    &_over {
+      background-color: $success-trans;
+    }
 
     &:hover {
       transform: scale(.98);
-      & > .plan__day-body {
+
+      &>.plan__day-body {
         box-shadow: $none-shadow;
       }
     }
@@ -105,7 +106,7 @@
       border: 1px dotted $font-medium;
     }
 
-    & > * {
+    &>* {
       transition: .3s;
       transform: scale(0) translateY(1000px);
     }
@@ -142,8 +143,8 @@
     transform: scale(0);
 
     &.plan__button-add_drag {
-        transform: translateY(30%);
-      }
+      transform: translateY(30%);
+    }
   }
 
 
@@ -181,7 +182,7 @@
       background-color: $color-background-2-trans;
     }
 
-    & > * {
+    &>* {
       height: 30px;
       width: 40px;
       background-repeat: no-repeat;
@@ -197,7 +198,7 @@
   position: relative;
   height: calc(100% - 160px);
 
-  & > * {
+  &>* {
     display: flex;
 
     flex-wrap: wrap;
@@ -212,17 +213,4 @@
   &__small {
     width: 40%;
   }
-}
-
-.banner {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: $font-light;
-  background-color: $color-background-2;
-  padding: 50px;
-  width: 500px;
-  height: 500px;
-  border-radius: 100%;
-  box-shadow: $shadow;
 }
