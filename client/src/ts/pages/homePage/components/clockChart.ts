@@ -23,7 +23,13 @@ class ClockChart extends Clock {
 
   chartData: ChartData[];
 
+  halfOfDay: string;
+
   minutes: number;
+
+  seconds: number;
+
+  currPlan: ChartData;
 
   currPlanNum: number;
 
@@ -38,7 +44,10 @@ class ClockChart extends Clock {
     this.distributedPlans = [];
     this.dayData = [emptyData, emptyData];
     this.chartData = emptyData;
+    this.halfOfDay = InnerText.timeOfDayAM;
     this.minutes = 0;
+    this.seconds = 1;
+    [this.currPlan] = emptyData;
     this.currPlanNum = 0;
     this.currColor = this.chartData[0].color;
     this.dayOfWeek = 0;
@@ -114,6 +123,19 @@ class ClockChart extends Clock {
     this.splitData(data);
   }
 
+  returnDataObj(counter: number, i: number) {
+    return {
+      id: counter,
+      _id: this.distributedPlans[i]._id,
+      hours: (this.distributedPlans[i].to - this.distributedPlans[i].from) / 60,
+      from: this.distributedPlans[i].from,
+      to: this.distributedPlans[i].to,
+      color: this.distributedPlans[i].color,
+      title: this.distributedPlans[i].title,
+      text: this.distributedPlans[i].text,
+    };
+  }
+
   splitData(data: ChartData[]) {
     const AMData: ChartData[] = [];
     const PMData: ChartData[] = [];
@@ -136,88 +158,52 @@ class ClockChart extends Clock {
     });
 
     this.dayData = [AMData, PMData];
-    this.getCurrData();
   }
 
-  getCurrData() {
-    const [hours] = this.getCurrTime();
-    // const [hours, , s] = this.getCurrTime();
-    // if (s === 0) {
-    //   this.getDistributedPlans();
-    //   this.transformData();
-    // }
-
-    const currData = hours < Values.clockHours ? this.dayData[0] : this.dayData[1];
-    this.chartData = currData;
-    return currData;
+  setHalfOfDayData() {
+    this.chartData = this.hours < Values.clockHours ? this.dayData[0] : this.dayData[1];
+    this.halfOfDay = this.hours < Values.clockHours ? InnerText.timeOfDayAM : InnerText.timeOfDayPM;
   }
 
-  getCurrTime() {
+  setCurrTime() {
     const date = new Date();
     const day = date.getDay() - 1;
     const hours = date.getHours();
     const minutes = hours * 60 + date.getMinutes();
-    const s = date.getSeconds() + minutes * 60;
+    this.seconds = minutes * 60 + date.getSeconds();
     this.dayOfWeek = day;
     this.hours = hours;
     this.minutes = minutes;
-    return [hours, minutes, s];
   }
 
   updateDataByTime() {
-    this.getCurrData();
-    this.setDataByTime();
     setInterval(() => {
       if (!(window.location.pathname === Path.home) || !document.querySelector(`.${HomePageClassList.clock}`)) return;
-      this.getCurrData();
-      const sector = this.chartData.findIndex((el) => el.id === this.currPlanNum);
-      // console.log('updData', this.minutes, this.chartData[sector].to);
-      if (this.minutes === this.chartData[sector].to) {
-        this.setDataByTime();
-        const toDo = getExistentElement(`.${HomePageClassList.toDo}`);
-        toDo.style.backgroundColor = this.currColor;
-        toDo.innerHTML = '';
-        const toDoList = this.toDoInst.draw(this.currPlanNum, this.chartData, this.distributedPlans);
-        toDo.append(toDoList);
-      }
-      // if (this.minutes === Values.allDayMinutes) {
-      //   this.transformData();
-      // }
-      this.checkTodo();
+      this.setCurrTime();
+      this.setHalfOfDayData();
+      this.setChartSector();
     }, 1000);
   }
 
-  checkTodo() {
-    if (!document.querySelector(`.${HomePageClassList.toDoTitle}`)) {
-      const toDo = getExistentElement(`.${HomePageClassList.toDo}`);
-      toDo.style.backgroundColor = this.currColor;
-      toDo.innerHTML = '';
-      const toDoList = this.toDoInst.draw(this.currPlanNum, this.chartData, this.distributedPlans);
-      toDo.append(toDoList);
-    } // test
+  setChartSector() {
+    if (this.minutes === this.currPlan.to) {
+      this.setDataByTime();
+      this.updateToDo();
+    }
   }
+
+  // handlers
 
   setDataByTime() {
     const currPlan = this.chartData.filter((el) => this.minutes >= el.from && this.minutes < el.to);
+    [this.currPlan] = currPlan;
     this.currPlanNum = currPlan[0].id;
     this.currColor = currPlan[0].color;
   }
 
-  returnDataObj(counter: number, i: number) {
-    return {
-      id: counter,
-      _id: this.distributedPlans[i]._id,
-      hours: (this.distributedPlans[i].to - this.distributedPlans[i].from) / 60,
-      from: this.distributedPlans[i].from,
-      to: this.distributedPlans[i].to,
-      color: this.distributedPlans[i].color,
-      title: this.distributedPlans[i].title,
-      text: this.distributedPlans[i].text,
-    };
-  }
-
   private showToDo(e: Event) {
     if (!(e.target instanceof SVGCircleElement) || !e.target.id) return;
+    const sector = +e.target.id;
     const toDo = getExistentElement(`.${HomePageClassList.toDo}`);
     const color = e.target.getAttribute(Attributes.stroke);
     if (color) toDo.style.backgroundColor = color;
@@ -226,7 +212,9 @@ class ClockChart extends Clock {
       getExistentElement(`.${HomePageClassList.timeOfDay}`).textContent === InnerText.timeOfDayAM
         ? this.dayData[0]
         : this.dayData[1];
-    const toDoList = this.toDoInst.draw(+e.target.id, data, this.distributedPlans);
+    let plan = data.find((el) => el.id === sector);
+    if (!plan) plan = this.currPlan;
+    const toDoList = this.toDoInst.draw(plan, this.distributedPlans);
     toDo.append(toDoList);
   }
 
@@ -236,7 +224,7 @@ class ClockChart extends Clock {
     const toDo = getExistentElement(`.${HomePageClassList.toDo}`);
     toDo.style.backgroundColor = this.currColor;
     toDo.innerHTML = '';
-    const toDoList = this.toDoInst.draw(this.currPlanNum, this.chartData, this.distributedPlans);
+    const toDoList = this.toDoInst.draw(this.currPlan, this.distributedPlans);
     toDo.append(toDoList);
   }
 
@@ -249,30 +237,44 @@ class ClockChart extends Clock {
       e.target.textContent = InnerText.timeOfDayAM;
       [this.chartData] = this.dayData;
     }
+    this.updateChart();
+  }
+
+  showCurrHalfOfDay() {
+    getExistentElement(`.${HomePageClassList.timeOfDay}`).textContent = this.halfOfDay;
+    this.setHalfOfDayData();
+    this.updateChart();
+  }
+
+  // update
+
+  updateToDo() {
+    const toDo = getExistentElement(`.${HomePageClassList.toDo}`);
+    toDo.style.backgroundColor = this.currColor;
+    toDo.innerHTML = '';
+    const toDoList = this.toDoInst.draw(this.currPlan, this.distributedPlans);
+    toDo.append(toDoList);
+  }
+
+  updateChart() {
     const chart = getExistentElement(`.${HomePageClassList.chart}`);
     chart.innerHTML = '';
     this.chartInst.createChart(chart, this.chartData, { strokeWidth: 14, radius: 285 });
     getExistentElement(`.${HomePageClassList.clock}`).append(chart);
   }
 
-  showCurrTimeOfDay() {
-    getExistentElement(`.${HomePageClassList.timeOfDay}`).textContent = this.getTimeOfDay();
-    this.chartData = this.getCurrData();
-    const chart = getExistentElement(`.${HomePageClassList.chart}`);
-    chart.innerHTML = '';
-    this.chartInst.createChart(chart, this.chartData, { strokeWidth: 14, radius: 285 });
-    getExistentElement(`.${HomePageClassList.clock}`).append(chart);
-  }
-
-  getTimeOfDay() {
-    return this.hours < Values.clockHours ? InnerText.timeOfDayAM : InnerText.timeOfDayPM;
+  setValidChartData() {
+    this.transformData();
+    this.setCurrTime();
+    this.setHalfOfDayData();
+    this.setDataByTime();
   }
 
   draw(distributedPlans: DistDayPlan[], dayNum: number) {
     this.setDistributedPlans(distributedPlans, dayNum);
-    console.log(this.distributedPlans);
-    this.transformData(); // login && data
+    this.setValidChartData();
     this.updateDataByTime();
+
     const clock = createNewElement('div', HomePageClassList.clock);
     const hour = createNewElement('div', HomePageClassList.hour);
     const hr = createNewElement('div', HomePageClassList.hourCircle);
@@ -286,17 +288,18 @@ class ClockChart extends Clock {
 
     const toDo = createNewElement('div', HomePageClassList.toDo);
     toDo.style.backgroundColor = this.currColor;
-    const toDoWrap = this.toDoInst.draw(this.currPlanNum, this.chartData, this.distributedPlans);
+    const toDoWrap = this.toDoInst.draw(this.currPlan, this.distributedPlans);
 
     const timeOfDay = createNewElement('div', HomePageClassList.timeOfDay);
-    timeOfDay.innerText = this.getTimeOfDay();
-    timeOfDay.addEventListener('click', (e) => this.changeTimeOfDay(e));
+    timeOfDay.innerText = this.halfOfDay;
+
     toDo.append(toDoWrap);
     clock.append(hour, minutes, chart, toDo, timeOfDay);
 
+    timeOfDay.addEventListener('click', (e) => this.changeTimeOfDay(e));
     chart.addEventListener('mouseover', (e) => this.showToDo(e));
     chart.addEventListener('mouseout', (e) => this.showCurrToDo(e));
-    clock.addEventListener('mouseleave', () => this.showCurrTimeOfDay());
+    clock.addEventListener('mouseleave', () => this.showCurrHalfOfDay());
 
     return clock;
   }

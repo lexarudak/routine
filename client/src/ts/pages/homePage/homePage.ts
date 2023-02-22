@@ -1,9 +1,9 @@
 import PageList from '../../base/enums/pageList';
-import { HomePageClassList } from '../../base/enums/classList';
+import { HomePageClassList, ClassList } from '../../base/enums/classList';
 import { GoToFn } from '../../base/types';
 import Page from '../page';
 import Api from '../../api';
-import { createElement, createNewElement, client } from '../../base/helpers';
+import { createElement, createNewElement, client, getExistentElementByClass } from '../../base/helpers';
 import ClockChart from './components/clockChart';
 import Thought from './components/thought';
 import RoutsList from '../../base/enums/routsList';
@@ -73,25 +73,20 @@ class HomePage extends Page {
   }
 
   private async setUserInfo() {
-    try {
-      console.log('setUserInfo');
-      const userInfo = await Promise.all([Api.getUserProfile(), Api.getConfirmDayInfo()]);
-      const [userProfile, confirmDayInfo] = userInfo;
-      this.userName = userProfile.name;
-      this.confirmDayInfo = confirmDayInfo;
-      this.confirmationTime = userProfile.confirmationTime;
-    } catch (error) {
-      console.log(error);
-    }
+    const userInfo = await Promise.all([Api.getUserProfile(), Api.getConfirmDayInfo()]);
+    const [userProfile, confirmDayInfo] = userInfo;
+    this.userName = userProfile.name;
+    this.confirmDayInfo = confirmDayInfo;
+    this.confirmationTime = userProfile.confirmationTime;
   }
 
   private async checkConfirmTime(confirmDay: HTMLElement) {
-    setInterval(() => {
-      if (!(window.location.pathname === Path.home)) return;
+    const chartInterval = setInterval(() => {
+      if (!(window.location.pathname === Path.home)) clearTimeout(chartInterval);
       if (this.clockChartInst.minutes >= this.confirmationTime && this.confirmDayInfo === false) {
-        confirmDay.classList.add('show');
+        confirmDay.classList.add(HomePageClassList.show);
       } else if (this.confirmDayInfo === true) {
-        confirmDay.classList.remove('show');
+        confirmDay.classList.remove(HomePageClassList.show);
       }
     }, 1000);
   }
@@ -103,39 +98,42 @@ class HomePage extends Page {
 
   protected async getFilledPage(): Promise<HTMLElement> {
     const page = document.createElement(HomePageClassList.section);
-    try {
-      const currentDayNum = this.getCurrentDayNum();
-      const canvas = this.createCanvas();
-      const [, thought, dayPlans] = await Promise.all([
-        this.setUserInfo(),
-        this.createThought(canvas),
-        Api.getDayDistribution(currentDayNum.toString()),
-      ]);
-      const confirmDay = createElement('div', HomePageClassList.confirmDay);
-      confirmDay.addEventListener('click', () => this.goTo(RoutsList.confirmPage));
-      this.checkConfirmTime(confirmDay);
+    const currentDayNum = this.getCurrentDayNum();
+    const canvas = this.createCanvas();
+    const [, thought, dayPlans] = await Promise.all([
+      this.setUserInfo(),
+      this.createThought(canvas),
+      Api.getDayDistribution(currentDayNum.toString()),
+    ]);
 
-      const plan = createElement('div', HomePageClassList.plan);
-      plan.textContent = InnerText.planText;
-      plan.addEventListener('click', () => this.goTo(RoutsList.planPage));
+    const confirmDay = createElement('div', HomePageClassList.confirmDay);
+    confirmDay.addEventListener('click', () => this.goTo(RoutsList.confirmPage));
+    this.checkConfirmTime(confirmDay);
 
-      const profile = createElement('div', HomePageClassList.profile);
-      profile.addEventListener('click', () => this.goTo(RoutsList.profilePage));
+    const plan = createElement('div', HomePageClassList.plan);
+    plan.textContent = InnerText.planText;
+    plan.addEventListener('click', () => this.goTo(RoutsList.planPage));
 
-      profile.textContent = this.userName;
+    const profile = createElement('div', HomePageClassList.profile);
+    profile.addEventListener('click', () => this.goTo(RoutsList.profilePage));
 
-      const clock = await this.clockChartInst.draw(dayPlans.distributedPlans, currentDayNum);
+    profile.textContent = this.userName;
 
-      page.append(canvas, thought, profile, plan, confirmDay, clock);
+    const clock = this.clockChartInst.draw(dayPlans.distributedPlans, currentDayNum);
 
-      setTimeout(() => {
-        this.clockChartInst.getTime();
-      });
-    } catch (error) {
-      this.goTo(RoutsList.loginPage);
-      console.log(error);
-    }
+    page.append(canvas, thought, profile, plan, confirmDay, clock);
+
     return page;
+  }
+
+  public async draw() {
+    const container = getExistentElementByClass(ClassList.mainContainer);
+    try {
+      await this.animatedFilledPageAppend(container);
+      this.clockChartInst.getTime();
+    } catch {
+      this.goTo(RoutsList.loginPage);
+    }
   }
 }
 
