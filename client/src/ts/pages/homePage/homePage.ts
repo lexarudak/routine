@@ -3,7 +3,8 @@ import { HomePageClassList, ClassList } from '../../base/enums/classList';
 import { GoToFn } from '../../base/types';
 import Page from '../page';
 import Api from '../../api';
-import { createElement, createNewElement, client, getExistentElementByClass } from '../../base/helpers';
+import { createNewElement, getExistentElementByClass } from '../../base/helpers';
+import { client } from './data/data';
 import ClockChart from './components/clockChart';
 import Thought from './components/thought';
 import RoutsList from '../../base/enums/routsList';
@@ -38,9 +39,9 @@ class HomePage extends Page {
   }
 
   private async createThought(canvas: HTMLCanvasElement) {
-    const thought = createElement('div', HomePageClassList.thought);
-    const thoughtContainer = createElement('div', HomePageClassList.thoughtContainer);
-    const thoughtTitle = createElement('h3', HomePageClassList.thoughtTitle);
+    const thought = createNewElement('div', HomePageClassList.thought);
+    const thoughtContainer = createNewElement('div', HomePageClassList.thoughtContainer);
+    const thoughtTitle = createNewElement('h3', HomePageClassList.thoughtTitle);
     thoughtTitle.textContent = InnerText.thoughtText;
     const [thoughtsDataList, allPlans]: [ThoughtsData[], Plan[]] = await Promise.all([
       Api.getThoughts(),
@@ -115,15 +116,15 @@ class HomePage extends Page {
       Api.getDayDistribution(currentDayNum.toString()),
     ]);
 
-    const confirmDay = createElement('div', HomePageClassList.confirmDay);
+    const confirmDay = createNewElement('div', HomePageClassList.confirmDay);
     confirmDay.addEventListener('click', () => this.goTo(RoutsList.confirmPage));
     this.checkConfirmTime(confirmDay);
 
-    const plan = createElement('div', HomePageClassList.plan);
+    const plan = createNewElement('div', HomePageClassList.plan);
     plan.textContent = InnerText.planText;
     plan.addEventListener('click', () => this.goTo(RoutsList.planPage));
 
-    const profile = createElement('div', HomePageClassList.profile);
+    const profile = createNewElement('div', HomePageClassList.profile);
     profile.addEventListener('click', () => this.goTo(RoutsList.profilePage));
 
     profile.textContent = this.userName;

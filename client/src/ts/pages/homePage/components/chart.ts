@@ -1,8 +1,9 @@
-import { ChartData, ChartConfig, SvgAttrs, ChartSector } from '../../../base/interfaces';
+import { ChartData, ChartConfig, SvgAttrs, ChartSector } from '../../../base/interface';
+import Values from '../../../base/enums/values';
 
 class Chart {
   createSvgElement(elementName: string, attrs: SvgAttrs) {
-    const svgNs = 'http://www.w3.org/2000/svg';
+    const svgNs = Values.svgLink;
     const svgEl = document.createElementNS(svgNs, elementName);
     Object.entries(attrs).forEach(([attrName, attrValue]) => svgEl.setAttributeNS(null, attrName, attrValue));
     return svgEl;

@@ -4,12 +4,11 @@ import { Attributes } from '../../../base/enums/attributes';
 import Values from '../../../base/enums/values';
 import Colors from '../../../base/enums/colors';
 import InnerText from '../../../base/enums/innerText';
-import { ChartData } from '../../../base/interfaces';
-import { DistDayPlan } from '../../../base/interface';
+import { DistDayPlan, ChartData } from '../../../base/interface';
 import Clock from './clock';
 import Chart from './chart';
 import ToDo from './toDo';
-import { emptyData } from '../data/chartData';
+import { emptyData } from '../data/data';
 import Path from '../../../base/enums/path';
 
 class ClockChart extends Clock {

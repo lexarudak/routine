@@ -1,4 +1,4 @@
-import { client } from '../../../base/helpers';
+import { client } from '../data/data';
 import Colors from '../../../base/enums/colors';
 
 class FlyingThought {
@@ -23,14 +23,11 @@ class FlyingThought {
 
     this.dx = dx;
     this.dy = dy;
-
-    // this.color = getColor();
   }
 
   draw(ctx: CanvasRenderingContext2D) {
     ctx.beginPath();
     ctx.arc(Math.round(this.x), Math.round(this.y), this.radius, 0, 2 * Math.PI);
-    // ctx.fillStyle = this.color;
     ctx.fillStyle = Colors.mediumGrey;
     ctx.fill();
     ctx.closePath();
