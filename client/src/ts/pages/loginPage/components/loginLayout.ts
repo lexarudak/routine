@@ -34,6 +34,7 @@ class LoginLayout {
     const checkBox = document.createElement('input');
     checkBox.type = 'checkbox';
     checkBox.id = Values.rememberMeId;
+    checkBox.checked = true;
     return checkBox;
   }
 

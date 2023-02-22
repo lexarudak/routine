@@ -80,7 +80,8 @@
         z-index: 10;
         transition: .2s;
       }
-
+    
+    &.timeline-div_fake,
     &:hover  {
 
       .timeline-div__name,
@@ -167,6 +168,7 @@
     background-color: inherit;
     border-radius: 15px;
     color: inherit;
+    // box-shadow: $shadow;
   }
 
   &_fake {
