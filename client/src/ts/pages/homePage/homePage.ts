@@ -9,6 +9,7 @@ import Thought from './components/thought';
 import RoutsList from '../../base/enums/routsList';
 import Path from '../../base/enums/path';
 import InnerText from '../../base/enums/innerText';
+import Values from '../../base/enums/values';
 import PlanEditor from '../planPage/components/planEditor';
 import Popup from '../../components/popup';
 import { Plan, ThoughtsData } from '../../base/interface';
@@ -88,7 +89,15 @@ class HomePage extends Page {
       } else if (this.confirmDayInfo === true) {
         confirmDay.classList.remove(HomePageClassList.show);
       }
+      if (this.clockChartInst.seconds === Values.startDayTime) this.getNewDayData();
     }, 1000);
+  }
+
+  private async getNewDayData() {
+    const currentDayNum = this.getCurrentDayNum();
+    const dayPlans = await Api.getDayDistribution((currentDayNum + 2).toString());
+    console.log(this.clockChartInst.seconds, dayPlans, currentDayNum);
+    this.clockChartInst.showNewDay(dayPlans.distributedPlans, currentDayNum);
   }
 
   private getCurrentDayNum() {

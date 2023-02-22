@@ -263,6 +263,13 @@ class ClockChart extends Clock {
     getExistentElement(`.${HomePageClassList.clock}`).append(chart);
   }
 
+  showNewDay(distributedPlans: DistDayPlan[], dayNum: number) {
+    this.setDistributedPlans(distributedPlans, dayNum);
+    this.setValidChartData();
+    this.updateToDo();
+    this.updateChart();
+  }
+
   setValidChartData() {
     this.transformData();
     this.setCurrTime();
