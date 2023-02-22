@@ -57,10 +57,11 @@ class ConfirmLayout extends Layout {
     container.dataset.id = plan[enums.DBAttributes.id];
 
     const title = helpers.cutStringLine(plan.title, 20);
+    const [bgColor] = helpers.getColors(plan.color);
 
     container.innerHTML = `
       <span class="confirm-plan__label">${title}</span>
-      <div class="plan-square confirm-plan__line" style="background-color: ${plan.color};">
+      <div class="plan-square confirm-plan__line" style="background-color: ${bgColor};">
         <div class="confirm-plan__arrows">
           <img class="confirm-plan__arrow confirm-plan__arrow_left" src="./assets/svg/arrow-left.svg" alt="Left">
           <img class="confirm-plan__arrow confirm-plan__arrow_right" src="./assets/svg/arrow-right.svg" alt="Right">

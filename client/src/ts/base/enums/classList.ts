@@ -5,6 +5,16 @@ const enum ClassList {
   banner = 'banner',
   imgContainer = 'img-container',
   scaleNormal = 'scale-normal',
+  title = 'title',
+  // header
+  header = 'header',
+  headerLogo = 'header__logo',
+  headerName = 'header__name',
+  headerInfo = 'header__info',
+  // nav
+  nav = 'nav',
+  navButton = 'nav__button',
+  navButtonActive = 'nav__button_active',
   // 404
   page404 = 'page-404',
   page404text = 'page-404__text',
@@ -37,7 +47,8 @@ const enum ClassList {
   infoTextContainer = 'plan__text-container',
   infoTextValue = 'plan__text-value',
   planBody = 'plan__body',
-  planTools = 'plan__tools',
+  planName = 'plan__name',
+  planLeftColumn = 'plan__left-column',
   planButtons = 'plan__buttons',
   planAddButton = 'plan__button-add',
   planAddButtonDarg = 'plan__button-add_drag',

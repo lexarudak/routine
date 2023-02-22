@@ -1,5 +1,6 @@
 import { ChartData, ChartConfig, SvgAttrs, ChartSector } from '../../../base/interface';
 import Values from '../../../base/enums/values';
+import { getColors } from '../../../base/helpers';
 
 class Chart {
   createSvgElement(elementName: string, attrs: SvgAttrs) {
@@ -42,7 +43,7 @@ class Chart {
         r: svgRadius,
         'stroke-dasharray': `${sector.width} ${circumference - sector.width}`,
         'stroke-dashoffset': sector.offset.toString(),
-        stroke: sector.color,
+        stroke: getColors(sector.color)[0],
         'stroke-width': strokeWidth,
       });
       svg.append(circle);

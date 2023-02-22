@@ -2,9 +2,8 @@
 import { SetAttribute } from '../base/enums/attributes';
 import ButtonClasses from '../base/enums/buttonClasses';
 import { ClassList } from '../base/enums/classList';
-import { createNewElement, makeColorTransparent, minToHour } from '../base/helpers';
+import { createNewElement, getColors, makeColorTransparent, minToHour } from '../base/helpers';
 import { Plan } from '../base/interface';
-import colorsAndFonts from './colorsAndFonts';
 import PlanRoundConfig from './planRoundConfig';
 import PlanRoundConfigDay from './planRoundConfigDay';
 import alignValues from './plansAlignValues';
@@ -23,8 +22,9 @@ class PlanRound {
   }
 
   private getUniqValue() {
-    const a = parseInt(this.planInfo.color.slice(6, 7), 16);
-    const b = parseInt(this.planInfo.color.slice(4, 5), 16);
+    const [bgColor] = getColors(this.planInfo.color);
+    const a = parseInt(bgColor.slice(6, 7), 16);
+    const b = parseInt(bgColor.slice(4, 5), 16);
     return a + b;
   }
 
@@ -64,7 +64,8 @@ class PlanRound {
     round.classList.add(ClassList.planRound, ButtonClasses.button);
     time.classList.add(ClassList.planRoundVal);
 
-    round.style.backgroundColor = this.planInfo.color;
+    const [bgColor, fontColor] = getColors(this.planInfo.color);
+    round.style.backgroundColor = bgColor;
     name.innerText = this.planInfo.title;
     name.style.fontSize = this.getFontSize();
     time.innerText = minToHour(this.planInfo.duration);
@@ -74,11 +75,8 @@ class PlanRound {
     const val = this.getUniqValue();
     round.style.margin = `${val}px`;
     round.style.alignSelf = `${alignValues[val % alignValues.length]}`;
-    const fontColor = colorsAndFonts.get(this.planInfo.color);
-    if (fontColor) {
-      round.style.color = fontColor;
-      time.style.color = makeColorTransparent(fontColor, 50);
-    }
+    round.style.color = fontColor;
+    time.style.color = makeColorTransparent(fontColor, 50);
 
     round.append(name, this.blur, time);
     return round;

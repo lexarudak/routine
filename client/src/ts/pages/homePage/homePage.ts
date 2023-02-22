@@ -3,7 +3,7 @@ import { HomePageClassList, ClassList } from '../../base/enums/classList';
 import { GoToFn } from '../../base/types';
 import Page from '../page';
 import Api from '../../api';
-import { createNewElement, getExistentElementByClass } from '../../base/helpers';
+import { createNewElement, getCurrentDayNum, getExistentElementByClass } from '../../base/helpers';
 import { client } from './data/data';
 import ClockChart from './components/clockChart';
 import Thought from './components/thought';
@@ -95,20 +95,15 @@ class HomePage extends Page {
   }
 
   private async getNewDayData() {
-    const currentDayNum = this.getCurrentDayNum();
+    const currentDayNum = getCurrentDayNum();
     const dayPlans = await Api.getDayDistribution((currentDayNum + 2).toString());
     console.log(this.clockChartInst.seconds, dayPlans, currentDayNum);
     this.clockChartInst.showNewDay(dayPlans.distributedPlans, currentDayNum);
   }
 
-  private getCurrentDayNum() {
-    const date = new Date();
-    return date.getDay() - 1;
-  }
-
   protected async getFilledPage(): Promise<HTMLElement> {
     const page = document.createElement(HomePageClassList.section);
-    const currentDayNum = this.getCurrentDayNum();
+    const currentDayNum = getCurrentDayNum();
     const canvas = this.createCanvas();
     const [, thought, dayPlans] = await Promise.all([
       this.setUserInfo(),

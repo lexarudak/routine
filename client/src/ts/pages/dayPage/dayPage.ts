@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import Api from '../../api';
 import { ClassList } from '../../base/enums/classList';
+import Days from '../../base/enums/days';
 import EditorMode from '../../base/enums/editorMode';
 import ErrorsList from '../../base/enums/errorsList';
 import InnerText from '../../base/enums/innerText';
@@ -17,6 +18,7 @@ import {
 } from '../../base/helpers';
 import { DistDayPlan, Plan } from '../../base/interface';
 import { GoToFn, PlanDis } from '../../base/types';
+import Header from '../../components/header';
 import PlanRound from '../../components/planRound';
 import PlanRoundConfigDay from '../../components/planRoundConfigDay';
 import Popup from '../../components/popup';
@@ -44,6 +46,8 @@ class DayPage extends Page {
 
   timeLine: Timeline;
 
+  header: Header;
+
   planRounds: PlanRound[] = [];
 
   constructor(goTo: GoToFn, popup: Popup, editor: PlanEditor) {
@@ -51,6 +55,7 @@ class DayPage extends Page {
     this.popup = popup;
     this.layout = new PlanLayout(goTo);
     this.timeLine = new Timeline(goTo);
+    this.header = new Header(goTo);
   }
 
   private setRoundClick(roundDiv: HTMLElement, round: PlanRound) {
@@ -212,10 +217,10 @@ class DayPage extends Page {
 
     this.makePlans();
     const container = createNewElement('div', ClassList.dayPageContainer);
+    this.header.paintToday(this.dayId);
 
     container.append(
-      this.layout.makeButtonsBlock(),
-      this.layout.makeInfoText(InnerText.allDayHours),
+      this.header.draw(Days[Number(this.dayId)], undefined, this.layout.makeInfoText(InnerText.allDayHours)),
       createNewElement('div', ClassList.timelineHeader),
       this.timeLine.draw(),
       this.layout.makeDayBody(this.dayId, this.allDayPlans, this.distPlans)
