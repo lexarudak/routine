@@ -8,6 +8,7 @@ const enum InnerText {
   allWeekHours = ' / 168 h',
   allDayHours = ' / 24 h',
   defaultPlanText = '- Make some awesome things',
+  emptyPlanText = 'There are no plans at this time.',
   defaultPlanName = 'Plan for ...',
   hoursText = 'Hours',
   minutesText = 'Minutes',

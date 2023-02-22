@@ -157,6 +157,7 @@ const enum HomePageClassList {
   none = 'none',
   open = 'open',
   blur = 'blur',
+  show = 'show',
 }
 
 const enum ProfilePageClassList {

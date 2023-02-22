@@ -1,4 +1,4 @@
-import { getExistentElement, createElement } from '../../../base/helpers';
+import { getExistentElement, createNewElement } from '../../../base/helpers';
 import { HomePageClassList } from '../../../base/enums/classList';
 import Path from '../../../base/enums/path';
 import Links from '../../../base/enums/links';
@@ -68,8 +68,8 @@ class Clock {
 
     const hr = getExistentElement(`.${HomePageClassList.hourCircle}`);
     const min = getExistentElement(`.${HomePageClassList.minutesCircle}`);
-    const dayInfoHTML = createElement('div', HomePageClassList.dayInfo);
-    const dayIcon = createElement('div', HomePageClassList.dayIcon);
+    const dayInfoHTML = createNewElement('div', HomePageClassList.dayInfo);
+    const dayIcon = createNewElement('div', HomePageClassList.dayIcon);
 
     this.showTime(deg, hourDeg, hourCount, hr, min, dayInfoHTML, dayIcon);
     setInterval(() => {

@@ -1,27 +1,22 @@
 import {
-  createElement,
   createNewElement,
   isHTMLElement,
   getExistentElement,
-  client,
   getExistentElementByClass,
   makeBanner,
 } from '../../../base/helpers';
+import { client } from '../data/data';
 import { HomePageClassList } from '../../../base/enums/classList';
 import Api from '../../../api';
 import { ThoughtsData } from '../../../base/interface';
 import { SetAttribute, GetAttribute } from '../../../base/enums/attributes';
 import FlyingThought from './flyingThought';
 import { GoToFn } from '../../../base/types';
-// import RoutsList from '../../../base/enums/routsList';
-// import Path from '../../../base/enums/path';
 import PlanEditor from '../../planPage/components/planEditor';
 import Popup from '../../../components/popup';
 import Values from '../../../base/enums/values';
 import EditorMode from '../../../base/enums/editorMode';
 import ErrorsList from '../../../base/enums/errorsList';
-// import Values from '../../../base/enums/values';
-// import EditorMode from '../../../base/enums/editorMode';
 
 class Thought {
   goTo: GoToFn;
@@ -207,8 +202,8 @@ class Thought {
   }
 
   draw(elClass: string) {
-    const thoughtAdd = createElement('div', elClass);
-    const thoughtAddBtn = createElement('div', HomePageClassList.thoughtAddBtn);
+    const thoughtAdd = createNewElement('div', elClass);
+    const thoughtAddBtn = createNewElement('div', HomePageClassList.thoughtAddBtn);
     thoughtAdd.classList.add(HomePageClassList.none);
 
     const thoughtInput = createNewElement<HTMLInputElement>('input', HomePageClassList.thoughtInput);

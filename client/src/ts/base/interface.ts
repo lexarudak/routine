@@ -92,3 +92,50 @@ export interface DayDist {
   dayOfWeek: number;
   dayDistribution: DistPlan[];
 }
+
+export interface ChartData {
+  id: number;
+  _id: string;
+  hours: number;
+  from: number;
+  to: number;
+  color: string;
+  title: string;
+  text: string;
+}
+
+export interface ThoughtData {
+  title: string;
+}
+
+export interface ChartConfig {
+  strokeWidth: number;
+  radius: number;
+}
+
+export interface ChartSector {
+  id: number;
+  hours: number;
+  color: string;
+  width: number;
+  offset: number;
+}
+
+export interface SvgAttrs {
+  id?: number;
+  viewBox?: string;
+  fill?: string;
+  width?: number;
+  height?: number;
+  cx?: number;
+  cy?: number;
+  r?: number;
+  'stroke-dasharray'?: string;
+  'stroke-dashoffset'?: string;
+  stroke?: string;
+  'stroke-width'?: number;
+}
+
+export interface ObjNum {
+  [id: string]: number;
+}

@@ -24,28 +24,11 @@ function getExistentElementByClass<T extends HTMLElement>(
   return getExistentElement(`.${selector}`, node);
 }
 
-const createElement = (tag: string, className: string): HTMLElement => {
-  const element: HTMLElement = document.createElement(tag);
-  element.classList.add(className);
-  return element;
-};
-
 function createNewElement<T extends HTMLElement>(tag: string, className: string): T {
   const element = document.createElement(tag);
   element.classList.add(className);
   return <T>element;
 }
-
-const container = 1380;
-
-const client = {
-  width: document.documentElement.clientWidth,
-  height: document.documentElement.clientHeight,
-  planPosWidth: document.documentElement.clientWidth / 2 - container / 2 + 250,
-  planPosHeight: document.documentElement.clientHeight / 2 - 15,
-  clockPosWidth: document.documentElement.clientWidth / 2 + container / 2 - 330,
-  clockPosHeight: document.documentElement.clientHeight / 2 - 15,
-};
 
 function getExistentInputElement<T extends HTMLElement>(
   selector: string,
@@ -191,9 +174,7 @@ export {
   timeToMin,
   getEventTarget,
   loginRedirect,
-  createElement,
   createNewElement,
-  client,
   isDayOfWeek,
   sortAllPlans,
   makeRoundIcon,
