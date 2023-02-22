@@ -6,12 +6,12 @@ import ErrorsList from '../../../base/enums/errorsList';
 import {
   buttonOff,
   createNewElement,
+  getColors,
   getExistentElementByClass,
   getExistentInputElement,
   loginRedirect,
 } from '../../../base/helpers';
 import { Plan } from '../../../base/interface';
-import colorsAndFonts from '../../../components/colorsAndFonts';
 import Popup from '../../../components/popup';
 import TimeSlider from './timeSlider';
 import defaultPlan from './defaultPlan';
@@ -23,6 +23,7 @@ import { GoToFn } from '../../../base/types';
 import RoutsList from '../../../base/enums/routsList';
 import InnerText from '../../../base/enums/innerText';
 import Days from '../../../base/enums/days';
+import { colorsAndFonts } from '../../../components/colorsAndFonts';
 
 class PlanEditor {
   goTo: GoToFn;
@@ -115,7 +116,7 @@ class PlanEditor {
       this.plan = JSON.parse(savedNewPlan);
     } else {
       this.plan = { ...defaultPlan };
-      this.plan.color = this.getRandomColor();
+      this.plan.color = this.getRandomColorId();
     }
   }
 
@@ -170,31 +171,31 @@ class PlanEditor {
     if (textArea instanceof HTMLTextAreaElement) this.plan.text = textArea.value;
   }
 
-  private getRandomColor() {
-    const maxVal = colorsAndFonts.size;
-    const num = Math.floor(Math.random() * maxVal);
-    const arr: string[] = [];
-    colorsAndFonts.forEach((_font, color) => {
-      arr.push(color);
-    });
-    return arr[num];
+  private getRandomColorId() {
+    const min = 1;
+    const max = colorsAndFonts.length;
+    return (Math.floor(Math.random() * (max - min)) + min).toString();
   }
 
   private drawEditor() {
-    const secColor = colorsAndFonts.get(this.plan.color);
-    if (!secColor) throw new Error(ErrorsList.notStandardColor);
-    const container = this.makeContainer(secColor);
+    const [bgColor, fontColor] = getColors(this.plan.color);
+    const container = this.makeContainer(bgColor, fontColor);
     const tools = createNewElement('div', ClassList.editorTools);
 
-    tools.append(this.makeAcceptButton(secColor), this.colorPicker(), this.makeColorBox(), this.slider.draw(this.mode));
+    tools.append(
+      this.makeAcceptButton(fontColor),
+      this.colorPicker(),
+      this.makeColorBox(),
+      this.slider.draw(this.mode)
+    );
     container.append(tools, this.makeTitle(), this.makeText());
     this.popup.open(container);
   }
 
-  private makeContainer(secColor: string) {
+  private makeContainer(bgColor: string, fontColor: string) {
     const editor = createNewElement('div', ClassList.editor);
-    editor.style.backgroundColor = this.plan.color;
-    editor.style.color = secColor;
+    editor.style.backgroundColor = bgColor;
+    editor.style.color = fontColor;
     return editor;
   }
 
@@ -263,17 +264,18 @@ class PlanEditor {
   private makeColorBox() {
     const box = createNewElement('div', ClassList.editorColorBox);
 
-    colorsAndFonts.forEach((_value, color) => {
-      box.append(this.makeColorRound(color));
+    colorsAndFonts.forEach((_value, id) => {
+      if (id !== 0) box.append(this.makeColorRound(id.toString()));
     });
 
     return box;
   }
 
-  private makeColorRound(color: string) {
+  private makeColorRound(colorId: string) {
+    const [bgColor] = getColors(colorId);
     const round = createNewElement('div', ClassList.editorColorRound);
-    round.style.backgroundColor = color;
-    round.setAttribute(SetAttribute.pickerColor, color);
+    round.style.backgroundColor = bgColor;
+    round.setAttribute(SetAttribute.pickerColor, colorId);
 
     round.addEventListener('click', () => this.toggleColorBox());
     round.addEventListener('click', (e) => this.changeColor(e));
@@ -283,22 +285,20 @@ class PlanEditor {
   private changeColor(e: Event) {
     const { target } = e;
     if (target instanceof HTMLElement) {
-      const color = target.dataset[GetAttribute.pickerColor];
-      if (color) {
-        this.plan.color = color;
-        this.paintEditor(color);
+      const colorId = target.dataset[GetAttribute.pickerColor];
+      if (colorId) {
+        this.plan.color = colorId;
+        this.paintEditor(colorId);
       }
     }
   }
 
-  private paintEditor(color: string) {
+  private paintEditor(colorId: string) {
+    const [bgColor, fontColor] = getColors(colorId);
     const editor = getExistentElementByClass(ClassList.editor);
-    editor.style.backgroundColor = color;
-    const secondColor = colorsAndFonts.get(color);
-    if (secondColor) {
-      editor.style.color = secondColor;
-      getExistentElementByClass(ClassList.editorSaveIcon).style.stroke = secondColor;
-    }
+    editor.style.backgroundColor = bgColor;
+    editor.style.color = fontColor;
+    getExistentElementByClass(ClassList.editorSaveIcon).style.stroke = fontColor;
   }
 
   private toggleColorBox() {

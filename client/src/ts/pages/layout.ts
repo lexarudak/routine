@@ -8,8 +8,9 @@ import { createNewElement, getExistentElementByClass } from '../base/helpers';
 import * as enums from '../base/enums/enums';
 
 class Layout {
-  public makeNavButton(name: string, routPath: RoutsList, callback: GoToFn) {
-    const btn: HTMLButtonElement = createNewElement('button', ButtonClasses.navButton);
+  public makeNavButton(name: string, routPath: RoutsList | string, callback: GoToFn) {
+    const btn: HTMLButtonElement = createNewElement('button', ClassList.navButton);
+    btn.classList.add(ButtonClasses.navButton);
 
     btn.innerText = name;
     btn.addEventListener('click', () => callback(routPath));

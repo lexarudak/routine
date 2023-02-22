@@ -10,11 +10,11 @@ import { ClassList, ProfilePageClassList } from '../../base/enums/classList';
 
 import PagesList from '../../base/enums/pageList';
 import ErrorsList from '../../base/enums/errorsList';
-import ButtonNames from '../../base/enums/buttonNames';
-import RoutsList from '../../base/enums/routsList';
 
 import * as helpers from '../../base/helpers';
 import * as enums from '../../base/enums/enums';
+import NavButtons from '../../base/enums/navButtons';
+import Header from '../../components/header';
 
 class ProfilePage extends Page {
   layout: ProfileLayout;
@@ -23,9 +23,12 @@ class ProfilePage extends Page {
 
   statistics: Statistics[] = [];
 
+  header: Header;
+
   constructor(goTo: GoToFn, editor: PlanEditor) {
     super(PagesList.profilePage, goTo, editor);
     this.layout = new ProfileLayout();
+    this.header = new Header(goTo);
   }
 
   private async setProfileInfo() {
@@ -83,7 +86,7 @@ class ProfilePage extends Page {
     wrapper.classList.add(ProfilePageClassList.profileWrapper);
     wrapper.append(this.layout.makeUserData(this.profile), this.layout.makeStatistics(this.statistics));
 
-    container.append(this.layout.makeNavButton(ButtonNames.home, RoutsList.homePage, this.goTo), wrapper);
+    container.append(this.header.draw(PagesList.profilePage, NavButtons.profile), wrapper);
     return container;
   }
 

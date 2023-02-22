@@ -5,7 +5,7 @@ const emptyData = [
     hours: 24,
     from: 0,
     to: 1440,
-    color: '#afafaf',
+    color: '0',
     title: 'Free time',
     text: '',
   },

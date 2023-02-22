@@ -3,6 +3,7 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   font-weight: normal;
   padding: 20px;
   padding-bottom: 5px;
@@ -14,11 +15,11 @@
     justify-content: flex-end;
     font-size: 14px;
     padding-right: 5px;
-    width: 100%;
   }
 
   &__week-line {
     margin-top: 10px;
+    margin-bottom: 20px;
     width: 100%;
     overflow: hidden;
     flex-shrink: 0;
@@ -40,18 +41,33 @@
     display: flex;
     align-items: flex-end;
     width: 100%;
-    height: calc(100% - 40px);
+    height: calc(100% - 77px);
   }
 
-  &__tools {
-    width: 350px;
+  &__field {
+    width: 100%;
     height: 100%;
     display: flex;
     flex-direction: column;
+    position: relative;
+    overflow: auto;
   }
 
+  &__left-column {
+    // height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    height: calc(100% - 1px);
+  }
+
+  &__name {
+    margin: 45px 5px;
+  }
+
+
   &__days {
-    height: 85%;
+    height: calc(100% - 140px);
     display: flex;
     position: relative;
     justify-content: space-between;
@@ -112,21 +128,13 @@
     }
   }
 
-  &__field {
-    height: 100%;
-    display: flex;
-    flex-grow: 1;
-    flex-direction: column;
-    position: relative;
-  }
-
   &__buttons {
     display: flex;
     flex-direction: row-reverse;
     gap: 25px;
     align-items: flex-end;
-    height: 160px;
-    padding-bottom: 5px;
+    height: 180px;
+    padding: 20px 0px;
   }
 
   &__button-add {
@@ -196,7 +204,7 @@
   display: flex;
   overflow: auto;
   position: relative;
-  height: calc(100% - 160px);
+  height: calc(100%);
 
   &>* {
     display: flex;

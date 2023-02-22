@@ -1,4 +1,4 @@
-import { createNewElement, getExistentElement } from '../../../base/helpers';
+import { createNewElement, getColors, getExistentElement } from '../../../base/helpers';
 import { HomePageClassList } from '../../../base/enums/classList';
 import { Attributes } from '../../../base/enums/attributes';
 import Values from '../../../base/enums/values';
@@ -34,6 +34,8 @@ class ClockChart extends Clock {
 
   currColor: string;
 
+  currFontColor: string;
+
   dayOfWeek: number;
 
   constructor() {
@@ -48,7 +50,7 @@ class ClockChart extends Clock {
     this.seconds = 1;
     [this.currPlan] = emptyData;
     this.currPlanNum = 0;
-    this.currColor = this.chartData[0].color;
+    [this.currColor, this.currFontColor] = getColors(this.chartData[0].color);
     this.dayOfWeek = 0;
   }
 
@@ -197,7 +199,7 @@ class ClockChart extends Clock {
     const currPlan = this.chartData.filter((el) => this.minutes >= el.from && this.minutes < el.to);
     [this.currPlan] = currPlan;
     this.currPlanNum = currPlan[0].id;
-    this.currColor = currPlan[0].color;
+    [this.currColor, this.currFontColor] = getColors(currPlan[0].color);
   }
 
   private showToDo(e: Event) {

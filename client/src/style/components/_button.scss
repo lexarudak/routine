@@ -63,13 +63,19 @@
   color: $font-medium;
   border: none;
   background: none;
-  font-size: 16px;
+  font-size: 14px;
   transition: .3s;
   width: auto;
+  text-transform: capitalize;
+
+  &_active {
+    color: $success;
+    font-weight: 600;
+  }
+
 
   &:hover {
     color: $success;
-    transform: scale(.95);
   }
 }
 

@@ -4,6 +4,7 @@ import { ClassList } from '../../../base/enums/classList';
 import Values from '../../../base/enums/values';
 import {
   createNewElement,
+  getColors,
   getExistentElementByClass,
   loginRedirect,
   minToHourTimeline,
@@ -12,7 +13,6 @@ import {
 } from '../../../base/helpers';
 import { DistDayPlan, Plan } from '../../../base/interface';
 import { GoToFn } from '../../../base/types';
-import colorsAndFonts from '../../../components/colorsAndFonts';
 
 class TimelineDiv {
   pxToMin: (px: number) => number;
@@ -177,6 +177,7 @@ class TimelineDiv {
   }
 
   private makeDiv() {
+    const [bgColor, fontColor] = getColors(this.plan.color);
     const div: HTMLDivElement = createNewElement('div', ClassList.timelineDiv);
     div.setAttribute('draggable', 'true');
     div.setAttribute(SetAttribute.planTimelineId, this.plan._id);
@@ -187,11 +188,10 @@ class TimelineDiv {
 
     this.addSizeListener(left, this.leftButtonResize.bind(this), this.setZoneStart.bind(this));
     this.addSizeListener(right, this.rightButtonResize.bind(this), this.setZoneEnd.bind(this));
-    const textColor = colorsAndFonts.get(this.plan.color);
-    if (textColor) div.style.color = textColor;
+    div.style.color = fontColor;
 
     const body = createNewElement('div', ClassList.timelineDivBody);
-    body.style.backgroundColor = this.plan.color;
+    body.style.backgroundColor = bgColor;
     body.append(left, this.name, right);
 
     div.append(this.from, body, this.to);
