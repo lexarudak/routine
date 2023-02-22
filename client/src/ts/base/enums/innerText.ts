@@ -13,7 +13,7 @@ const enum InnerText {
   hoursText = 'Hours',
   minutesText = 'Minutes',
   thoughtText = 'Thought',
-  planText = 'Plan',
+  weekText = 'Week',
   emptyTitle = 'Free time',
   emptyText = '',
   timeOfDayAM = 'AM',
