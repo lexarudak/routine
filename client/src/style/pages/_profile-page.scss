@@ -35,7 +35,7 @@
 
   &__info {
     margin: 10px 0 0 0;
-
+    font-weight: normal;
   }
 }
 
@@ -47,22 +47,41 @@
 .settings {
   @include flexbox(center, flex-end);
   flex-direction: column;
+  position: relative;
 
   &__label {
-    padding: 0 1.5rem;
+    display: inline-block;
+    text-align: start;
+    width: 130px;
+    font-weight: normal;
+    color: $font-medium;
   }
 
   &__button {
     @include buttonable();
+    color: $font-medium;
 
     &_capitalized {
       text-transform: capitalize;
+    }
+
+    &:hover {
+      color: $success;
+      border-color: $success
     }
   }
 
   &__input {
     @include buttonable();
     padding: 3px 25px;
+    font-weight: normal;
+    color: $font-medium;
+    border-color: $font-medium;
+
+    &:hover {
+        color: $success;
+        border-color: $success
+      }
   }
 }
 
@@ -84,8 +103,9 @@
   position: relative;
 
   &__name {
-    padding: 0 0 1rem 0;
-    font-size: 24px;
+    padding: 0 0 1rem 1rem;
+    font-size: 20px;
+    font-weight: normal;
   }
 
   &__content {
