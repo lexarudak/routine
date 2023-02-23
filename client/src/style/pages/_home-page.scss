@@ -34,7 +34,7 @@ section {
   transition: 0.3s;
   &:hover {
     color: $success;
-    transform: scale(.95);
+    transform: scale(0.98);
     filter: none;
   }
 }
@@ -66,7 +66,7 @@ section {
     filter: drop-shadow(0px 4px 4px $shadow-dark);
 
     circle {
-      transition: 0.2s;
+      transition: 0.3s;
       cursor: pointer;
       &:hover {
         stroke-width: 20;
@@ -81,7 +81,7 @@ section {
   align-items: center;
   padding: 20px;
   background-color: $job-color;
-  color: $background-color;
+  color: inherit;
   position: absolute;
   width: 502px;
   height: 502px;
@@ -114,12 +114,12 @@ section {
     width: 100%;
     height: 90%;
     text-align: center;
+    color: inherit;
   }
 
   &__textarea {
     position: relative;
     padding-right: 10px;
-    color: $background-color;
     outline: none;
     background-color: transparent;
     border: none;
@@ -190,8 +190,8 @@ section {
 
 .time-of-day {
   position: absolute;
+  color: inherit;
   bottom: 104px;
-  color: $background-color;
   font-size: 18px;
   cursor: pointer;
   transition: 0.2s;
@@ -203,21 +203,18 @@ section {
 
 .day-info {
   position: absolute;
+  color: inherit;
   display: flex;
+  justify-content: center;
   flex-wrap: wrap;
   bottom: 140px;
-  color: $background-color;
   z-index: 11;
 
-  &__icon {
-    display: block;
+  svg {
     margin-bottom: 10px;
     width: 100%;
     height: 48px;
-    background: url('./assets/svg/sun.svg');
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
+    stroke:  $background-color;
   }
 
   &__date {
@@ -267,7 +264,7 @@ canvas {
     transform: translateY(0%);
     opacity: 1;
     &:hover {
-      transform: scale(.95);
+      transform: scale(0.95);
       filter: none;
     }
   }

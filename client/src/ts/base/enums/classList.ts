@@ -163,6 +163,7 @@ const enum HomePageClassList {
 
   dayInfo = 'day-info',
   dayIcon = 'day-info__icon',
+  daySvg = 'day-info__svg',
   timeOfDay = 'time-of-day',
 
   none = 'none',

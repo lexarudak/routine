@@ -44,6 +44,7 @@ class Chart {
         'stroke-dasharray': `${sector.width} ${circumference - sector.width}`,
         'stroke-dashoffset': sector.offset.toString(),
         stroke: getColors(sector.color)[0],
+        class: getColors(sector.color)[1],
         'stroke-width': strokeWidth,
       });
       svg.append(circle);
