@@ -32,13 +32,17 @@ class ProfileLayout extends Layout {
   }
 
   public getUserSettings() {
-    let classCSS = `.${ProfilePageClassList.settingsConfirmDay}>.${ProfilePageClassList.button}`;
+    let classCSS: string = ProfilePageClassList.greetingUserName;
+    const uiUserName = helpers.getExistentElementByClass<HTMLInputElement>(classCSS);
+
+    classCSS = `.${ProfilePageClassList.settingsConfirmDay}>.${ProfilePageClassList.button}`;
     const uiConfirmationDay = helpers.getExistentElement(classCSS);
 
     classCSS = `.${ProfilePageClassList.settingsConfirmTime}>.${ProfilePageClassList.button}`;
     const uiConfirmationTime = helpers.getExistentElement<HTMLInputElement>(classCSS);
 
     const settings: UserSettings = {
+      name: uiUserName.value,
       confirmationDay: (uiConfirmationDay.textContent || enums.ConfirmationDays.today) as ConfirmationDay,
       confirmationTime: helpers.timeToMin(uiConfirmationTime.value),
     };
@@ -52,8 +56,11 @@ class ProfileLayout extends Layout {
     const container = document.createElement('div');
     container.classList.add(ProfilePageClassList.greeting);
     container.innerHTML = `
-      <h1 class="${ProfilePageClassList.greetingHello} ${ClassList.title}">Hello, ${profile.name}!</h1>
-      <p class="${ProfilePageClassList.greetingInfo}">This is your ${day} day in this app</з>`;
+      <h1 class="${ProfilePageClassList.greetingHello} ${ClassList.title}">
+        Hello, <input class="${ProfilePageClassList.greetingUserName}" type="text" maxlength="30"
+          value="${profile.name}" placeholder="Anonymous"></input>
+      </h1>
+      <p class="${ProfilePageClassList.greetingInfo}">This is your ${day} day in this app</p>`;
 
     return container;
   }
@@ -94,11 +101,9 @@ class ProfileLayout extends Layout {
 
     element = document.createElement('div');
     element.classList.add(ProfilePageClassList.statisticsTankName);
-    console.log(name);
     switch (name) {
       case StatisticsTankNames.Fulfilled:
         element.classList.add('fulfilled');
-        console.log(element);
         break;
       case StatisticsTankNames.Underfulfilled:
         element.classList.add('underfulfilled');

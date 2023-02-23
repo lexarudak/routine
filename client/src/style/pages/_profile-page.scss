@@ -27,11 +27,22 @@
 }
 
 .greeting {
-  // &__hello {
-  //   font-weight: 400;
-  //   font-size: 40px;
-  //   color: $font-heading-1;
-  // }
+  flex-grow: 1;
+  padding: 0 30px 0 0;
+
+  &__user-name {
+    width: 80%;
+    font-size: 40px;
+    font-weight: 500;
+    color: inherit;
+    border: none;
+  }
+
+  &__user-name::placeholder {
+    font-size: 40px;
+    font-weight: 500;
+    color: inherit;
+  }
 
   &__info {
     margin: 10px 0 0 0;
@@ -79,9 +90,9 @@
     border-color: $font-medium;
 
     &:hover {
-        color: $success;
-        border-color: $success
-      }
+      color: $success;
+      border-color: $success
+    }
   }
 }
 

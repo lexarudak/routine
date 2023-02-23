@@ -36,6 +36,9 @@ class ProfilePage extends Page {
   }
 
   private setEventLiseners() {
+    const uiUserName = helpers.getExistentElementByClass<HTMLInputElement>(ProfilePageClassList.greetingUserName);
+    uiUserName.addEventListener('input', () => this.activateSaveButton());
+
     let classCSS = `.${ProfilePageClassList.settingsConfirmDay}>.${ProfilePageClassList.button}`;
     const uiConfirmDay = helpers.getExistentElement<HTMLButtonElement>(classCSS);
     uiConfirmDay.addEventListener('click', () => this.changeConfirmationDay(uiConfirmDay));
