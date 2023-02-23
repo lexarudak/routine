@@ -124,11 +124,10 @@
 .plan-square {
   @include flexbox(space-between);
 
-  padding: 10px 20px;
+  padding: 12px 22px;
   margin: 0 0 1rem 0;
 
   font-weight: 400;
-  font-size: 18px;
   color: rgba(255, 255, 255, 0.9);
 
   background: #549F7B;

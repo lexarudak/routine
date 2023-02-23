@@ -210,7 +210,6 @@
 
   &>* {
     display: flex;
-
     flex-wrap: wrap;
     height: 100%;
   }
@@ -224,5 +223,6 @@
   &__small {
     padding: 30px 0px;
     width: 40%;
+    height: 100%;
   }
 }

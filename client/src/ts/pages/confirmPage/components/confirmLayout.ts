@@ -87,7 +87,7 @@ class ConfirmLayout extends Layout {
 
     const uiQuestion = document.createElement('h2');
     uiQuestion.classList.add('banner__title');
-    uiQuestion.innerText = 'This day has already been confirmed.\nDo you want to confirm it again?';
+    uiQuestion.innerText = 'This day is confirmed\nConfirm it again?';
     uiBanner.append(uiQuestion);
 
     const uiButtons = document.createElement('div');

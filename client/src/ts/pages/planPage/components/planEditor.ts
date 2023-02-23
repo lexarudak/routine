@@ -248,6 +248,7 @@ class PlanEditor {
         await this.sendPlan();
         this.goTo(!this.dayId ? RoutsList.planPage : `/${Days[Number(this.dayId)]}`);
       } catch (error) {
+        this.popup.easyClose();
         loginRedirect(error, this.goTo);
       }
     });
