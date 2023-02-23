@@ -77,6 +77,7 @@ export interface DistPlan {
 }
 
 export type UserSettings = {
+  name: string;
   confirmationDay: ConfirmationDay;
   confirmationTime: number;
 };
