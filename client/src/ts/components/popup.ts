@@ -56,6 +56,11 @@ class Popup {
       this.popup.classList.add(ClassList.popupShow);
     }, 0);
   }
+
+  public refresh(inner: HTMLElement) {
+    this.popup.innerHTML = '';
+    this.popup.append(inner);
+  }
 }
 
 export default Popup;

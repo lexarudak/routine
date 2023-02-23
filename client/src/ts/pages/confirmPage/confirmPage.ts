@@ -23,6 +23,7 @@ class ConfirmPage extends Page {
   dayOfWeek = 0;
   isDayConfirmed = false;
   header: Header;
+  popup = new Popup();
 
   constructor(goTo: GoToFn, editor: PlanEditor) {
     super(PagesList.confirmPage, goTo, editor);
@@ -186,7 +187,7 @@ class ConfirmPage extends Page {
     const wrapper = document.createElement('div');
     wrapper.classList.add(ConfirmPageClassList.confirmWrapper);
 
-    wrapper.append(this.layout.makeHeader(this.dayOfWeek), this.layout.makeConfirmContent(this.dayPlans));
+    wrapper.append(this.layout.makeHeader(), this.layout.makeConfirmContent(this.dayPlans, this.dayOfWeek));
     container.append(this.header.draw(PagesList.confirmPage, NavButtons.confirm), wrapper);
     return container;
   }
@@ -203,39 +204,45 @@ class ConfirmPage extends Page {
   }
 
   private confirm() {
-    const popup = new Popup();
-    popup.editorMode();
+    let banner: HTMLElement;
 
     const ok = async () => {
-      const uiConfirm = helpers.getExistentElementByClass<HTMLButtonElement>('confirm__main-button');
-      helpers.buttonOff(uiConfirm);
-
       try {
         if (this.isDayConfirmed) {
-          popup.easyClose();
+          banner = this.layout.makeBanner(enums.MessageType.warning, 'Waiting...');
+          this.popup.refresh(banner);
         }
+
         await this.confirmDay();
         this.isDayConfirmed = true;
-        this.openPopup(enums.MessageType.success, 'Confirmed!');
-      } catch (error) {
-        this.openPopup(enums.MessageType.error, 'Ooops! Something went wrong...');
-      }
 
-      helpers.buttonOn(uiConfirm);
+        banner = this.layout.makeBanner(enums.MessageType.success, 'Confirmed!');
+        this.popup.refresh(banner);
+
+        setTimeout(() => {
+          document.location.href = './';
+        }, 1000);
+      } catch (error) {
+        banner = this.layout.makeBanner(enums.MessageType.error, 'Ooops! Something went wrong...');
+
+        this.popup.editorMode();
+        if (this.isDayConfirmed) {
+          this.popup.refresh(banner);
+        } else {
+          this.popup.open(banner);
+        }
+      }
+    };
+
+    const cancel = () => {
+      this.popup.easyClose();
     };
 
     if (!this.isDayConfirmed) {
       ok();
     } else {
-      const banner = this.layout.makeConfirmationBanner(ok, popup.easyClose.bind(popup));
-      popup.open(banner);
+      this.popup.open(this.layout.makeConfirmationBanner(ok, cancel));
     }
-  }
-
-  private openPopup(type: enums.MessageType, text: string) {
-    const popup = new Popup();
-    popup.editorMode();
-    popup.open(this.layout.makeBanner(type, text));
   }
 
   private async confirmDay() {

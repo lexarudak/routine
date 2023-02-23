@@ -5,16 +5,15 @@ import { ClassList } from '../../../base/enums/classList';
 import { Plan } from '../../../base/interface';
 import * as helpers from '../../../base/helpers';
 import * as enums from '../../../base/enums/enums';
+import ButtonClasses from '../../../base/enums/buttonClasses';
 
 class ConfirmLayout extends Layout {
-  public makeHeader(dayOfWeek: number) {
-    const dayOfWeekName = this.getDayOfWeekName(dayOfWeek);
-
+  public makeHeader() {
     const container = document.createElement('div');
     container.classList.add('confirm-header');
     container.innerHTML = `
-      <div class="confirm-header__greeting">Confirm day! ${dayOfWeekName}</div>
-      <div class="confirm-header__info">Drag the edge to change the time</div>`;
+      <h1 class="${ClassList.title} confirm-header__greeting">Confirm day</h1>
+      <p class="confirm-header__info">Drag the edge to change the time</p>`;
 
     return container;
   }
@@ -32,12 +31,14 @@ class ConfirmLayout extends Layout {
     return daysOfWeek[dayOfWeek];
   }
 
-  public makeConfirmContent(dayPlans: Plan[]) {
+  public makeConfirmContent(dayPlans: Plan[], dayOfWeek: number) {
     const container = document.createElement('div');
     container.classList.add('confirm-content');
 
-    container.append(this.makeConfirmPlans(dayPlans));
-    container.append(this.makeConfirmButton());
+    const title = helpers.createNewElement('h2', ClassList.subtitle);
+    title.innerHTML = this.getDayOfWeekName(dayOfWeek);
+
+    container.append(title, this.makeConfirmPlans(dayPlans), this.makeConfirmButton());
 
     return container;
   }
@@ -73,10 +74,9 @@ class ConfirmLayout extends Layout {
   }
 
   private makeConfirmButton() {
-    const container = document.createElement('div');
-    container.classList.add('confirm-buttons');
-
-    container.innerHTML = `<button class="button confirm__main-button">Confirm!</button>`;
+    const container = helpers.createNewElement('button', ButtonClasses.button);
+    container.classList.add('confirm__main-button');
+    container.innerHTML = 'Confirm!';
 
     return container;
   }

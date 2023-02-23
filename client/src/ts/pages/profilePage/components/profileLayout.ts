@@ -1,7 +1,7 @@
 import Layout from '../../layout';
 
 import { User, Statistics, UserSettings, ConfirmationDay } from '../../../base/interface';
-import { ProfilePageClassList } from '../../../base/enums/classList';
+import { ClassList, ProfilePageClassList } from '../../../base/enums/classList';
 
 import * as helpers from '../../../base/helpers';
 import * as enums from '../../../base/enums/enums';
@@ -51,8 +51,8 @@ class ProfileLayout extends Layout {
     const container = document.createElement('div');
     container.classList.add(ProfilePageClassList.greeting);
     container.innerHTML = `
-      <div class="${ProfilePageClassList.greetingHello}">Hello, ${profile.name}!</div>
-      <div class="${ProfilePageClassList.greetingInfo}">This is your ${day} day in this app</div>`;
+      <h1 class="${ProfilePageClassList.greetingHello} ${ClassList.title}">Hello, ${profile.name}!</h1>
+      <h3 class="${ProfilePageClassList.greetingInfo} ${ClassList.subtitle}">This is your ${day} day in this app</h3>`;
 
     return container;
   }
