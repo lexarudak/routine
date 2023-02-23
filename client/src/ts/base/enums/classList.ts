@@ -6,6 +6,7 @@ const enum ClassList {
   imgContainer = 'img-container',
   scaleNormal = 'scale-normal',
   title = 'title',
+  subtitle = 'subtitle',
   // header
   header = 'header',
   headerLogo = 'header__logo',

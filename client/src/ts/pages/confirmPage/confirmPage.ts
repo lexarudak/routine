@@ -187,7 +187,7 @@ class ConfirmPage extends Page {
     const wrapper = document.createElement('div');
     wrapper.classList.add(ConfirmPageClassList.confirmWrapper);
 
-    wrapper.append(this.layout.makeHeader(this.dayOfWeek), this.layout.makeConfirmContent(this.dayPlans));
+    wrapper.append(this.layout.makeHeader(), this.layout.makeConfirmContent(this.dayPlans, this.dayOfWeek));
     container.append(this.header.draw(PagesList.confirmPage, NavButtons.confirm), wrapper);
     return container;
   }
