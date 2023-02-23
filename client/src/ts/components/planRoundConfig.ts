@@ -1,5 +1,5 @@
 const enum PlanRoundConfig {
-  maxSizeK = 0.5,
+  maxSizeK = 0.4,
   minProcDur = 90,
   maxProcDur = 4200,
   minRoundSize = 70,
