@@ -212,7 +212,6 @@ class ConfirmPage extends Page {
         this.popup.open(banner);
 
         await this.confirmDay();
-        this.isDayConfirmed = true;
 
         banner = this.layout.makeBanner(enums.MessageType.success, 'Confirmed!');
         this.popup.open(banner);
@@ -254,6 +253,7 @@ class ConfirmPage extends Page {
     });
 
     await Api.confirmDay(body);
+    this.isDayConfirmed = true;
   }
 
   private getDayOfWeekByConfirmationDay(confirmationDay: ConfirmationDay) {
