@@ -5,6 +5,7 @@ import { ClassList, ProfilePageClassList } from '../../../base/enums/classList';
 
 import * as helpers from '../../../base/helpers';
 import * as enums from '../../../base/enums/enums';
+import { StatisticsTankNames } from '../../../base/enums/enums';
 
 class ProfileLayout extends Layout {
   public makeUserData(profile: User) {
@@ -23,21 +24,25 @@ class ProfileLayout extends Layout {
 
     const tanks = this.getStatisticsTanks(statistics);
 
-    container.append(this.makeStatisticsTank(tanks[0], enums.StatisticsTankNames.Fulfilled));
     container.append(this.makeStatisticsTank(tanks[1], enums.StatisticsTankNames.Underfulfilled));
+    container.append(this.makeStatisticsTank(tanks[0], enums.StatisticsTankNames.Fulfilled));
     container.append(this.makeStatisticsTank(tanks[2], enums.StatisticsTankNames.Overfulfilled));
 
     return container;
   }
 
   public getUserSettings() {
-    let classCSS = `.${ProfilePageClassList.settingsConfirmDay}>.${ProfilePageClassList.button}`;
+    let classCSS: string = ProfilePageClassList.greetingUserName;
+    const uiUserName = helpers.getExistentElementByClass<HTMLInputElement>(classCSS);
+
+    classCSS = `.${ProfilePageClassList.settingsConfirmDay}>.${ProfilePageClassList.button}`;
     const uiConfirmationDay = helpers.getExistentElement(classCSS);
 
     classCSS = `.${ProfilePageClassList.settingsConfirmTime}>.${ProfilePageClassList.button}`;
     const uiConfirmationTime = helpers.getExistentElement<HTMLInputElement>(classCSS);
 
     const settings: UserSettings = {
+      name: uiUserName.value,
       confirmationDay: (uiConfirmationDay.textContent || enums.ConfirmationDays.today) as ConfirmationDay,
       confirmationTime: helpers.timeToMin(uiConfirmationTime.value),
     };
@@ -51,8 +56,11 @@ class ProfileLayout extends Layout {
     const container = document.createElement('div');
     container.classList.add(ProfilePageClassList.greeting);
     container.innerHTML = `
-      <h1 class="${ProfilePageClassList.greetingHello} ${ClassList.title}">Hello, ${profile.name}!</h1>
-      <h3 class="${ProfilePageClassList.greetingInfo} ${ClassList.subtitle}">This is your ${day} day in this app</h3>`;
+      <h1 class="${ProfilePageClassList.greetingHello} ${ClassList.title}">
+        Hello, <input class="${ProfilePageClassList.greetingUserName}" type="text" maxlength="30"
+          value="${profile.name}" placeholder="Anonymous"></input>
+      </h1>
+      <p class="${ProfilePageClassList.greetingInfo}">This is your ${day} day in this app</p>`;
 
     return container;
   }
@@ -93,6 +101,20 @@ class ProfileLayout extends Layout {
 
     element = document.createElement('div');
     element.classList.add(ProfilePageClassList.statisticsTankName);
+    switch (name) {
+      case StatisticsTankNames.Fulfilled:
+        element.classList.add('fulfilled');
+        break;
+      case StatisticsTankNames.Underfulfilled:
+        element.classList.add('underfulfilled');
+        break;
+      case StatisticsTankNames.Overfulfilled:
+        element.classList.add('overfulfilled');
+        break;
+
+      default:
+        break;
+    }
     element.textContent = name;
     container.append(element);
 
@@ -108,9 +130,10 @@ class ProfileLayout extends Layout {
     const title = helpers.cutStringLine(statistics.title, 20);
 
     const container = document.createElement('div');
-    const [bgColor] = helpers.getColors(statistics.color);
+    const [bgColor, color] = helpers.getColors(statistics.color);
     container.classList.add(ProfilePageClassList.planSquare);
     container.style.backgroundColor = bgColor;
+    container.style.color = color;
 
     container.innerHTML = `
       <div class="${ProfilePageClassList.planSquareName}">${title}</div>

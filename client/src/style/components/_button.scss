@@ -80,10 +80,12 @@
 
 .save-button {
   position: absolute;
-  right: 70px;
-  top: 20px;
+  right: 0px;
+  bottom: -30px;
+  z-index: 20;
 
-  width: auto;
+  cursor: pointer;
+  width: 135px;
   padding: 5px 10px;
 
   border: none;

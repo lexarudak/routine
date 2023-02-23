@@ -73,7 +73,7 @@ class StatisticsService extends Service<Type.TStatistics> {
         break;
       default:
         if (distributionPlan && distributionFact) {
-          return distributionPlan.duration - distributionFact.duration;
+          return distributionFact.duration - distributionPlan.duration;
         }
         break;
     }

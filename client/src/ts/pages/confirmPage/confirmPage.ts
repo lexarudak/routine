@@ -208,29 +208,21 @@ class ConfirmPage extends Page {
 
     const ok = async () => {
       try {
-        if (this.isDayConfirmed) {
-          banner = this.layout.makeBanner(enums.MessageType.warning, 'Waiting...');
-          this.popup.refresh(banner);
-        }
+        banner = this.layout.makeBanner(enums.MessageType.warning, 'Waiting...');
+        this.popup.open(banner);
 
         await this.confirmDay();
-        this.isDayConfirmed = true;
 
         banner = this.layout.makeBanner(enums.MessageType.success, 'Confirmed!');
-        this.popup.refresh(banner);
+        this.popup.open(banner);
 
         setTimeout(() => {
           document.location.href = './';
         }, 1000);
       } catch (error) {
         banner = this.layout.makeBanner(enums.MessageType.error, 'Ooops! Something went wrong...');
-
         this.popup.editorMode();
-        if (this.isDayConfirmed) {
-          this.popup.refresh(banner);
-        } else {
-          this.popup.open(banner);
-        }
+        this.popup.open(banner);
       }
     };
 
@@ -241,7 +233,8 @@ class ConfirmPage extends Page {
     if (!this.isDayConfirmed) {
       ok();
     } else {
-      this.popup.open(this.layout.makeConfirmationBanner(ok, cancel));
+      banner = this.layout.makeConfirmationBanner(ok, cancel);
+      this.popup.open(banner);
     }
   }
 
@@ -260,6 +253,7 @@ class ConfirmPage extends Page {
     });
 
     await Api.confirmDay(body);
+    this.isDayConfirmed = true;
   }
 
   private getDayOfWeekByConfirmationDay(confirmationDay: ConfirmationDay) {

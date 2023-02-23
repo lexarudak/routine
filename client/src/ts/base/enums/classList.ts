@@ -188,6 +188,7 @@ const enum ProfilePageClassList {
   statistics = 'statistics',
   greeting = 'greeting',
   greetingHello = 'greeting__hello',
+  greetingUserName = 'greeting__user-name',
   greetingInfo = 'greeting__info',
   statisticsTank = 'statistics-tank',
   statisticsTankName = 'statistics-tank__name',

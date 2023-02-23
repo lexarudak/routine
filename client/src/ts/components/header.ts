@@ -46,8 +46,6 @@ class Header {
       this.layout.makeNavButton(NavButtons.profile, RoutsList.profilePage, this.goTo),
     ];
     buttons.forEach((button) => {
-      console.log(button.innerText);
-      console.log(activeNavButton);
       if (button.innerText === activeNavButton?.toString()) {
         button.classList.add(ButtonClasses.navButtonActive);
       }

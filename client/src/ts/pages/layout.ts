@@ -39,7 +39,7 @@ class Layout {
       btn.classList.add('save-button_visible');
       btn.addEventListener('animationend', () => btn.classList.remove('save-button_visible'), { once: true });
 
-      const uiMain = getExistentElementByClass('main__container');
+      const uiMain = getExistentElementByClass('settings');
       uiMain.append(btn);
     }
   }
