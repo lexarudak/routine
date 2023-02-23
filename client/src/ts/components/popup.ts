@@ -3,6 +3,7 @@ import { getExistentElementByClass } from '../base/helpers';
 
 class Popup {
   popup: HTMLElement;
+  protected opened = false;
 
   constructor() {
     this.popup = getExistentElementByClass(ClassList.popup);
@@ -42,7 +43,8 @@ class Popup {
   private clean(target: HTMLElement) {
     target.addEventListener(
       'transitionend',
-      function clearInner() {
+      () => {
+        this.opened = false;
         target.innerHTML = '';
       },
       { once: true }
@@ -51,15 +53,24 @@ class Popup {
   }
 
   public open(inner: HTMLElement) {
-    this.popup.append(inner);
-    setTimeout(() => {
-      this.popup.classList.add(ClassList.popupShow);
-    }, 0);
+    if (this.opened) {
+      this.refresh(inner);
+    } else {
+      this.popup.append(inner);
+      setTimeout(() => {
+        this.opened = true;
+        this.popup.classList.add(ClassList.popupShow);
+      }, 0);
+    }
   }
 
   public refresh(inner: HTMLElement) {
     this.popup.innerHTML = '';
     this.popup.append(inner);
+  }
+
+  public isOpen() {
+    return this.opened;
   }
 }
 
