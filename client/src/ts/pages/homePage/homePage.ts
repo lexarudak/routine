@@ -116,7 +116,7 @@ class HomePage extends Page {
     this.checkConfirmTime(confirmDay);
 
     const plan = createNewElement('div', HomePageClassList.plan);
-    plan.textContent = InnerText.planText;
+    plan.textContent = InnerText.weekText;
     plan.addEventListener('click', () => this.goTo(RoutsList.planPage));
 
     const profile = createNewElement('div', HomePageClassList.profile);

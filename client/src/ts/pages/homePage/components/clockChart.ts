@@ -2,7 +2,6 @@ import { createNewElement, getColors, getExistentElement } from '../../../base/h
 import { HomePageClassList } from '../../../base/enums/classList';
 import { Attributes } from '../../../base/enums/attributes';
 import Values from '../../../base/enums/values';
-import Colors from '../../../base/enums/colors';
 import InnerText from '../../../base/enums/innerText';
 import { DistDayPlan, ChartData } from '../../../base/interface';
 import Clock from './clock';
@@ -74,7 +73,7 @@ class ClockChart extends Clock {
               hours: (this.distributedPlans[i].from - 0) / 60,
               from: 0,
               to: this.distributedPlans[i].from,
-              color: Colors.mediumGrey,
+              color: '0',
               title: InnerText.emptyTitle,
               text: InnerText.emptyText,
             };
@@ -93,7 +92,7 @@ class ClockChart extends Clock {
               hours: (this.distributedPlans[i + 1].from - this.distributedPlans[i].to) / 60,
               from: this.distributedPlans[i].to,
               to: this.distributedPlans[i + 1].from,
-              color: Colors.mediumGrey,
+              color: '0',
               title: InnerText.emptyTitle,
               text: InnerText.emptyText,
             };
@@ -111,7 +110,7 @@ class ClockChart extends Clock {
               hours: (Values.allDayMinutes - this.distributedPlans[i].to) / 60,
               from: this.distributedPlans[i].to,
               to: +Values.allDayMinutes,
-              color: Colors.mediumGrey,
+              color: '0',
               title: InnerText.emptyTitle,
               text: InnerText.emptyText,
             };
@@ -172,6 +171,7 @@ class ClockChart extends Clock {
     const hours = date.getHours();
     const minutes = hours * 60 + date.getMinutes();
     this.seconds = minutes * 60 + date.getSeconds();
+    this.date = date;
     this.dayOfWeek = day;
     this.hours = hours;
     this.minutes = minutes;
@@ -193,21 +193,32 @@ class ClockChart extends Clock {
     }
   }
 
-  // handlers
-
   setDataByTime() {
     const currPlan = this.chartData.filter((el) => this.minutes >= el.from && this.minutes < el.to);
     [this.currPlan] = currPlan;
     this.currPlanNum = currPlan[0].id;
-    [this.currColor, this.currFontColor] = getColors(currPlan[0].color);
+    this.setColor(currPlan[0].color);
   }
+
+  setColor(color: string) {
+    [this.currColor, this.currFontColor] = getColors(color);
+  }
+
+  // handlers
 
   private showToDo(e: Event) {
     if (!(e.target instanceof SVGCircleElement) || !e.target.id) return;
     const sector = +e.target.id;
     const toDo = getExistentElement(`.${HomePageClassList.toDo}`);
-    const color = e.target.getAttribute(Attributes.stroke);
-    if (color) toDo.style.backgroundColor = color;
+    const bgColor = e.target.getAttribute(Attributes.stroke);
+    const color = e.target.getAttribute('class');
+    console.log(color);
+    if (bgColor && color) {
+      toDo.style.backgroundColor = bgColor;
+      if (toDo.parentElement) toDo.parentElement.style.color = color;
+      const svg = document.querySelector(`.${HomePageClassList.daySvg}`);
+      if (svg instanceof SVGElement) svg.style.stroke = color;
+    }
     toDo.innerHTML = '';
     const data =
       getExistentElement(`.${HomePageClassList.timeOfDay}`).textContent === InnerText.timeOfDayAM
@@ -224,6 +235,9 @@ class ClockChart extends Clock {
 
     const toDo = getExistentElement(`.${HomePageClassList.toDo}`);
     toDo.style.backgroundColor = this.currColor;
+    if (toDo.parentElement) toDo.parentElement.style.color = this.currFontColor;
+    const svg = document.querySelector(`.${HomePageClassList.daySvg}`);
+    if (svg instanceof SVGElement) svg.style.stroke = this.currFontColor;
     toDo.innerHTML = '';
     const toDoList = this.toDoInst.draw(this.currPlan, this.distributedPlans);
     toDo.append(toDoList);
@@ -252,6 +266,9 @@ class ClockChart extends Clock {
   updateToDo() {
     const toDo = getExistentElement(`.${HomePageClassList.toDo}`);
     toDo.style.backgroundColor = this.currColor;
+    if (toDo.parentElement) toDo.parentElement.style.color = this.currFontColor;
+    const svg = document.querySelector(`.${HomePageClassList.daySvg}`);
+    if (svg instanceof SVGElement) svg.style.stroke = this.currFontColor;
     toDo.innerHTML = '';
     const toDoList = this.toDoInst.draw(this.currPlan, this.distributedPlans);
     toDo.append(toDoList);
@@ -294,15 +311,20 @@ class ClockChart extends Clock {
     const chart = createNewElement('div', HomePageClassList.chart);
     this.chartInst.createChart(chart, this.chartData, { strokeWidth: 14, radius: 285 });
 
+    const dayInfoHTML = createNewElement('div', HomePageClassList.dayInfo);
+    dayInfoHTML.innerHTML = this.showDayInfo(this.currFontColor);
+
     const toDo = createNewElement('div', HomePageClassList.toDo);
     toDo.style.backgroundColor = this.currColor;
+    clock.style.color = this.currFontColor;
+
     const toDoWrap = this.toDoInst.draw(this.currPlan, this.distributedPlans);
 
     const timeOfDay = createNewElement('div', HomePageClassList.timeOfDay);
     timeOfDay.innerText = this.halfOfDay;
 
     toDo.append(toDoWrap);
-    clock.append(hour, minutes, chart, toDo, timeOfDay);
+    clock.append(hour, minutes, chart, toDo, dayInfoHTML, timeOfDay);
 
     timeOfDay.addEventListener('click', (e) => this.changeTimeOfDay(e));
     chart.addEventListener('mouseover', (e) => this.showToDo(e));

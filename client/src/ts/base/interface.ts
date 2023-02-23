@@ -123,6 +123,7 @@ export interface ChartSector {
 
 export interface SvgAttrs {
   id?: number;
+  class?: string;
   viewBox?: string;
   fill?: string;
   width?: number;
