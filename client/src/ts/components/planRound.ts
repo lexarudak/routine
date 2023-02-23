@@ -23,7 +23,7 @@ class PlanRound {
 
   private getUniqValue() {
     const [bgColor] = getColors(this.planInfo.color);
-    const a = parseInt(bgColor.slice(6, 7), 16);
+    const a = parseInt(bgColor.slice(5, 6), 16);
     const b = parseInt(bgColor.slice(4, 5), 16);
     return a + b;
   }

@@ -5,6 +5,7 @@ import { ClassList, ProfilePageClassList } from '../../../base/enums/classList';
 
 import * as helpers from '../../../base/helpers';
 import * as enums from '../../../base/enums/enums';
+import { StatisticsTankNames } from '../../../base/enums/enums';
 
 class ProfileLayout extends Layout {
   public makeUserData(profile: User) {
@@ -23,8 +24,8 @@ class ProfileLayout extends Layout {
 
     const tanks = this.getStatisticsTanks(statistics);
 
-    container.append(this.makeStatisticsTank(tanks[0], enums.StatisticsTankNames.Fulfilled));
     container.append(this.makeStatisticsTank(tanks[1], enums.StatisticsTankNames.Underfulfilled));
+    container.append(this.makeStatisticsTank(tanks[0], enums.StatisticsTankNames.Fulfilled));
     container.append(this.makeStatisticsTank(tanks[2], enums.StatisticsTankNames.Overfulfilled));
 
     return container;
@@ -52,7 +53,7 @@ class ProfileLayout extends Layout {
     container.classList.add(ProfilePageClassList.greeting);
     container.innerHTML = `
       <h1 class="${ProfilePageClassList.greetingHello} ${ClassList.title}">Hello, ${profile.name}!</h1>
-      <h3 class="${ProfilePageClassList.greetingInfo} ${ClassList.subtitle}">This is your ${day} day in this app</h3>`;
+      <p class="${ProfilePageClassList.greetingInfo}">This is your ${day} day in this app</з>`;
 
     return container;
   }
@@ -93,6 +94,22 @@ class ProfileLayout extends Layout {
 
     element = document.createElement('div');
     element.classList.add(ProfilePageClassList.statisticsTankName);
+    console.log(name);
+    switch (name) {
+      case StatisticsTankNames.Fulfilled:
+        element.classList.add('fulfilled');
+        console.log(element);
+        break;
+      case StatisticsTankNames.Underfulfilled:
+        element.classList.add('underfulfilled');
+        break;
+      case StatisticsTankNames.Overfulfilled:
+        element.classList.add('overfulfilled');
+        break;
+
+      default:
+        break;
+    }
     element.textContent = name;
     container.append(element);
 
@@ -108,9 +125,10 @@ class ProfileLayout extends Layout {
     const title = helpers.cutStringLine(statistics.title, 20);
 
     const container = document.createElement('div');
-    const [bgColor] = helpers.getColors(statistics.color);
+    const [bgColor, color] = helpers.getColors(statistics.color);
     container.classList.add(ProfilePageClassList.planSquare);
     container.style.backgroundColor = bgColor;
+    container.style.color = color;
 
     container.innerHTML = `
       <div class="${ProfilePageClassList.planSquareName}">${title}</div>

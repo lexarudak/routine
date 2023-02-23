@@ -146,12 +146,17 @@ class Timeline {
     this.dragInfo.currentDiv.toMin = startMin + durMin;
   }
 
+  private getDistPlans() {
+    return this.distPlans;
+  }
+
   private appendDiv(plan: Plan) {
     if (plan.duration >= Values.minPlanDuration) {
       const currentDiv = new TimelineDiv(
         this.width,
         plan,
-        this.distPlans,
+        this.getDistPlans.bind(this),
+        this.updateDistPlans.bind(this),
         this.pushToServer.bind(this),
         this.goTo,
         this.paintRound.bind(this)
@@ -319,6 +324,10 @@ class Timeline {
     this.plan.duration += this.dragInfo.currentDiv.toMin - this.dragInfo.currentDiv.fromMin;
   }
 
+  private updateDistPlans(distPlans: DistDayPlan[]) {
+    this.distPlans = distPlans;
+  }
+
   private fillTimeline() {
     this.showLine.innerHTML = '';
     this.distPlans.forEach((distPlan) => {
@@ -330,7 +339,8 @@ class Timeline {
       const currentDiv = new TimelineDiv(
         this.width,
         noDistPlan || plan,
-        this.distPlans,
+        this.getDistPlans.bind(this),
+        this.updateDistPlans.bind(this),
         this.pushToServer.bind(this),
         this.goTo,
         this.paintRound.bind(this)
@@ -402,7 +412,10 @@ class Timeline {
   }
 
   private deleteFromDistPlan(fromId: string | undefined) {
+    console.log('before delete', this.distPlans);
     if (fromId) this.distPlans = this.distPlans.filter((disPlan) => disPlan.from.toString() !== fromId);
+    console.log('after delete', this.distPlans);
+    // this.
   }
 
   public setTimeline(notDistPlans: Plan[], distPlans: DistDayPlan[], allDayPlans: Plan[], dayId: string) {

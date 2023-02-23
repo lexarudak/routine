@@ -27,7 +27,9 @@ class TimelineDiv {
 
   timelineWidthPx: number;
 
-  distPlans: DistDayPlan[];
+  getDistPlans: () => DistDayPlan[];
+
+  updateDistPlans: (distPlans: DistDayPlan[]) => void;
 
   div: HTMLDivElement;
 
@@ -56,7 +58,8 @@ class TimelineDiv {
   constructor(
     timelineWidthPx: number,
     plan: Plan,
-    distPlans: DistDayPlan[],
+    getDistPlans: () => DistDayPlan[],
+    updateDistPlans: (distPlans: DistDayPlan[]) => void,
     pushToServer: () => Promise<void>,
     goTo: GoToFn,
     paintRound: (round: HTMLElement | undefined, plan: Plan) => void
@@ -65,7 +68,8 @@ class TimelineDiv {
     this.pushToServer = pushToServer;
     this.paintRound = paintRound;
     this.timelineWidthPx = timelineWidthPx;
-    this.distPlans = distPlans;
+    this.getDistPlans = getDistPlans;
+    this.updateDistPlans = updateDistPlans;
     this.plan = plan;
     this.from = createNewElement('div', ClassList.timelineDivFrom);
     this.to = createNewElement('div', ClassList.timelineDivTo);
@@ -164,14 +168,17 @@ class TimelineDiv {
     this.plan.duration -= this.fromMin - this.newFromMin;
     this.plan.duration -= this.newToMin - this.toMin;
 
-    this.distPlans.forEach((plan) => {
+    const distPlans = this.getDistPlans();
+    distPlans.forEach((plan) => {
       if (plan.from === this.fromMin) {
         plan.from = this.newFromMin;
         plan.to = this.newToMin;
       }
     });
+    this.updateDistPlans(distPlans);
     this.fromMin = this.newFromMin;
     this.toMin = this.newToMin;
+
     this.div.setAttribute(SetAttribute.from, this.fromMin.toString());
     console.log('from after resize', this.fromMin);
   }
@@ -254,7 +261,9 @@ class TimelineDiv {
   }
 
   private setZoneStart() {
-    const start = this.distPlans.reduce((acc, plan) => {
+    const distPlans = this.getDistPlans();
+    console.log('set start zone', distPlans);
+    const start = distPlans.reduce((acc, plan) => {
       if (plan.to <= this.fromMin && plan.to > acc) {
         return plan.to;
       }
@@ -264,7 +273,9 @@ class TimelineDiv {
   }
 
   private setZoneEnd() {
-    const end = this.distPlans.reduce((acc, plan) => {
+    const distPlans = this.getDistPlans();
+    console.log('set end zone', distPlans);
+    const end = distPlans.reduce((acc, plan) => {
       if (plan.from >= this.toMin && plan.from < acc) {
         return plan.from;
       }

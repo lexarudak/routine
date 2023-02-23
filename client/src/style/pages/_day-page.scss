@@ -68,8 +68,9 @@
     background-color: rgba(255, 255, 255, 0.46);
 
     & > div {
-      height: 35px;
-      width: 35px;
+      height: 40px;
+      width: 40px;
+      padding: 4;
       background-repeat: no-repeat;
       background-position: center;
       background-size: contain;
@@ -90,7 +91,7 @@
     display: flex;
     overflow: auto;
     position: relative;
-    height: calc(100% - 150px);
+    height: calc(100% - 30px);
     flex-wrap: wrap;
     padding-left: 5px;
     padding-right: 5px;

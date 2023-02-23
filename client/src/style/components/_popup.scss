@@ -29,11 +29,12 @@
   flex-direction: column;
   color: $font-light;
   background-color: $color-background-2;
-  padding: 50px;
+  padding: 80px;
   width: 500px;
   height: 500px;
   border-radius: 100%;
   box-shadow: $shadow;
+  position: relative;
 
   &_error {
     background-color: $error;
@@ -48,17 +49,23 @@
   }
 
   &__title {
-    text-align: center;
+    text-align: start;
   }
 
   &__buttons {
     @include flexbox();
-    width: 70%;
-    padding: 20px 0 0 0;
+    justify-content: flex-start;
+    position: absolute;
+    left: 50%;
+    transform: translate(-61%, 85px);
   }
 
   &__button {
     width: 100px;
-    margin: 0 5px;
+    margin: 0 7px;
+    background-color: transparent;
+    color: $font-light;
+    border-width: 1.5px;
+    border-color: $font-light;
   }
 }

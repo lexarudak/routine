@@ -124,7 +124,7 @@ class TimeSlider {
       perVal.innerHTML = this.weekHoursToDay();
       perContainer.append('( ~ ', perVal, '/day)');
     }
-    if (mode === EditorMode.newPlanDay || mode === EditorMode.day) perContainer.innerHTML = InnerText.perDay;
+    // if (mode === EditorMode.newPlanDay || mode === EditorMode.day) perContainer.innerHTML = InnerText.perDay;
     return perContainer;
   }
 
