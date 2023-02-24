@@ -9,17 +9,21 @@ import ClockChart from './components/clockChart';
 import Thought from './components/thought';
 import RoutsList from '../../base/enums/routsList';
 import Path from '../../base/enums/path';
+import * as enums from '../../base/enums/enums';
 import InnerText from '../../base/enums/innerText';
 import Values from '../../base/enums/values';
 import PlanEditor from '../planPage/components/planEditor';
 import Popup from '../../components/popup';
-import { Plan, ThoughtsData } from '../../base/interface';
+import { Plan, ThoughtsData, ConfirmationDay } from '../../base/interface';
 
 class HomePage extends Page {
   clockChartInst: ClockChart;
   userName: string;
   confirmDayInfo: boolean;
+  confirmDay: number;
   confirmationTime: number;
+  confirmDayPlans: Plan[];
+  daysInApp: number;
   commonPopup: Popup;
 
   constructor(goTo: GoToFn, editor: PlanEditor, commonPopup: Popup) {
@@ -27,7 +31,10 @@ class HomePage extends Page {
     this.clockChartInst = new ClockChart();
     this.userName = '';
     this.confirmDayInfo = false;
+    this.confirmDay = 0;
     this.confirmationTime = 660;
+    this.confirmDayPlans = [];
+    this.daysInApp = 1;
     this.commonPopup = commonPopup;
   }
 
@@ -75,17 +82,43 @@ class HomePage extends Page {
   }
 
   private async setUserInfo() {
-    const userInfo = await Promise.all([Api.getUserProfile(), Api.getConfirmDayInfo()]);
-    const [userProfile, confirmDayInfo] = userInfo;
+    const userInfo = await Promise.all([Api.getUserProfile(), Api.getConfirmDayInfo(), Api.getWeekDistribution()]);
+    const [userProfile, confirmDayInfo, weekDistribution] = userInfo;
     this.userName = userProfile.name;
     this.confirmDayInfo = confirmDayInfo;
+    this.confirmDay = this.getDayOfWeekByConfirmationDay(userProfile.confirmationDay);
     this.confirmationTime = userProfile.confirmationTime;
+    this.confirmDayPlans = weekDistribution[this.confirmDay];
+    this.daysInApp = this.getDaysInApp(new Date(userProfile.createdAt));
+  }
+
+  private getDayOfWeekByConfirmationDay(confirmationDay: ConfirmationDay) {
+    const dayOfWeek = this.getPreviousDayOfWeek(new Date().getDay());
+    return confirmationDay === enums.ConfirmationDays.today ? dayOfWeek : this.getPreviousDayOfWeek(dayOfWeek);
+  }
+
+  private getPreviousDayOfWeek(dayOfWeek: number) {
+    return dayOfWeek - 1 < 0 ? 6 : dayOfWeek - 1;
+  }
+
+  private isValidDay() {
+    return !(this.confirmDay === new Date().getDay() - 2 && this.daysInApp === 1);
+  }
+
+  private getDaysInApp(startDate: Date) {
+    return Math.ceil((Date.now() - startDate.getTime()) / 1000 / 3600 / 24);
   }
 
   private async checkConfirmTime(confirmDay: HTMLElement) {
+    this.isValidDay();
     const chartInterval = setInterval(() => {
       if (!(window.location.pathname === Path.home)) clearTimeout(chartInterval);
-      if (this.clockChartInst.minutes >= this.confirmationTime && this.confirmDayInfo === false) {
+      if (
+        this.clockChartInst.minutes >= this.confirmationTime &&
+        this.confirmDayInfo === false &&
+        this.confirmDayPlans.length &&
+        this.isValidDay()
+      ) {
         confirmDay.classList.add(HomePageClassList.show);
       } else if (this.confirmDayInfo === true) {
         confirmDay.classList.remove(HomePageClassList.show);
