@@ -28,7 +28,7 @@ class HomePage extends Page {
 
   constructor(goTo: GoToFn, editor: PlanEditor, commonPopup: Popup) {
     super(PageList.homePage, goTo, editor);
-    this.clockChartInst = new ClockChart();
+    this.clockChartInst = new ClockChart(this.goTo);
     this.userName = '';
     this.confirmDayInfo = false;
     this.confirmDay = 0;

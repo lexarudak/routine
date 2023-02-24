@@ -9,8 +9,12 @@ import Chart from './chart';
 import ToDo from './toDo';
 import { emptyData } from '../data/data';
 import Path from '../../../base/enums/path';
+import { GoToFn } from '../../../base/types';
+import Days from '../../../base/enums/days';
 
 class ClockChart extends Clock {
+  protected goTo: GoToFn;
+
   toDoInst: ToDo;
 
   chartInst: Chart;
@@ -37,8 +41,9 @@ class ClockChart extends Clock {
 
   dayOfWeek: number;
 
-  constructor() {
+  constructor(goTo: GoToFn) {
     super();
+    this.goTo = goTo;
     this.toDoInst = new ToDo();
     this.chartInst = new Chart();
     this.distributedPlans = [];
@@ -332,6 +337,7 @@ class ClockChart extends Clock {
     toDo.append(toDoWrap);
     clock.append(hour, minutes, chart, toDo, dayInfoHTML, timeOfDay);
 
+    dayInfoHTML.addEventListener('click', () => this.goTo(`/${Days[this.dayOfWeek]}`));
     timeOfDay.addEventListener('click', (e) => this.changeTimeOfDay(e));
     chart.addEventListener('mouseover', (e) => this.showToDo(e));
     chart.addEventListener('mouseout', (e) => this.showCurrToDo(e));
