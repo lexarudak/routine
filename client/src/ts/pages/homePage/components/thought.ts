@@ -101,9 +101,8 @@ class Thought {
     setTimeout(() => thought.parentElement?.removeChild(thought), 350);
 
     if (!thoughtId) return;
-    const deletedThought = await Api.deleteThought(thoughtId);
+    await Api.deleteThought(thoughtId);
     const thoughtsDataList = await Api.getThoughts();
-    console.log('deletedThought', deletedThought);
     this.createFlyingThought(getExistentElement(`.${HomePageClassList.canvas}`), thoughtsDataList);
   }
 
@@ -124,9 +123,7 @@ class Thought {
   }
 
   openCloseThoughtList(thoughtAdd: HTMLElement, popup: HTMLElement) {
-    console.log('can create ', this.canCreate);
     if (this.canCreate) {
-      console.log('toggle');
       thoughtAdd.classList.toggle(HomePageClassList.none);
       popup.classList.toggle(HomePageClassList.none);
 
