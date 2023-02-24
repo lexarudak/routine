@@ -183,6 +183,7 @@ class ClockChart extends Clock {
       this.setCurrTime();
       this.setHalfOfDayData();
       this.setChartSector();
+      this.updateDaayInfo();
     }, 1000);
   }
 
@@ -212,7 +213,6 @@ class ClockChart extends Clock {
     const toDo = getExistentElement(`.${HomePageClassList.toDo}`);
     const bgColor = e.target.getAttribute(Attributes.stroke);
     const color = e.target.getAttribute('class');
-    console.log(color);
     if (bgColor && color) {
       toDo.style.backgroundColor = bgColor;
       if (toDo.parentElement) toDo.parentElement.style.color = color;
@@ -279,6 +279,12 @@ class ClockChart extends Clock {
     chart.innerHTML = '';
     this.chartInst.createChart(chart, this.chartData, { strokeWidth: 14, radius: 285 });
     getExistentElement(`.${HomePageClassList.clock}`).append(chart);
+  }
+
+  updateDaayInfo() {
+    if (this.hours === 6 * 3600 || this.hours === 12 * 3600 || this.hours === 18 * 3600 || this.hours === 24 * 3600) {
+      getExistentElement(`.${HomePageClassList.dayInfo}`).innerHTML = this.showDayInfo(this.currFontColor);
+    }
   }
 
   showNewDay(distributedPlans: DistDayPlan[], dayNum: number) {

@@ -14,7 +14,7 @@
   width: 100%;
   height: 100%;
   padding: 20px 20px 10px;
-  position: relative
+  position: relative;
 }
 
 .profile-wrapper {
@@ -78,7 +78,7 @@
 
     &:hover {
       color: $success;
-      border-color: $success
+      border-color: $success;
     }
   }
 
@@ -88,10 +88,29 @@
     font-weight: normal;
     color: $font-medium;
     border-color: $font-medium;
+    cursor: auto;
+
+    &::-webkit-calendar-picker-indicator {
+      cursor: pointer;
+      opacity: 0.45;
+    }
+
+    &::-webkit-datetime-edit-hour-field,
+    &::-webkit-datetime-edit-minute-field {
+      cursor: pointer;
+      &:hover {
+        background-color: $font-light;
+        border-radius: 5px;
+      }
+      &:focus {
+        background-color: $success;
+        border-radius: 5px;
+      }
+    }
 
     &:hover {
       color: $success;
-      border-color: $success
+      border-color: $success;
     }
   }
 }
@@ -156,7 +175,7 @@
   font-weight: 400;
   color: rgba(255, 255, 255, 0.9);
 
-  background: #549F7B;
+  background: #549f7b;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
 
   overflow: hidden;
@@ -168,16 +187,16 @@
 }
 
 .fulfilled {
-  color: #AFA64E;
-  border-color: #AFA64E;
+  color: #afa64e;
+  border-color: #afa64e;
 }
 
 .underfulfilled {
-  color: #BD3737;
-  border-color: #BD3737;
+  color: #bd3737;
+  border-color: #bd3737;
 }
 
 .overfulfilled {
-  color: #549F7B;
-  border-color: #549F7B;
+  color: #549f7b;
+  border-color: #549f7b;
 }
