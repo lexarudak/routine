@@ -110,7 +110,7 @@ class PlanLayout extends Layout {
         getExistentElementByClass(PlanRoundClassList.planRoundDrag);
         this.classList.add(DayPageClassList.dayPageReturnOver);
       } catch {
-        console.log();
+        /* do nothing */
       }
     });
 
@@ -126,7 +126,6 @@ class PlanLayout extends Layout {
       try {
         getExistentElementByClass(PlanRoundClassList.planRoundDrag);
       } catch {
-        console.log('this element is from timeline');
         return;
       }
       const roundDiv = getExistentElementByClass(PlanRoundClassList.planRoundDrag);

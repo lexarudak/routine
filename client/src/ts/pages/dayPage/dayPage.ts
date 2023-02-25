@@ -250,7 +250,6 @@ class DayPage extends Page {
       this.showElements();
       this.timeLine.setTimeline(this.notDistPlans, this.distPlans, this.allDayPlans, id);
     } catch (error) {
-      console.log(error);
       this.goTo(RoutsList.loginPage);
     }
   }
