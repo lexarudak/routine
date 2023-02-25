@@ -4,7 +4,7 @@ import NavButtons from '../base/enums/navButtons';
 import RoutsList from '../base/enums/routsList';
 import { createNewElement, getCurrentDayNum } from '../base/helpers';
 import { GoToFn } from '../base/types';
-import Layout from '../pages/layout';
+import Layout from './layout';
 
 class Header {
   goTo: GoToFn;

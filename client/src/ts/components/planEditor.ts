@@ -21,7 +21,7 @@ import RoutsList from '../base/enums/routsList';
 import InnerText from '../base/enums/innerText';
 import Days from '../base/enums/days';
 import { colorsAndFonts } from './colorsAndFonts';
-import TimeSlider from '../pages/planPage/components/timeSlider';
+import TimeSlider from './timeSlider';
 import defaultPlan from '../pages/planPage/components/defaultPlan';
 import savePlanIcon from '../pages/planPage/components/savePlanIcon';
 

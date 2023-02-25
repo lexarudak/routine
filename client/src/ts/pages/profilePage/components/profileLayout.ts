@@ -1,4 +1,4 @@
-import Layout from '../../layout';
+import Layout from '../../../components/layout';
 
 import { User, Statistics, UserSettings, ConfirmationDay } from '../../../base/interface';
 import { BaseClassList, ProfilePageClassList } from '../../../base/enums/classList';

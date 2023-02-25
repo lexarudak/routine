@@ -27,7 +27,7 @@ import Popup from '../../components/popup';
 import ErrorsList from '../../base/enums/errorsList';
 import Api from '../../api';
 import { GetAttribute } from '../../base/enums/attributes';
-import TimeSlider from './components/timeSlider';
+import TimeSlider from '../../components/timeSlider';
 import savePlanIcon from './components/savePlanIcon';
 import RoutsList from '../../base/enums/routsList';
 import InnerText from '../../base/enums/innerText';

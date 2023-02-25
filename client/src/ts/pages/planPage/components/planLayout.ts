@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-underscore-dangle */
-import Layout from '../../layout';
+import Layout from '../../../components/layout';
 import {
   BaseClassList,
   ButtonClassList,

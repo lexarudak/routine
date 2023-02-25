@@ -1,8 +1,8 @@
-import { TimeContainerClassList } from '../../../base/enums/classList';
-import EditorMode from '../../../base/enums/editorMode';
-import InnerText from '../../../base/enums/innerText';
-import Values from '../../../base/enums/values';
-import { createNewElement, getHours, getMinutes, minToHour } from '../../../base/helpers';
+import { TimeContainerClassList } from '../base/enums/classList';
+import EditorMode from '../base/enums/editorMode';
+import InnerText from '../base/enums/innerText';
+import Values from '../base/enums/values';
+import { createNewElement, getHours, getMinutes, minToHour } from '../base/helpers';
 
 class TimeSlider {
   minTime: number;
