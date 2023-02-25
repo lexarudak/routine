@@ -29,50 +29,6 @@ Schema:
 ```
 
 <details>
-
-- `GET` /api/users
-  
-  Respose `200` `OK`
-  ```
-  [
-    {
-      "_id": "63dbce8efc36f95ae5646e7e",
-      "name": "John Doe",
-      "email": "john.doe@gmail.com",
-      "confirmationDay": "today",
-      "confirmationTime": 960,
-      "createdAt": "2023-02-05T18:15:14.997Z",
-      "__v": 0
-    },
-    {
-      "_id": "63dbd176bb3349816256d074",
-      "name": "Steven Gundry",
-      "email": "steven.gundry@gmail.com",
-      "confirmationDay": "yesterday",
-      "confirmationTime": 660,
-      "createdAt": "2023-02-04T12:45:53.196Z",
-      "__v": 0
-    }
-  ]
-  ```  
-  
-- `DELETE` /api/users/:id 
-  
-  Request
-  `/api/users/63dbd176bb3349816256d074`
-  
-  Respose `200` `OK`
-  ```
-  {
-    "_id": "63dbd176bb3349816256d074",
-    "name": "Steven Gundry",
-    "email": "steven.gundry@gmail.com",
-    "confirmationDay": "yesterday",
-    "confirmationTime": 660,
-    "createdAt": "2023-02-04T12:45:53.196Z",
-    "__v": 0
-  }
-  ```
   
 - `POST` /api/users/registration
   
