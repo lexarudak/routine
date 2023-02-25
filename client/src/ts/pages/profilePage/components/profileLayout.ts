@@ -1,11 +1,19 @@
 import Layout from '../../layout';
 
 import { User, Statistics, UserSettings, ConfirmationDay } from '../../../base/interface';
-import { ClassList, ProfilePageClassList } from '../../../base/enums/classList';
+import { BaseClassList, ProfilePageClassList } from '../../../base/enums/classList';
 
-import * as helpers from '../../../base/helpers';
-import * as enums from '../../../base/enums/enums';
-import { StatisticsTankNames } from '../../../base/enums/enums';
+import {
+  cutStringLine,
+  getColors,
+  getExistentElement,
+  getExistentElementByClass,
+  getHours,
+  getMinutes,
+  timeToMin,
+} from '../../../base/helpers';
+import ConfirmationDays from '../../../base/enums/confirmationDays';
+import StatisticsTankNames from '../../../base/enums/statisticsTankNames';
 
 class ProfileLayout extends Layout {
   public makeUserData(profile: User) {
@@ -24,27 +32,27 @@ class ProfileLayout extends Layout {
 
     const tanks = this.getStatisticsTanks(statistics);
 
-    container.append(this.makeStatisticsTank(tanks[1], enums.StatisticsTankNames.Underfulfilled));
-    container.append(this.makeStatisticsTank(tanks[0], enums.StatisticsTankNames.Fulfilled));
-    container.append(this.makeStatisticsTank(tanks[2], enums.StatisticsTankNames.Overfulfilled));
+    container.append(this.makeStatisticsTank(tanks[1], StatisticsTankNames.underfulfilled));
+    container.append(this.makeStatisticsTank(tanks[0], StatisticsTankNames.fulfilled));
+    container.append(this.makeStatisticsTank(tanks[2], StatisticsTankNames.overfulfilled));
 
     return container;
   }
 
   public getUserSettings() {
     let classCSS: string = ProfilePageClassList.greetingUserName;
-    const uiUserName = helpers.getExistentElementByClass<HTMLInputElement>(classCSS);
+    const uiUserName = getExistentElementByClass<HTMLInputElement>(classCSS);
 
     classCSS = `.${ProfilePageClassList.settingsConfirmDay}>.${ProfilePageClassList.button}`;
-    const uiConfirmationDay = helpers.getExistentElement(classCSS);
+    const uiConfirmationDay = getExistentElement(classCSS);
 
     classCSS = `.${ProfilePageClassList.settingsConfirmTime}>.${ProfilePageClassList.button}`;
-    const uiConfirmationTime = helpers.getExistentElement<HTMLInputElement>(classCSS);
+    const uiConfirmationTime = getExistentElement<HTMLInputElement>(classCSS);
 
     const settings: UserSettings = {
       name: uiUserName.value,
-      confirmationDay: (uiConfirmationDay.textContent || enums.ConfirmationDays.today) as ConfirmationDay,
-      confirmationTime: helpers.timeToMin(uiConfirmationTime.value),
+      confirmationDay: (uiConfirmationDay.textContent || ConfirmationDays.today) as ConfirmationDay,
+      confirmationTime: timeToMin(uiConfirmationTime.value),
     };
 
     return settings;
@@ -56,7 +64,7 @@ class ProfileLayout extends Layout {
     const container = document.createElement('div');
     container.classList.add(ProfilePageClassList.greeting);
     container.innerHTML = `
-      <h1 class="${ProfilePageClassList.greetingHello} ${ClassList.title}">
+      <h1 class="${ProfilePageClassList.greetingHello} ${BaseClassList.title}">
         Hello, <input class="${ProfilePageClassList.greetingUserName}" type="text" maxlength="30"
           value="${profile.name}" placeholder="Anonymous"></input>
       </h1>
@@ -102,13 +110,13 @@ class ProfileLayout extends Layout {
     element = document.createElement('div');
     element.classList.add(ProfilePageClassList.statisticsTankName);
     switch (name) {
-      case StatisticsTankNames.Fulfilled:
+      case StatisticsTankNames.fulfilled:
         element.classList.add('fulfilled');
         break;
-      case StatisticsTankNames.Underfulfilled:
+      case StatisticsTankNames.underfulfilled:
         element.classList.add('underfulfilled');
         break;
-      case StatisticsTankNames.Overfulfilled:
+      case StatisticsTankNames.overfulfilled:
         element.classList.add('overfulfilled');
         break;
 
@@ -127,10 +135,10 @@ class ProfileLayout extends Layout {
   }
 
   private makeStatisticsPlan(statistics: Statistics) {
-    const title = helpers.cutStringLine(statistics.title, 20);
+    const title = cutStringLine(statistics.title, 20);
 
     const container = document.createElement('div');
-    const [bgColor, color] = helpers.getColors(statistics.color);
+    const [bgColor, color] = getColors(statistics.color);
     container.classList.add(ProfilePageClassList.planSquare);
     container.style.backgroundColor = bgColor;
     container.style.color = color;
@@ -165,7 +173,7 @@ class ProfileLayout extends Layout {
   }
 
   private getFormattedTime(time: number) {
-    return `${helpers.getHours(time).toString().padStart(2, '0')}:${helpers.getMinutes(time)}`;
+    return `${getHours(time).toString().padStart(2, '0')}:${getMinutes(time)}`;
   }
 }
 

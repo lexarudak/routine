@@ -1,8 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable @typescript-eslint/naming-convention */
-import { GetAttribute, SetAttribute } from '../../../base/enums/attributes';
-import { ClassList } from '../../../base/enums/classList';
-import ErrorsList from '../../../base/enums/errorsList';
+import { GetAttribute, SetAttribute } from '../base/enums/attributes';
+import { EditorClassList, MainClassList } from '../base/enums/classList';
+import ErrorsList from '../base/enums/errorsList';
 import {
   buttonOff,
   createNewElement,
@@ -10,20 +10,20 @@ import {
   getExistentElementByClass,
   getExistentInputElement,
   loginRedirect,
-} from '../../../base/helpers';
-import { Plan } from '../../../base/interface';
-import Popup from '../../../components/popup';
-import TimeSlider from './timeSlider';
-import defaultPlan from './defaultPlan';
-import savePlanIcon from './savePlanIcon';
-import Values from '../../../base/enums/values';
-import EditorMode from '../../../base/enums/editorMode';
-import Api from '../../../api';
-import { GoToFn } from '../../../base/types';
-import RoutsList from '../../../base/enums/routsList';
-import InnerText from '../../../base/enums/innerText';
-import Days from '../../../base/enums/days';
-import { colorsAndFonts } from '../../../components/colorsAndFonts';
+} from '../base/helpers';
+import { Plan } from '../base/interface';
+import Popup from './popup';
+import Values from '../base/enums/values';
+import EditorMode from '../base/enums/editorMode';
+import Api from '../api';
+import { GoToFn } from '../base/types';
+import RoutsList from '../base/enums/routsList';
+import InnerText from '../base/enums/innerText';
+import Days from '../base/enums/days';
+import { colorsAndFonts } from './colorsAndFonts';
+import TimeSlider from '../pages/planPage/components/timeSlider';
+import defaultPlan from '../pages/planPage/components/defaultPlan';
+import savePlanIcon from '../pages/planPage/components/savePlanIcon';
 
 class PlanEditor {
   goTo: GoToFn;
@@ -46,7 +46,7 @@ class PlanEditor {
 
   constructor(popup: Popup, goTo: GoToFn) {
     this.goTo = goTo;
-    this.mode = EditorMode.newPlan;
+    this.mode = EditorMode.newPlanFromWeek;
     this.popup = popup;
     this.plan = { ...defaultPlan };
     this.open = this.open.bind(this);
@@ -69,19 +69,19 @@ class PlanEditor {
     this.slider.setTimer(minTime, maxTime, plan?.duration);
 
     switch (this.mode) {
-      case EditorMode.editPlan:
+      case EditorMode.editWeekPlan:
         if (plan) this.plan = { ...plan };
         this.popup.editorMode();
         break;
 
-      case EditorMode.day:
+      case EditorMode.editDayPlan:
         if (plan) this.plan = { ...plan };
         if (plan) this.oldDur = { ...plan }.duration;
         if (dayId) this.dayId = dayId;
         this.popup.editorMode();
         break;
 
-      case EditorMode.newPlan:
+      case EditorMode.newPlanFromWeek:
         this.popup.editorMode(this.saveToLocalStorage);
         this.loadToLocalStorage();
         break;
@@ -93,13 +93,8 @@ class PlanEditor {
         if (thoughtId) this.thoughtId = thoughtId;
         break;
 
-      case EditorMode.newPlanDay:
+      case EditorMode.newPlanFromDay:
         if (dayId) this.dayId = dayId;
-        this.popup.editorMode(this.saveToLocalStorage);
-        this.loadToLocalStorage();
-        break;
-
-      case EditorMode.planFromThought:
         this.popup.editorMode(this.saveToLocalStorage);
         this.loadToLocalStorage();
         break;
@@ -111,7 +106,7 @@ class PlanEditor {
   }
 
   private loadToLocalStorage() {
-    const savedNewPlan = localStorage.getItem(`${Values.newPlanSave}/${this.dayId}`);
+    const savedNewPlan = localStorage.getItem(`${Values.locStorNewPlanName}/${this.dayId}`);
     if (savedNewPlan) {
       this.plan = JSON.parse(savedNewPlan);
     } else {
@@ -125,25 +120,25 @@ class PlanEditor {
     const { _id, title, text, color, duration } = this.plan;
     const dayOpt = { dayOfWeek: Number(this.dayId), planId: this.plan._id, duration: this.plan.duration - this.oldDur };
     switch (this.mode) {
-      case EditorMode.newPlan:
+      case EditorMode.newPlanFromWeek:
         await Api.createNewPlan({ title, text, color, duration });
-        localStorage.removeItem(`${Values.newPlanSave}/${this.dayId}`);
+        localStorage.removeItem(`${Values.locStorNewPlanName}/${this.dayId}`);
         break;
 
       case EditorMode.newPlanFromThought:
         await Api.convertToPlan({ title, text, color, duration }, this.thoughtId);
         break;
 
-      case EditorMode.editPlan:
+      case EditorMode.editWeekPlan:
         await Api.editPlan({ _id, title, text, color, duration });
         break;
 
-      case EditorMode.day:
+      case EditorMode.editDayPlan:
         await Api.editPlan({ _id, title, text, color });
         await Api.pushPlanToDay(dayOpt);
         break;
 
-      case EditorMode.newPlanDay:
+      case EditorMode.newPlanFromDay:
         // eslint-disable-next-line no-case-declarations
         const newPlan = await Api.createNewPlan({ title, text, color, duration });
         await Api.pushPlanToDay({
@@ -151,7 +146,7 @@ class PlanEditor {
           planId: newPlan._id,
           duration: newPlan.duration,
         });
-        localStorage.removeItem(`${Values.newPlanSave}/${this.dayId}`);
+        localStorage.removeItem(`${Values.locStorNewPlanName}/${this.dayId}`);
         break;
 
       default:
@@ -161,13 +156,13 @@ class PlanEditor {
 
   private saveToLocalStorage() {
     this.setPlan();
-    localStorage.setItem(`${Values.newPlanSave}/${this.dayId}`, JSON.stringify(this.plan));
+    localStorage.setItem(`${Values.locStorNewPlanName}/${this.dayId}`, JSON.stringify(this.plan));
   }
 
   private setPlan() {
     this.plan.duration = this.slider.currentTime;
-    this.plan.title = getExistentInputElement(`.${ClassList.editorTitle}`).value;
-    const textArea = document.querySelector(`.${ClassList.editorText}`);
+    this.plan.title = getExistentInputElement(`.${EditorClassList.editorTitle}`).value;
+    const textArea = document.querySelector(`.${EditorClassList.editorText}`);
     if (textArea instanceof HTMLTextAreaElement) this.plan.text = textArea.value;
   }
 
@@ -180,7 +175,7 @@ class PlanEditor {
   private drawEditor() {
     const [bgColor, fontColor] = getColors(this.plan.color);
     const container = this.makeContainer(bgColor, fontColor);
-    const tools = createNewElement('div', ClassList.editorTools);
+    const tools = createNewElement('div', EditorClassList.editorTools);
 
     tools.append(
       this.makeAcceptButton(fontColor),
@@ -193,7 +188,7 @@ class PlanEditor {
   }
 
   private makeContainer(bgColor: string, fontColor: string) {
-    const editor = createNewElement('div', ClassList.editor);
+    const editor = createNewElement('div', EditorClassList.editor);
     editor.style.backgroundColor = bgColor;
     editor.style.color = fontColor;
     return editor;
@@ -201,7 +196,7 @@ class PlanEditor {
 
   private makeTitle() {
     const title = document.createElement('input');
-    title.classList.add(ClassList.editorTitle);
+    title.classList.add(EditorClassList.editorTitle);
     title.value = this.plan.title;
     title.addEventListener('blur', function trim() {
       this.value = this.value.trim();
@@ -227,15 +222,15 @@ class PlanEditor {
 
   private makeText() {
     const text = document.createElement('textarea');
-    text.classList.add(ClassList.editorText);
+    text.classList.add(EditorClassList.editorText);
     text.value = this.plan.text;
     return text;
   }
 
   private makeAcceptButton(secColor: string) {
     const container = document.createElement('button');
-    container.classList.add(ClassList.editorButton);
-    container.innerHTML = savePlanIcon(secColor, ClassList.editorSaveIcon);
+    container.classList.add(EditorClassList.editorButton);
+    container.innerHTML = savePlanIcon(secColor, EditorClassList.editorSaveIcon);
 
     container.addEventListener('click', async (e) => {
       const { currentTarget } = e;
@@ -244,7 +239,7 @@ class PlanEditor {
 
       try {
         this.popup.easyClose();
-        getExistentElementByClass(ClassList.mainContainer).classList.add(ClassList.mainContainerHide);
+        getExistentElementByClass(MainClassList.mainContainer).classList.add(MainClassList.mainContainerHide);
         await this.sendPlan();
         this.goTo(!this.dayId ? RoutsList.planPage : `/${Days[Number(this.dayId)]}`);
       } catch (error) {
@@ -256,14 +251,14 @@ class PlanEditor {
   }
 
   private colorPicker() {
-    const container = createNewElement('div', ClassList.editorColorPicker);
+    const container = createNewElement('div', EditorClassList.editorColorPicker);
 
     container.addEventListener('click', () => this.toggleColorBox());
     return container;
   }
 
   private makeColorBox() {
-    const box = createNewElement('div', ClassList.editorColorBox);
+    const box = createNewElement('div', EditorClassList.editorColorBox);
 
     colorsAndFonts.forEach((_value, id) => {
       if (id !== 0) box.append(this.makeColorRound(id.toString()));
@@ -274,7 +269,7 @@ class PlanEditor {
 
   private makeColorRound(colorId: string) {
     const [bgColor] = getColors(colorId);
-    const round = createNewElement('div', ClassList.editorColorRound);
+    const round = createNewElement('div', EditorClassList.editorColorRound);
     round.style.backgroundColor = bgColor;
     round.setAttribute(SetAttribute.pickerColor, colorId);
 
@@ -296,14 +291,14 @@ class PlanEditor {
 
   private paintEditor(colorId: string) {
     const [bgColor, fontColor] = getColors(colorId);
-    const editor = getExistentElementByClass(ClassList.editor);
+    const editor = getExistentElementByClass(EditorClassList.editor);
     editor.style.backgroundColor = bgColor;
     editor.style.color = fontColor;
-    getExistentElementByClass(ClassList.editorSaveIcon).style.stroke = fontColor;
+    getExistentElementByClass(EditorClassList.editorSaveIcon).style.stroke = fontColor;
   }
 
   private toggleColorBox() {
-    getExistentElementByClass(ClassList.editorColorBox).classList.toggle(ClassList.editorColorBoxActive);
+    getExistentElementByClass(EditorClassList.editorColorBox).classList.toggle(EditorClassList.editorColorBoxActive);
   }
 }
 

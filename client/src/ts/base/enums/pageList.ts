@@ -1,9 +1,8 @@
 const enum PageList {
-  homePage = 'Home page',
+  homePage = 'Home',
   planPage = 'Week',
-  accountPage = 'Account page',
-  dayPage = 'Day page',
-  notFound = '404 page',
+  dayPage = 'Day',
+  notFoundPage = '404 page',
   loginPage = 'Login page',
   profilePage = 'Profile',
   confirmPage = 'Confirm',

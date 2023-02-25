@@ -1,5 +1,5 @@
+import { colorsAndFonts } from '../../../components/colorsAndFonts';
 import { client } from '../data/data';
-import Colors from '../../../base/enums/colors';
 
 class FlyingThought {
   id: string;
@@ -28,7 +28,7 @@ class FlyingThought {
   draw(ctx: CanvasRenderingContext2D) {
     ctx.beginPath();
     ctx.arc(Math.round(this.x), Math.round(this.y), this.radius, 0, 2 * Math.PI);
-    ctx.fillStyle = Colors.mediumGrey;
+    [[ctx.fillStyle]] = colorsAndFonts;
     ctx.fill();
     ctx.closePath();
     this.updateThoughtPos();
@@ -37,7 +37,7 @@ class FlyingThought {
   drawCircles(ctx: CanvasRenderingContext2D) {
     ctx.beginPath();
     ctx.arc(Math.round(this.x), Math.round(this.y), this.radius, 0, 2 * Math.PI);
-    ctx.fillStyle = Colors.white;
+    [[, ctx.fillStyle]] = colorsAndFonts;
     ctx.fill();
     ctx.closePath();
   }

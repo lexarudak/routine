@@ -1,5 +1,5 @@
 import PageList from '../../base/enums/pageList';
-import { HomePageClassList, ClassList } from '../../base/enums/classList';
+import { HomePageClassList, BaseClassList, ThoughtsClassList, MainClassList } from '../../base/enums/classList';
 import { GoToFn } from '../../base/types';
 import Page from '../page';
 import Api from '../../api';
@@ -9,12 +9,12 @@ import ClockChart from './components/clockChart';
 import Thought from './components/thought';
 import RoutsList from '../../base/enums/routsList';
 import Path from '../../base/enums/path';
-import * as enums from '../../base/enums/enums';
 import InnerText from '../../base/enums/innerText';
 import Values from '../../base/enums/values';
-import PlanEditor from '../planPage/components/planEditor';
 import Popup from '../../components/popup';
 import { Plan, ThoughtsData, ConfirmationDay } from '../../base/interface';
+import ConfirmationDays from '../../base/enums/confirmationDays';
+import PlanEditor from '../../components/planEditor';
 
 class HomePage extends Page {
   clockChartInst: ClockChart;
@@ -39,16 +39,16 @@ class HomePage extends Page {
   }
 
   private createCanvas() {
-    const canvas = createNewElement<HTMLCanvasElement>('canvas', HomePageClassList.canvas);
+    const canvas = createNewElement<HTMLCanvasElement>('canvas', BaseClassList.canvas);
     canvas.width = client.width;
     canvas.height = client.height;
     return canvas;
   }
 
   private async createThought(canvas: HTMLCanvasElement) {
-    const thought = createNewElement('div', HomePageClassList.thought);
-    const thoughtContainer = createNewElement('div', HomePageClassList.thoughtContainer);
-    const thoughtTitle = createNewElement('h3', HomePageClassList.thoughtTitle);
+    const thought = createNewElement('div', ThoughtsClassList.thought);
+    const thoughtContainer = createNewElement('div', ThoughtsClassList.thoughtContainer);
+    const thoughtTitle = createNewElement('h3', ThoughtsClassList.thoughtTitle);
     thoughtTitle.textContent = InnerText.thoughtText;
     const [thoughtsDataList, allPlans]: [ThoughtsData[], Plan[]] = await Promise.all([
       Api.getThoughts(),
@@ -60,19 +60,19 @@ class HomePage extends Page {
     }, 0);
 
     const thoughtAddInst = new Thought(this.goTo, this.editor, this.commonPopup, fillWeekTime, '');
-    const thoughtAdd = thoughtAddInst.draw(HomePageClassList.thoughtAdd);
-    thoughtAdd.classList.remove(HomePageClassList.none);
+    const thoughtAdd = thoughtAddInst.draw(ThoughtsClassList.thoughtAdd);
+    thoughtAdd.classList.remove(BaseClassList.none);
     thought.append(thoughtTitle, thoughtAdd, thoughtContainer);
 
     thoughtAddInst.createThoughtsList(thoughtContainer, thoughtsDataList);
     thoughtAddInst.createFlyingThought(canvas, thoughtsDataList);
 
-    const oldPopup = document.querySelector(`.${HomePageClassList.blur}`);
+    const oldPopup = document.querySelector(`.${BaseClassList.blur}`);
     if (oldPopup instanceof HTMLElement) {
       thoughtTitle.addEventListener('click', () => thoughtAddInst.openCloseThoughtList(thoughtAdd, oldPopup));
     } else {
-      const popup = createNewElement('div', HomePageClassList.blur);
-      popup.classList.add(HomePageClassList.none);
+      const popup = createNewElement('div', BaseClassList.blur);
+      popup.classList.add(BaseClassList.none);
       document.body.append(popup);
       thoughtTitle.addEventListener('click', () => thoughtAddInst.openCloseThoughtList(thoughtAdd, popup));
       popup.addEventListener('click', () => thoughtAddInst.openCloseThoughtList(thoughtAdd, popup));
@@ -94,7 +94,7 @@ class HomePage extends Page {
 
   private getDayOfWeekByConfirmationDay(confirmationDay: ConfirmationDay) {
     const dayOfWeek = this.getPreviousDayOfWeek(new Date().getDay());
-    return confirmationDay === enums.ConfirmationDays.today ? dayOfWeek : this.getPreviousDayOfWeek(dayOfWeek);
+    return confirmationDay === ConfirmationDays.today ? dayOfWeek : this.getPreviousDayOfWeek(dayOfWeek);
   }
 
   private getPreviousDayOfWeek(dayOfWeek: number) {
@@ -119,9 +119,9 @@ class HomePage extends Page {
         this.confirmDayPlans.length &&
         this.isValidDay()
       ) {
-        confirmDay.classList.add(HomePageClassList.show);
+        confirmDay.classList.add(BaseClassList.show);
       } else if (this.confirmDayInfo === true) {
-        confirmDay.classList.remove(HomePageClassList.show);
+        confirmDay.classList.remove(BaseClassList.show);
       }
       if (this.clockChartInst.seconds === Values.startDayTime) this.getNewDayData();
     }, 1000);
@@ -134,7 +134,7 @@ class HomePage extends Page {
   }
 
   protected async getFilledPage(): Promise<HTMLElement> {
-    const page = document.createElement(HomePageClassList.section);
+    const page = document.createElement(BaseClassList.section);
     const currentDayNum = getCurrentDayNum();
     const canvas = this.createCanvas();
     const [, thought, dayPlans] = await Promise.all([
@@ -164,7 +164,7 @@ class HomePage extends Page {
   }
 
   public async draw() {
-    const container = getExistentElementByClass(ClassList.mainContainer);
+    const container = getExistentElementByClass(MainClassList.mainContainer);
     try {
       await this.animatedFilledPageAppend(container);
       this.clockChartInst.getTime();

@@ -6,17 +6,17 @@ import {
   makeBanner,
 } from '../../../base/helpers';
 import { client } from '../data/data';
-import { HomePageClassList } from '../../../base/enums/classList';
+import { BaseClassList, ThoughtsClassList } from '../../../base/enums/classList';
 import Api from '../../../api';
 import { ThoughtsData } from '../../../base/interface';
 import { SetAttribute, GetAttribute } from '../../../base/enums/attributes';
 import FlyingThought from './flyingThought';
 import { GoToFn } from '../../../base/types';
-import PlanEditor from '../../planPage/components/planEditor';
 import Popup from '../../../components/popup';
 import Values from '../../../base/enums/values';
 import EditorMode from '../../../base/enums/editorMode';
 import ErrorsList from '../../../base/enums/errorsList';
+import PlanEditor from '../../../components/planEditor';
 
 class Thought {
   goTo: GoToFn;
@@ -45,29 +45,29 @@ class Thought {
   async createThought(thoughtText: string) {
     if (!thoughtText) return;
     this.canCreate = false;
-    const thoughtAdd = getExistentElement(`.${HomePageClassList.thoughtAdd}`);
-    thoughtAdd.classList.remove(HomePageClassList.open);
-    thoughtAdd.classList.add(HomePageClassList.thoughtAddHold);
+    const thoughtAdd = getExistentElement(`.${ThoughtsClassList.thoughtAdd}`);
+    thoughtAdd.classList.remove(BaseClassList.open);
+    thoughtAdd.classList.add(ThoughtsClassList.thoughtAddHold);
 
     const text = thoughtText;
     this.thoughtText = '';
     await Api.createThoughts({ title: text });
     const thoughtsDataList = await Api.getThoughts();
 
-    this.createThoughtsList(getExistentElement(`.${HomePageClassList.thoughtContainer}`), thoughtsDataList);
-    this.createFlyingThought(getExistentElement(`.${HomePageClassList.canvas}`), thoughtsDataList);
+    this.createThoughtsList(getExistentElement(`.${ThoughtsClassList.thoughtContainer}`), thoughtsDataList);
+    this.createFlyingThought(getExistentElement(`.${BaseClassList.canvas}`), thoughtsDataList);
 
-    getExistentElement<HTMLInputElement>(`.${HomePageClassList.thoughtInput}`).value = this.thoughtText;
-    getExistentElement(`.${HomePageClassList.canvas}`).classList.remove(HomePageClassList.none);
-    thoughtAdd.classList.remove(HomePageClassList.thoughtAddHold);
+    getExistentElement<HTMLInputElement>(`.${ThoughtsClassList.thoughtInput}`).value = this.thoughtText;
+    getExistentElement(`.${BaseClassList.canvas}`).classList.remove(BaseClassList.none);
+    thoughtAdd.classList.remove(ThoughtsClassList.thoughtAddHold);
 
     this.canCreate = true;
   }
 
   async convertToPlan(thoughtText: string) {
     this.openCloseThoughtList(
-      getExistentElementByClass(HomePageClassList.thoughtAdd),
-      getExistentElementByClass(HomePageClassList.blur)
+      getExistentElementByClass(ThoughtsClassList.thoughtAdd),
+      getExistentElementByClass(BaseClassList.blur)
     );
     if (this.fillWeekTime + Values.minPlanDuration <= Values.allWeekMinutes) {
       this.editor.open(
@@ -97,45 +97,45 @@ class Thought {
     const thought = e.target.parentElement;
     const thoughtId = e.target.parentElement.dataset[GetAttribute.thoughtId];
 
-    thought.classList.add(HomePageClassList.none);
+    thought.classList.add(BaseClassList.none);
     setTimeout(() => thought.parentElement?.removeChild(thought), 350);
 
     if (!thoughtId) return;
     await Api.deleteThought(thoughtId);
     const thoughtsDataList = await Api.getThoughts();
-    this.createFlyingThought(getExistentElement(`.${HomePageClassList.canvas}`), thoughtsDataList);
+    this.createFlyingThought(getExistentElement(`.${BaseClassList.canvas}`), thoughtsDataList);
   }
 
   openCloseThought(e: Event, thoughtAdd: HTMLElement) {
     if (!isHTMLElement(e.target)) return;
     if (this.canCreate) {
-      if (e.target.closest(`.${HomePageClassList.open}`)) {
-        thoughtAdd.classList.remove(HomePageClassList.open);
-        if (!getExistentElementByClass(HomePageClassList.thoughtAdd).classList.contains('none')) {
-          getExistentElement(`.${HomePageClassList.canvas}`).classList.remove(HomePageClassList.none);
+      if (e.target.closest(`.${BaseClassList.open}`)) {
+        thoughtAdd.classList.remove(BaseClassList.open);
+        if (!getExistentElementByClass(ThoughtsClassList.thoughtAdd).classList.contains('none')) {
+          getExistentElement(`.${BaseClassList.canvas}`).classList.remove(BaseClassList.none);
         }
       } else {
-        thoughtAdd.classList.add(HomePageClassList.open);
-        if (e.target.closest(`.${HomePageClassList.thoughtAdd}`))
-          getExistentElement(`.${HomePageClassList.canvas}`).classList.add(HomePageClassList.none);
+        thoughtAdd.classList.add(BaseClassList.open);
+        if (e.target.closest(`.${ThoughtsClassList.thoughtAdd}`))
+          getExistentElement(`.${BaseClassList.canvas}`).classList.add(BaseClassList.none);
       }
     }
   }
 
   openCloseThoughtList(thoughtAdd: HTMLElement, popup: HTMLElement) {
     if (this.canCreate) {
-      thoughtAdd.classList.toggle(HomePageClassList.none);
-      popup.classList.toggle(HomePageClassList.none);
+      thoughtAdd.classList.toggle(BaseClassList.none);
+      popup.classList.toggle(BaseClassList.none);
 
-      document.querySelectorAll(`.${HomePageClassList.thoughtItem}`).forEach((el) => {
+      document.querySelectorAll(`.${ThoughtsClassList.thoughtItem}`).forEach((el) => {
         if (thoughtAdd.classList.contains('none')) {
-          el.classList.add(HomePageClassList.open);
-          thoughtAdd.classList.remove(HomePageClassList.open);
-          getExistentElement(`.${HomePageClassList.canvas}`).classList.add(HomePageClassList.none);
+          el.classList.add(BaseClassList.open);
+          thoughtAdd.classList.remove(BaseClassList.open);
+          getExistentElement(`.${BaseClassList.canvas}`).classList.add(BaseClassList.none);
         } else {
-          getExistentElement(`.${HomePageClassList.canvas}`).classList.remove(HomePageClassList.none);
+          getExistentElement(`.${BaseClassList.canvas}`).classList.remove(BaseClassList.none);
         }
-        el.classList.toggle(HomePageClassList.none);
+        el.classList.toggle(BaseClassList.none);
       });
     }
   }
@@ -150,7 +150,7 @@ class Thought {
     });
 
     for (let i = 0; i < thoughtsArr.length; i += 1) {
-      const thoughtEl = thoughtsArr[i].draw(HomePageClassList.thoughtItem);
+      const thoughtEl = thoughtsArr[i].draw(ThoughtsClassList.thoughtItem);
       thoughtContainer.append(thoughtEl);
     }
   }
@@ -200,10 +200,10 @@ class Thought {
 
   draw(elClass: string) {
     const thoughtAdd = createNewElement('div', elClass);
-    const thoughtAddBtn = createNewElement('div', HomePageClassList.thoughtAddBtn);
-    thoughtAdd.classList.add(HomePageClassList.none);
+    const thoughtAddBtn = createNewElement('div', ThoughtsClassList.thoughtAddBtn);
+    thoughtAdd.classList.add(BaseClassList.none);
 
-    const thoughtInput = createNewElement<HTMLInputElement>('input', HomePageClassList.thoughtInput);
+    const thoughtInput = createNewElement<HTMLInputElement>('input', ThoughtsClassList.thoughtInput);
     thoughtInput.value = this.thoughtText;
 
     if (this.thoughtId !== undefined) thoughtAdd.setAttribute(SetAttribute.thoughtId, this.thoughtId.toString());
@@ -211,13 +211,13 @@ class Thought {
     thoughtInput.addEventListener('blur', (e) => {
       if (!thoughtInput.value) return;
       this.thoughtText = thoughtInput.value;
-      if (elClass === HomePageClassList.thoughtItem) this.updateThought(this.thoughtText, e);
+      if (elClass === ThoughtsClassList.thoughtItem) this.updateThought(this.thoughtText, e);
     });
 
-    const thoughtCreate = createNewElement('div', HomePageClassList.thoughtCreateBtn);
+    const thoughtCreate = createNewElement('div', ThoughtsClassList.thoughtCreateBtn);
 
     thoughtCreate.addEventListener('click', () => {
-      if (elClass === HomePageClassList.thoughtItem) {
+      if (elClass === ThoughtsClassList.thoughtItem) {
         this.convertToPlan(this.thoughtText);
       } else {
         this.createThought(this.thoughtText);
@@ -227,8 +227,8 @@ class Thought {
     thoughtAdd.append(thoughtInput);
     thoughtAddBtn.addEventListener('click', (e) => this.openCloseThought(e, thoughtAdd));
 
-    if (elClass === HomePageClassList.thoughtItem) {
-      const thoughtRemove = createNewElement('div', HomePageClassList.thoughtRemoveBtn);
+    if (elClass === ThoughtsClassList.thoughtItem) {
+      const thoughtRemove = createNewElement('div', ThoughtsClassList.thoughtRemoveBtn);
 
       thoughtRemove.addEventListener('click', (e) => this.deleteThought(e));
       thoughtAdd.append(thoughtRemove);

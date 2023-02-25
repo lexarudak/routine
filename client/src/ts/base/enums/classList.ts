@@ -1,29 +1,44 @@
-const enum ClassList {
-  mainContainer = 'main__container',
-  mainContainerHide = 'main__container_hide',
-  mainContainerNoSelect = 'main__container_no-select',
+const enum BaseClassList {
   banner = 'banner',
   imgContainer = 'img-container',
   scaleNormal = 'scale-normal',
   title = 'title',
   subtitle = 'subtitle',
-  // header
+  section = 'section',
+  canvas = 'canvas',
+  chart = 'chart',
+  none = 'none',
+  open = 'open',
+  blur = 'blur',
+  show = 'show',
+  popup = 'popup',
+  popupShow = 'popup_show',
+  sliderPopup = 'slider-popup',
+}
+
+const enum MainClassList {
+  mainContainer = 'main__container',
+  mainContainerHide = 'main__container_hide',
+  mainContainerNoSelect = 'main__container_no-select',
+}
+
+const enum HeaderClassList {
   header = 'header',
   headerLogo = 'header__logo',
   headerName = 'header__name',
   headerInfo = 'header__info',
-  // nav
   nav = 'nav',
   navButton = 'nav__button',
   navButtonActive = 'nav__button_active',
-  // 404
+}
+
+const enum NotFoundPageClassList {
   page404 = 'page-404',
   page404text = 'page-404__text',
   page404title = 'page-404__title',
-  // Popup
-  popup = 'popup',
-  popupShow = 'popup_show',
-  // Sign in
+}
+
+const enum LoginClassList {
   signForm = 'sign-form',
   signIn = 'sign-form_sign-in',
   signUp = 'sign-form_sign-up',
@@ -42,7 +57,9 @@ const enum ClassList {
   signUpView = 'sign-up-view',
   inputError = 'sign-form__input-error',
   inputErrorActive = 'sign-form__input-error_active',
-  // Plans
+}
+
+const enum WeekPageClassList {
   planContainer = 'plan',
   weekLine = 'plan__week-line',
   infoTextContainer = 'plan__text-container',
@@ -66,14 +83,19 @@ const enum ClassList {
   planDayHours = 'plan__day-hours',
   planField = 'plan__field',
   planAddButtonName = 'plan__button-add-name',
-  weekendFields = 'weekend-fields',
-  weekendFieldsBig = 'weekend-fields__big',
-  weekendFieldsSmall = 'weekend-fields__small',
+  weekFields = 'week-fields',
+  weekFieldsBig = 'week-fields__big',
+  weekFieldsSmall = 'week-fields__small',
+}
+
+const enum PlanRoundClassList {
   planRound = 'plan-round',
   planRoundBlur = 'plan-round__blur',
   planRoundVal = 'plan-round__value',
   planRoundDrag = 'plan-round_drag',
-  // Editor
+}
+
+const enum EditorClassList {
   editor = 'editor',
   editorTools = 'editor__tools',
   editorTitle = 'editor__title',
@@ -84,16 +106,18 @@ const enum ClassList {
   editorColorBoxActive = 'editor__color-box_active',
   editorColorRound = 'editor__color-round',
   editorSaveIcon = 'editor__save-icon',
-  // time container
+}
+
+const enum TimeContainerClassList {
   timeContainer = 'time-container',
   timeContainerSlider = 'time-container__slider',
   timeContainerTimeInput = 'time-container__time-input',
   timeContainerTimeLabel = 'time-container__time-label',
   timeContainerPer = 'time-container__per',
   timeContainerPerVal = 'time-container__per-val',
-  // slider popup
-  sliderPopup = 'slider-popup',
-  // day page
+}
+
+const enum DayPageClassList {
   dayPageContainer = 'day-page__container',
   dayPageNavButtons = 'day-page__nav-buttons',
   dayPageBody = 'day-page__body',
@@ -105,7 +129,14 @@ const enum ClassList {
   dayPageReturnOver = 'day-page__return_over',
   dayPagePlansZone = 'day-page__plans-zone',
   dayPagePlansZoneDrag = 'day-page__plans-zone_drag',
-  // timeline
+  planList = 'plan-list',
+  planListItem = 'plan-list__item',
+  planListColor = 'plan-list__color',
+  planListName = 'plan-list__name',
+  planListDur = 'plan-list__dur',
+}
+
+const enum TimelineClassList {
   timeline = 'timeline',
   timelineDrag = 'timeline_drag',
   timelineHeader = 'timeline-header',
@@ -122,19 +153,9 @@ const enum ClassList {
   timelineDivRight = 'timeline-div__right',
   timelineDivName = 'timeline-div__name',
   timelineDivBody = 'timeline-div__body',
-  //
-  planList = 'plan-list',
-  planListItem = 'plan-list__item',
-  planListColor = 'plan-list__color',
-  planListName = 'plan-list__name',
-  planListDur = 'plan-list__dur',
 }
 
-const enum HomePageClassList {
-  section = 'section',
-  canvas = 'canvas',
-  chart = 'chart',
-  // thought
+const enum ThoughtsClassList {
   thought = 'thought',
   thoughtTitle = 'thought__title',
   thoughtContainer = 'thought__container',
@@ -145,32 +166,26 @@ const enum HomePageClassList {
   thoughtCreateBtn = 'thought__create-btn',
   thoughtRemoveBtn = 'thought__remove-btn',
   thoughtInput = 'thought__input',
+}
 
+const enum HomePageClassList {
   plan = 'plan-btn',
   profile = 'profile-btn',
   confirmDay = 'confirm-day',
-  // to-do
   toDo = 'to-do',
   toDoWrap = 'to-do__wrapper',
   toDoTitle = 'to-do__title',
   toDoTextarea = 'to-do__textarea',
   toDoText = 'to-do__text',
-  // clock
   clock = 'clock',
   hour = 'hour',
   hourCircle = 'hour__circle',
   minutes = 'minutes',
   minutesCircle = 'minutes__circle',
-
   dayInfo = 'day-info',
   dayIcon = 'day-info__icon',
   daySvg = 'day-info__svg',
   timeOfDay = 'time-of-day',
-
-  none = 'none',
-  open = 'open',
-  blur = 'blur',
-  show = 'show',
 }
 
 const enum ProfilePageClassList {
@@ -203,4 +218,30 @@ const enum ConfirmPageClassList {
   confirmWrapper = 'confirm-wrapper',
 }
 
-export { ClassList, HomePageClassList, ProfilePageClassList, ConfirmPageClassList };
+const enum ButtonClassList {
+  button = 'button',
+  main = 'button_main',
+  signIn = 'button_signIn',
+  navButton = 'nav-button',
+  navButtonActive = 'nav-button_active',
+  saveButton = 'save-button',
+}
+
+export {
+  BaseClassList,
+  HomePageClassList,
+  ProfilePageClassList,
+  ConfirmPageClassList,
+  ButtonClassList,
+  MainClassList,
+  HeaderClassList,
+  NotFoundPageClassList,
+  LoginClassList,
+  WeekPageClassList,
+  PlanRoundClassList,
+  TimeContainerClassList,
+  DayPageClassList,
+  TimelineClassList,
+  EditorClassList,
+  ThoughtsClassList,
+};

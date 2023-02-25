@@ -2,7 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 import Api from '../../../api';
 import { GetAttribute, SetAttribute } from '../../../base/enums/attributes';
-import { ClassList } from '../../../base/enums/classList';
+import { PlanRoundClassList, TimelineClassList } from '../../../base/enums/classList';
 import ErrorsList from '../../../base/enums/errorsList';
 import Values from '../../../base/enums/values';
 import {
@@ -59,11 +59,11 @@ class Timeline {
   constructor(goTo: GoToFn) {
     this.goTo = goTo;
     this.sensor = this.makeSensor();
-    this.showLine = createNewElement('div', ClassList.timelineShow);
+    this.showLine = createNewElement('div', TimelineClassList.timelineShow);
   }
 
   private makeSensor() {
-    const sensor: HTMLDivElement = createNewElement('div', ClassList.timelineSensor);
+    const sensor: HTMLDivElement = createNewElement('div', TimelineClassList.timelineSensor);
     this.addListenerEnter(sensor);
     this.addListenerOver(sensor);
     this.addListenerLeave(sensor);
@@ -173,11 +173,11 @@ class Timeline {
         await this.stopMove(e);
       });
 
-      newDiv.classList.add(ClassList.timelineDivFake);
+      newDiv.classList.add(TimelineClassList.timelineDivFake);
       this.currentDiv = currentDiv;
       this.currentDivHTML = newDiv;
 
-      const old = this.showLine.querySelector(`.${ClassList.timelineDivFake}`);
+      const old = this.showLine.querySelector(`.${TimelineClassList.timelineDivFake}`);
       if (old) old.remove();
       this.showLine.append(this.currentDivHTML);
     }
@@ -280,7 +280,7 @@ class Timeline {
       this.reduceNoDistPlan();
       this.paintRound(this.round, this.plan);
       this.currentDivHTML.setAttribute(SetAttribute.from, newDistPlan.from.toString());
-      this.currentDivHTML.classList.remove(ClassList.timelineDivFake);
+      this.currentDivHTML.classList.remove(TimelineClassList.timelineDivFake);
       this.currentDiv = undefined;
       this.currentDivHTML = undefined;
       try {
@@ -374,15 +374,15 @@ class Timeline {
     this.deleteFromDistPlan(target.dataset[GetAttribute.from]);
 
     setTimeout(() => {
-      this.sensor.classList.add(ClassList.timelineSensorActive);
+      this.sensor.classList.add(TimelineClassList.timelineSensorActive);
       target.style.display = 'none';
     }, 0);
   }
 
   private async stopMove(e: DragEvent) {
     const { target } = e;
-    this.sensor.classList.remove(ClassList.timelineSensorActive);
-    getExistentElementByClass(ClassList.planRoundDrag).classList.remove(ClassList.planRoundDrag);
+    this.sensor.classList.remove(TimelineClassList.timelineSensorActive);
+    getExistentElementByClass(PlanRoundClassList.planRoundDrag).classList.remove(PlanRoundClassList.planRoundDrag);
     if (target instanceof HTMLElement) {
       target.remove();
     }
@@ -402,7 +402,7 @@ class Timeline {
     this.round = round;
     const { icon, center } = makeRoundIcon(round);
     if (e.dataTransfer) e.dataTransfer.setDragImage(icon, center, center);
-    round.classList.add(ClassList.planRoundDrag);
+    round.classList.add(PlanRoundClassList.planRoundDrag);
   }
 
   private setDragInfoCurrentDiv(from: number, to: number) {
@@ -428,7 +428,7 @@ class Timeline {
   }
 
   public draw() {
-    const timelineDiv: HTMLDivElement = createNewElement('div', ClassList.timeline);
+    const timelineDiv: HTMLDivElement = createNewElement('div', TimelineClassList.timeline);
     timelineDiv.append(this.showLine, this.sensor);
     return timelineDiv;
   }

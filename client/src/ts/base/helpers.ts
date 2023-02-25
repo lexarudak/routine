@@ -1,6 +1,6 @@
 import { colorsAndFonts, defaultColors } from '../components/colorsAndFonts';
-import PlanRoundConfig from '../components/planRoundConfig';
-import { ClassList } from './enums/classList';
+import { PlanRoundConfig } from '../components/planRoundConfig';
+import { BaseClassList } from './enums/classList';
 import Days from './enums/days';
 import ErrorsList from './enums/errorsList';
 import RoutsList from './enums/routsList';
@@ -132,7 +132,7 @@ function makeRoundIcon(round: HTMLElement) {
   const icon = round.cloneNode(true);
   let center = 0;
   if (icon instanceof HTMLElement) {
-    getExistentElementByClass(ClassList.imgContainer).append(icon);
+    getExistentElementByClass(BaseClassList.imgContainer).append(icon);
     icon.style.transform = Values.scaleNormal;
     icon.style.boxShadow = 'none';
     center = width / 2;
@@ -156,7 +156,7 @@ function cutStringLine(str: string, length: number) {
 
 function makeBanner(bannerText: string) {
   const banner = document.createElement('h2');
-  banner.classList.add(ClassList.banner);
+  banner.classList.add(BaseClassList.banner);
   banner.innerText = bannerText;
   return banner;
 }

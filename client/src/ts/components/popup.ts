@@ -1,4 +1,4 @@
-import { ClassList } from '../base/enums/classList';
+import { BaseClassList, EditorClassList } from '../base/enums/classList';
 import { getExistentElementByClass } from '../base/helpers';
 
 class Popup {
@@ -6,7 +6,7 @@ class Popup {
   protected opened = false;
 
   constructor() {
-    this.popup = getExistentElementByClass(ClassList.popup);
+    this.popup = getExistentElementByClass(BaseClassList.popup);
   }
 
   public editorMode(callback?: () => void) {
@@ -22,17 +22,17 @@ class Popup {
   public close(e: Event, fnToDelete: (e: Event) => void, callback?: () => void) {
     const { target } = e;
     if (target instanceof HTMLElement) {
-      if (target.classList.contains(ClassList.popup)) {
+      if (target.classList.contains(BaseClassList.popup)) {
         if (callback) callback();
         this.clean(target);
         this.popup.removeEventListener('click', fnToDelete);
       }
-      if (target.closest(`.${ClassList.editorButton}`)) {
+      if (target.closest(`.${EditorClassList.editorButton}`)) {
         this.popup.removeEventListener('click', fnToDelete);
       }
     }
     if (target instanceof SVGElement) {
-      if (target.closest(`.${ClassList.editorButton}`)) this.popup.removeEventListener('click', fnToDelete);
+      if (target.closest(`.${EditorClassList.editorButton}`)) this.popup.removeEventListener('click', fnToDelete);
     }
   }
 
@@ -49,7 +49,7 @@ class Popup {
       },
       { once: true }
     );
-    target.classList.remove(ClassList.popupShow);
+    target.classList.remove(BaseClassList.popupShow);
   }
 
   public open(inner: HTMLElement) {
@@ -59,7 +59,7 @@ class Popup {
       this.popup.append(inner);
       setTimeout(() => {
         this.opened = true;
-        this.popup.classList.add(ClassList.popupShow);
+        this.popup.classList.add(BaseClassList.popupShow);
       }, 0);
     }
   }

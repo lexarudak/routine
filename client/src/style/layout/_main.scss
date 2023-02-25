@@ -2,7 +2,6 @@
   flex-grow: 1;
   width: 100%;
   height: calc(100% - 30px);
-  // padding: 20px;
   display: flex;
   justify-content: center;
 
@@ -14,13 +13,11 @@
     justify-content: center;
     position: relative;
     opacity: 1;
-    transition: .5s;
+    transition: .3s;
     visibility: visible;
     height: 100%;
-    // transform: translateY(0%);
 
     &_hide {
-      // transform: translateY(-50%);
       opacity: 0;
       visibility: hidden;
     }

@@ -1,10 +1,10 @@
 import { ChartData, ChartConfig, SvgAttrs, ChartSector } from '../../../base/interface';
-import Values from '../../../base/enums/values';
 import { getColors } from '../../../base/helpers';
+import Url from '../../../base/enums/url';
 
 class Chart {
   createSvgElement(elementName: string, attrs: SvgAttrs) {
-    const svgNs = Values.svgLink;
+    const svgNs = Url.svgLink;
     const svgEl = document.createElementNS(svgNs, elementName);
     Object.entries(attrs).forEach(([attrName, attrValue]) => svgEl.setAttributeNS(null, attrName, attrValue));
     return svgEl;

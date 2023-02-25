@@ -1,4 +1,4 @@
-import { ConfirmationDays } from './enums/enums';
+import ConfirmationDays from './enums/confirmationDays';
 
 export interface Plan {
   _id: string;

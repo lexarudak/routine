@@ -1,6 +1,5 @@
 import { createNewElement, getColors, getExistentElement } from '../../../base/helpers';
-import { HomePageClassList } from '../../../base/enums/classList';
-import { Attributes } from '../../../base/enums/attributes';
+import { BaseClassList, HomePageClassList } from '../../../base/enums/classList';
 import Values from '../../../base/enums/values';
 import InnerText from '../../../base/enums/innerText';
 import { DistDayPlan, ChartData } from '../../../base/interface';
@@ -11,6 +10,7 @@ import { emptyData } from '../data/data';
 import Path from '../../../base/enums/path';
 import { GoToFn } from '../../../base/types';
 import Days from '../../../base/enums/days';
+import { GetAttribute } from '../../../base/enums/attributes';
 
 class ClockChart extends Clock {
   protected goTo: GoToFn;
@@ -216,8 +216,8 @@ class ClockChart extends Clock {
     if (!(e.target instanceof SVGCircleElement) || !e.target.id) return;
     const sector = +e.target.id;
     const toDo = getExistentElement(`.${HomePageClassList.toDo}`);
-    const bgColor = e.target.getAttribute(Attributes.stroke);
-    const color = e.target.getAttribute('class');
+    const bgColor = e.target.getAttribute(GetAttribute.stroke);
+    const color = e.target.getAttribute(GetAttribute.class);
     if (bgColor && color) {
       toDo.style.backgroundColor = bgColor;
       if (toDo.parentElement) toDo.parentElement.style.color = color;
@@ -280,7 +280,7 @@ class ClockChart extends Clock {
   }
 
   updateChart() {
-    const chart = getExistentElement(`.${HomePageClassList.chart}`);
+    const chart = getExistentElement(`.${BaseClassList.chart}`);
     chart.innerHTML = '';
     this.chartInst.createChart(chart, this.chartData, { strokeWidth: 14, radius: 285 });
     getExistentElement(`.${HomePageClassList.clock}`).append(chart);
@@ -319,7 +319,7 @@ class ClockChart extends Clock {
     hour.append(hr);
     minutes.append(min);
 
-    const chart = createNewElement('div', HomePageClassList.chart);
+    const chart = createNewElement('div', BaseClassList.chart);
     this.chartInst.createChart(chart, this.chartData, { strokeWidth: 14, radius: 285 });
 
     const dayInfoHTML = createNewElement('div', HomePageClassList.dayInfo);

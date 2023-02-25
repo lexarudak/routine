@@ -1,8 +1,8 @@
 import PagesList from '../base/enums/pageList';
 import { getExistentElementByClass } from '../base/helpers';
-import { ClassList } from '../base/enums/classList';
+import { MainClassList } from '../base/enums/classList';
 import { GoToFn } from '../base/types';
-import PlanEditor from './planPage/components/planEditor';
+import PlanEditor from '../components/planEditor';
 
 abstract class Page {
   protected name: PagesList;
@@ -27,16 +27,16 @@ abstract class Page {
   }
 
   protected async animatedFilledPageAppend(container: HTMLElement) {
-    container.classList.add(ClassList.mainContainerHide);
+    container.classList.add(MainClassList.mainContainerHide);
     const page = await this.getFilledPage();
     container.innerHTML = '';
-    container.classList.remove(ClassList.mainContainerHide);
+    container.classList.remove(MainClassList.mainContainerHide);
     container.append(page);
   }
 
   public async draw(id?: string) {
     if (id) this.dayId = id;
-    const container = getExistentElementByClass(ClassList.mainContainer);
+    const container = getExistentElementByClass(MainClassList.mainContainer);
     await this.animatedFilledPageAppend(container);
   }
 }
