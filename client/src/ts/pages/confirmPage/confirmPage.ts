@@ -7,13 +7,13 @@ import ConfirmLayout from './components/confirmLayout';
 import { User, Plan, ConfirmationDay, ConfirmDay, ConfirmDayDistribution } from '../../base/interface';
 import { GoToFn } from '../../base/types';
 import { MainClassList, ConfirmPageClassList } from '../../base/enums/classList';
+import { getExistentElement, getExistentElementByClass, loginRedirect, minToHour } from '../../base/helpers';
 
 import Values from '../../base/enums/values';
 import PagesList from '../../base/enums/pageList';
 
 import Header from '../../components/header';
 import NavButtons from '../../base/enums/navButtons';
-import { getExistentElement, getExistentElementByClass, loginRedirect, minToHour } from '../../base/helpers';
 import ConfirmationDays from '../../base/enums/confirmationDays';
 import MessageType from '../../base/enums/messageType';
 import PlanEditor from '../../components/planEditor';
@@ -47,17 +47,17 @@ class ConfirmPage extends Page {
   }
 
   private setEventListeners() {
-    const uiConfirmButton = getExistentElement<HTMLButtonElement>('.confirm__main-button');
+    const uiConfirmButton = getExistentElementByClass<HTMLButtonElement>(ConfirmPageClassList.confirmMainButton);
     uiConfirmButton.addEventListener('click', () => this.confirm());
 
-    const uiPlans = getExistentElementByClass('confirm-plans');
+    const uiPlans = getExistentElementByClass(ConfirmPageClassList.confirmPlans);
     uiPlans.addEventListener('mousedown', (event) => this.startMove(event));
     uiPlans.addEventListener('click', (event) => this.changeTime(event));
   }
 
   private startMove(eMouseDown: MouseEvent) {
     const target = eMouseDown.target as HTMLElement;
-    if (!target.classList.contains('plan-square')) {
+    if (!target.classList.contains(ConfirmPageClassList.planSquare)) {
       return;
     }
 
@@ -65,7 +65,7 @@ class ConfirmPage extends Page {
     const rect = target.getBoundingClientRect();
 
     function onMouseMove(eMouseMove: MouseEvent) {
-      const uiConfirmPlan = target.closest('.confirm-plan') as HTMLElement;
+      const uiConfirmPlan = target.closest(`.${ConfirmPageClassList.confirmPlan}`) as HTMLElement;
       const plan = context.dayPlans.find((item) => item._id === uiConfirmPlan.dataset.id) as Plan;
 
       const offsetCursor = 5;
@@ -93,11 +93,11 @@ class ConfirmPage extends Page {
   private changeTime(event: MouseEvent) {
     const target = event.target as HTMLElement;
 
-    if (target.classList.contains('confirm-plan__arrow_left')) {
+    if (target.classList.contains(ConfirmPageClassList.confirmPlanArrowLeft)) {
       this.changePlanTime(target, -1);
       return;
     }
-    if (target.classList.contains('confirm-plan__arrow_right')) {
+    if (target.classList.contains(ConfirmPageClassList.confirmPlanArrowRight)) {
       this.changePlanTime(target, +1);
     }
   }
@@ -150,7 +150,7 @@ class ConfirmPage extends Page {
   }
 
   private changePlanTime(arrow: HTMLElement, increment: number) {
-    const uiConfirmPlan = arrow.closest('.confirm-plan') as HTMLElement;
+    const uiConfirmPlan = arrow.closest(`.${ConfirmPageClassList.confirmPlan}`) as HTMLElement;
     const plan = this.dayPlans.find((item) => item._id === uiConfirmPlan.dataset.id) as Plan;
 
     plan.duration += increment;
@@ -159,7 +159,7 @@ class ConfirmPage extends Page {
     let width = this.getWidthByDuration(plan.duration);
     width = this.restrictPlanWidth(plan, width);
 
-    const uiPlanLine = arrow.closest('.confirm-plan__line') as HTMLElement;
+    const uiPlanLine = arrow.closest(`.${ConfirmPageClassList.confirmPlanLine}`) as HTMLElement;
     uiPlanLine.style.width = `${width}px`;
 
     const uiPlanTime = uiPlanLine.nextElementSibling as HTMLElement;
@@ -168,13 +168,13 @@ class ConfirmPage extends Page {
 
   private setPageElementsParameters() {
     this.dayPlans.forEach((plan) => {
-      const classCSS = `.confirm-plan[data-id="${plan._id}"]`;
+      const classCSS = `.${ConfirmPageClassList.confirmPlan}[data-id="${plan._id}"]`;
       const uiConfirmPlan = getExistentElement<HTMLElement>(classCSS);
 
       let width = this.getWidthByDuration(plan.duration);
       width = this.restrictPlanWidth(plan, width);
 
-      const uiPlanLine = getExistentElementByClass('confirm-plan__line', uiConfirmPlan);
+      const uiPlanLine = getExistentElementByClass(ConfirmPageClassList.confirmPlanLine, uiConfirmPlan);
       uiPlanLine.style.width = `${width}px`;
     });
   }

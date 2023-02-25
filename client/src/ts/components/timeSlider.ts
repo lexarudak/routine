@@ -47,7 +47,6 @@ class TimeSlider {
 
   private setCorrectTimeInterval(hours: HTMLInputElement, minutes: HTMLInputElement) {
     const time = Number(hours.value) * 60 + Number(minutes.value);
-    console.log(time);
     if (time > this.maxTime) this.setTimeInterval(hours, minutes, this.maxTime);
     if (time < this.minTime) this.setTimeInterval(hours, minutes, this.minTime);
   }

@@ -121,7 +121,6 @@ class TimelineDiv {
     btn.addEventListener('mousedown', (e) => {
       e.stopPropagation();
       this.move.start = e.clientX;
-      console.log('mouse down');
       this.newFromMin = this.fromMin;
       this.newToMin = this.toMin;
       this.div.setAttribute('draggable', 'false');
@@ -137,7 +136,6 @@ class TimelineDiv {
         'mouseup',
         async (mUEvent) => {
           mUEvent.stopPropagation();
-          console.log('mouse up');
           this.div.setAttribute('draggable', 'true');
           this.div.classList.remove(TimelineClassList.timelineDivActive);
           sensor.classList.remove(TimelineClassList.timelineSensorActive);
@@ -180,7 +178,6 @@ class TimelineDiv {
     this.toMin = this.newToMin;
 
     this.div.setAttribute(SetAttribute.from, this.fromMin.toString());
-    console.log('from after resize', this.fromMin);
   }
 
   private makeDiv() {
@@ -252,7 +249,6 @@ class TimelineDiv {
   private addMoveListener(block: HTMLElement) {
     block.addEventListener('mousedown', (e) => {
       e.stopPropagation();
-      console.log('block fn');
     });
   }
 
@@ -262,7 +258,6 @@ class TimelineDiv {
 
   private setZoneStart() {
     const distPlans = this.getDistPlans();
-    console.log('set start zone', distPlans);
     const start = distPlans.reduce((acc, plan) => {
       if (plan.to <= this.fromMin && plan.to > acc) {
         return plan.to;
@@ -274,7 +269,6 @@ class TimelineDiv {
 
   private setZoneEnd() {
     const distPlans = this.getDistPlans();
-    console.log('set end zone', distPlans);
     const end = distPlans.reduce((acc, plan) => {
       if (plan.from >= this.toMin && plan.from < acc) {
         return plan.from;

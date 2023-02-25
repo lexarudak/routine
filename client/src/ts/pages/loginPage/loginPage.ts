@@ -91,7 +91,6 @@ class LoginPage extends Page {
           this.firstPasswordInput.showError(ErrorsList.wrongPass);
           break;
         default:
-          console.log(error.message);
           break;
       }
     } else {
@@ -100,7 +99,6 @@ class LoginPage extends Page {
           this.emailInput.showError(ErrorsList.existUser);
           break;
         default:
-          console.log(error.message);
           break;
       }
     }
@@ -111,8 +109,7 @@ class LoginPage extends Page {
       if (this.isFormValid()) {
         try {
           buttonOff(this.signButton);
-          const resp = await this.sendForm();
-          console.log(resp);
+          await this.sendForm();
           this.cleanForm();
           this.status = InnerText.signIn;
           buttonOn(this.signButton);

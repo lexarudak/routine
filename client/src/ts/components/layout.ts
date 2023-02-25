@@ -1,7 +1,7 @@
 import RoutsList from '../base/enums/routsList';
 
 import { GoToFn } from '../base/types';
-import { BaseClassList, ButtonClassList } from '../base/enums/classList';
+import { BaseClassList, ButtonClassList, BannerClassList } from '../base/enums/classList';
 import { createNewElement, getExistentElementByClass } from '../base/helpers';
 import MessageType from '../base/enums/messageType';
 
@@ -18,10 +18,10 @@ class Layout {
 
   public makeBanner(type: MessageType, text: string) {
     const uiBanner = document.createElement('div');
-    uiBanner.classList.add(BaseClassList.banner, `banner_${type}`);
+    uiBanner.classList.add(BaseClassList.banner, `${BaseClassList.banner}_${type}`);
 
     const uiTitle = document.createElement('h2');
-    uiTitle.classList.add('banner__title');
+    uiTitle.classList.add(BannerClassList.bannerTitle);
     uiTitle.innerText = text;
     uiBanner.append(uiTitle);
 
@@ -34,8 +34,10 @@ class Layout {
       btn.innerText = 'Save';
       btn.addEventListener('click', save);
 
-      btn.classList.add('save-button_visible');
-      btn.addEventListener('animationend', () => btn.classList.remove('save-button_visible'), { once: true });
+      btn.classList.add(ButtonClassList.saveButtonVisible);
+      btn.addEventListener('animationend', () => btn.classList.remove(ButtonClassList.saveButtonVisible), {
+        once: true,
+      });
 
       const uiMain = getExistentElementByClass('settings');
       uiMain.append(btn);
@@ -49,7 +51,7 @@ class Layout {
 
   public removeSaveButton() {
     const btn = getExistentElementByClass<HTMLButtonElement>(ButtonClassList.saveButton);
-    btn.classList.add('save-button_hidden');
+    btn.classList.add(ButtonClassList.saveButtonHidden);
     btn.addEventListener('animationend', () => btn.remove());
   }
 }

@@ -252,7 +252,6 @@ class PlanPage extends Page {
       if (width < PlanRoundConfig.minRoundSize) width = PlanRoundConfig.minRoundSize;
       if (width > maxRoundSize) width = maxRoundSize;
 
-      console.log(bigZone.clientWidth * PlanRoundConfig.maxSizeK);
       round.setWidth(width);
       const roundDiv = this.addRoundListener(round);
 
@@ -362,7 +361,6 @@ class PlanPage extends Page {
       this.setAddButton();
       this.addListenersToAllDays(this.addDayListener);
     } catch (error) {
-      console.log(error);
       this.goTo(RoutsList.loginPage);
     }
   }

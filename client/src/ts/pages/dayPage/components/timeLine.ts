@@ -165,7 +165,6 @@ class Timeline {
       const newDiv = currentDiv.draw();
 
       newDiv.addEventListener('dragstart', (e) => {
-        console.log(currentDiv);
         this.startMove(e, currentDiv.fromMin, currentDiv.toMin);
       });
 
@@ -197,7 +196,6 @@ class Timeline {
 
   private addListenerEnter(timelineDiv: HTMLDivElement) {
     timelineDiv.addEventListener('dragenter', (e) => {
-      console.log('enter');
       e.preventDefault();
       e.stopPropagation();
       const cursor = this.getCursorX(e);
@@ -311,7 +309,6 @@ class Timeline {
       const blur = round.childNodes[1];
       if (blur instanceof HTMLElement) {
         blur.style.height = `${100 * (1 - (noDistPlan ? noDistPlan.duration : plan.duration) / allTime)}%`;
-        // console.log(noDistPlan, blur.style.height);
       }
     }
   }
@@ -368,7 +365,6 @@ class Timeline {
     const { target } = e;
     if (!(target instanceof HTMLDivElement)) return;
     this.setRoundForDrag(e, target);
-    console.log('FROM WORKS', from);
     this.setDragInfoCurrentDiv(from, to);
     this.increaseNoDistPlan();
     this.deleteFromDistPlan(target.dataset[GetAttribute.from]);
@@ -406,16 +402,12 @@ class Timeline {
   }
 
   private setDragInfoCurrentDiv(from: number, to: number) {
-    console.log('from and to', from, to);
     this.dragInfo.currentDiv.fromMin = from;
     this.dragInfo.currentDiv.toMin = to;
   }
 
   private deleteFromDistPlan(fromId: string | undefined) {
-    console.log('before delete', this.distPlans);
     if (fromId) this.distPlans = this.distPlans.filter((disPlan) => disPlan.from.toString() !== fromId);
-    console.log('after delete', this.distPlans);
-    // this.
   }
 
   public setTimeline(notDistPlans: Plan[], distPlans: DistDayPlan[], allDayPlans: Plan[], dayId: string) {
