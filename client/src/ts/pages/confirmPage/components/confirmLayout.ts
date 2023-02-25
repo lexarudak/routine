@@ -26,7 +26,22 @@ class ConfirmLayout extends Layout {
     const title = createNewElement('h2', BaseClassList.subtitle);
     title.innerHTML = Days[dayOfWeek];
 
-    container.append(title, this.makeConfirmPlans(dayPlans), this.makeConfirmButton());
+    if (dayPlans.length) {
+      container.append(title, this.makeConfirmPlans(dayPlans), this.makeConfirmButton());
+    } else {
+      container.append(title, this.makeNoPlansMessage());
+    }
+
+    return container;
+  }
+
+  private makeNoPlansMessage() {
+    const container = document.createElement('div');
+    container.classList.add(ConfirmPageClassList.confirmContentMessage);
+
+    const message = createNewElement('div', ConfirmPageClassList.confirmContentMessageText);
+    message.textContent = 'There is no plans to confirm';
+    container.append(message);
 
     return container;
   }

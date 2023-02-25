@@ -220,6 +220,8 @@ const enum ConfirmPageClassList {
   confirmHeaderGreeting = 'confirm-header__greeting',
   confirmHeaderInfo = 'confirm-header__info',
   confirmContent = 'confirm-content',
+  confirmContentMessage = 'confirm-content__message',
+  confirmContentMessageText = 'confirm-content__message-text',
   confirmPlans = 'confirm-plans',
   confirmPlan = 'confirm-plan',
   confirmPlanLabel = 'confirm-plan__label',
