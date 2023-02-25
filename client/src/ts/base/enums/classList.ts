@@ -216,6 +216,27 @@ const enum ProfilePageClassList {
 const enum ConfirmPageClassList {
   confirm = 'confirm',
   confirmWrapper = 'confirm-wrapper',
+  confirmHeader = 'confirm-header',
+  confirmHeaderGreeting = 'confirm-header__greeting',
+  confirmHeaderInfo = 'confirm-header__info',
+  confirmContent = 'confirm-content',
+  confirmPlans = 'confirm-plans',
+  confirmPlan = 'confirm-plan',
+  confirmPlanLabel = 'confirm-plan__label',
+  confirmPlanLine = 'confirm-plan__line',
+  confirmPlanArrows = 'confirm-plan__arrows',
+  confirmPlanArrow = 'confirm-plan__arrow',
+  confirmPlanArrowLeft = 'confirm-plan__arrow_left',
+  confirmPlanArrowRight = 'confirm-plan__arrow_right',
+  confirmPlanTime = 'confirm-plan__time',
+  confirmMainButton = 'confirm__main-button',
+  planSquare = 'plan-square',
+}
+
+const enum BannerClassList {
+  bannerTitle = 'banner__title',
+  bannerButtons = 'banner__buttons',
+  bannerButton = 'banner__button',
 }
 
 const enum ButtonClassList {
@@ -225,6 +246,8 @@ const enum ButtonClassList {
   navButton = 'nav-button',
   navButtonActive = 'nav-button_active',
   saveButton = 'save-button',
+  saveButtonVisible = 'save-button_visible',
+  saveButtonHidden = 'save-button_hidden',
 }
 
 export {
@@ -244,4 +267,5 @@ export {
   TimelineClassList,
   EditorClassList,
   ThoughtsClassList,
+  BannerClassList,
 };
