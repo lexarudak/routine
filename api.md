@@ -15,6 +15,7 @@
 
 Returns json data about users.
 
+Schema:
 ```
 {
   "_id": string,
@@ -204,6 +205,7 @@ Returns json data about users.
 
 Returns json data about thought.
 
+Schema:
 ```
 {
   "_id": string,
@@ -335,6 +337,7 @@ Returns json data about thought.
 
 Returns json data about user's plans.
 
+Schema:
 ```
 {
   "_id": string,
@@ -466,6 +469,7 @@ Returns json data about user's plans.
 
 Returns json data about the distribution of time during the week.
 
+Schema:
 ```
 {
   "_id": string,
@@ -550,6 +554,7 @@ Returns json data about the distribution of time during the week.
 
 Returns json data about the distribution of time during the day.
 
+Schema:
 ```
 {
   "_id": string,
@@ -678,6 +683,7 @@ Returns json data about the distribution of time during the day.
 
 Returns json data about the user statistics.
 
+Schema:
 ```
 {
   "_id": string,
