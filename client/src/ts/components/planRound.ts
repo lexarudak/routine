@@ -1,11 +1,9 @@
 /* eslint-disable no-underscore-dangle */
 import { SetAttribute } from '../base/enums/attributes';
-import ButtonClasses from '../base/enums/buttonClasses';
-import { ClassList } from '../base/enums/classList';
+import { ButtonClassList, PlanRoundClassList } from '../base/enums/classList';
 import { createNewElement, getColors, makeColorTransparent, minToHour } from '../base/helpers';
 import { Plan } from '../base/interface';
-import PlanRoundConfig from './planRoundConfig';
-import PlanRoundConfigDay from './planRoundConfigDay';
+import { PlanRoundConfig, PlanRoundConfigDay } from './planRoundConfig';
 import alignValues from './plansAlignValues';
 
 class PlanRound {
@@ -18,7 +16,7 @@ class PlanRound {
   constructor(planInfo: Plan) {
     this.planInfo = planInfo;
     this.width = 0;
-    this.blur = createNewElement('div', ClassList.planRoundBlur);
+    this.blur = createNewElement('div', PlanRoundClassList.planRoundBlur);
   }
 
   private getUniqValue() {
@@ -61,8 +59,8 @@ class PlanRound {
     const time = document.createElement('span');
     round.setAttribute('draggable', 'true');
     round.setAttribute(SetAttribute.planId, this.planInfo._id);
-    round.classList.add(ClassList.planRound, ButtonClasses.button);
-    time.classList.add(ClassList.planRoundVal);
+    round.classList.add(PlanRoundClassList.planRound, ButtonClassList.button);
+    time.classList.add(PlanRoundClassList.planRoundVal);
 
     const [bgColor, fontColor] = getColors(this.planInfo.color);
     round.style.backgroundColor = bgColor;

@@ -1,7 +1,6 @@
-import { ClassList } from '../../base/enums/classList';
+import { LoginClassList } from '../../base/enums/classList';
 import InnerText from '../../base/enums/innerText';
 import PageList from '../../base/enums/pageList';
-import Values from '../../base/enums/values';
 import { buttonOff, buttonOn, getExistentElementByClass } from '../../base/helpers';
 import { GoToFn } from '../../base/types';
 import EmailInput from './components/emailInput';
@@ -13,7 +12,7 @@ import RoutsList from '../../base/enums/routsList';
 import LoginLayout from './components/loginLayout';
 import Api from '../../api';
 import ErrorsList from '../../base/enums/errorsList';
-import PlanEditor from '../planPage/components/planEditor';
+import PlanEditor from '../../components/planEditor';
 
 class LoginPage extends Page {
   status: InnerText.signIn | InnerText.signUp;
@@ -36,10 +35,10 @@ class LoginPage extends Page {
     super(PageList.loginPage, goTo, editor);
     this.layout = new LoginLayout();
     this.status = InnerText.signIn;
-    this.nameInput = new NameInput(Values.namePlaceholder);
-    this.firstPasswordInput = new FirstPasswordInput(Values.passwordPlaceholder);
-    this.secondPasswordInput = new SecondPasswordInput(Values.secondPasswordPlaceholder, this.firstPasswordInput);
-    this.emailInput = new EmailInput(Values.emailPlaceholder);
+    this.nameInput = new NameInput(InnerText.namePlaceholder);
+    this.firstPasswordInput = new FirstPasswordInput(InnerText.passwordPlaceholder);
+    this.secondPasswordInput = new SecondPasswordInput(InnerText.secondPasswordPlaceholder, this.firstPasswordInput);
+    this.emailInput = new EmailInput(InnerText.emailPlaceholder);
     this.signButton = this.setLoginButton(this.layout.makeButton());
     this.checkbox = this.layout.makeCheckbox();
   }
@@ -64,9 +63,9 @@ class LoginPage extends Page {
   }
 
   private toggleFormClass() {
-    const form = getExistentElementByClass(ClassList.signForm);
-    form.classList.toggle(ClassList.signUp);
-    form.classList.toggle(ClassList.signIn);
+    const form = getExistentElementByClass(LoginClassList.signForm);
+    form.classList.toggle(LoginClassList.signUp);
+    form.classList.toggle(LoginClassList.signIn);
   }
 
   private toggleStatus(): void {
@@ -134,16 +133,16 @@ class LoginPage extends Page {
   protected async getFilledPage(): Promise<HTMLElement> {
     const form = this.layout.makeEmptyForm();
     form.append(
-      this.layout.makeTitle(InnerText.signIn, ClassList.signInView),
-      this.layout.makeTitle(InnerText.signUp, ClassList.signUpView),
-      this.nameInput.draw(ClassList.signUpView),
+      this.layout.makeTitle(InnerText.signIn, LoginClassList.signInView),
+      this.layout.makeTitle(InnerText.signUp, LoginClassList.signUpView),
+      this.nameInput.draw(LoginClassList.signUpView),
       this.emailInput.draw(),
-      this.firstPasswordInput.draw(ClassList.signPassword),
-      this.secondPasswordInput.draw(ClassList.signUpView, ClassList.signPassword),
+      this.firstPasswordInput.draw(LoginClassList.signPassword),
+      this.secondPasswordInput.draw(LoginClassList.signUpView, LoginClassList.signPassword),
       this.checkbox,
       this.layout.makeLabel(),
-      this.makeLink(InnerText.newAccount, ClassList.signInView),
-      this.makeLink(InnerText.iHaveAccount, ClassList.signUpView),
+      this.makeLink(InnerText.newAccount, LoginClassList.signInView),
+      this.makeLink(InnerText.iHaveAccount, LoginClassList.signUpView),
       this.signButton
     );
     return form;
@@ -163,7 +162,7 @@ class LoginPage extends Page {
     this.secondPasswordInput.hideError();
   }
 
-  private makeLink(text: string, className: ClassList) {
+  private makeLink(text: string, className: string) {
     const span = document.createElement('span');
     span.innerText = text;
     span.addEventListener('click', () => {
@@ -171,7 +170,7 @@ class LoginPage extends Page {
       this.toggleFormClass();
       this.cleanErrors();
     });
-    span.classList.add(ClassList.signLink, className);
+    span.classList.add(LoginClassList.signLink, className);
     return span;
   }
 }

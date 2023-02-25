@@ -1,42 +1,28 @@
-import Layout from '../../layout';
+import Layout from '../../../components/layout';
 
-import { ClassList } from '../../../base/enums/classList';
+import { BaseClassList, ButtonClassList } from '../../../base/enums/classList';
 
 import { Plan } from '../../../base/interface';
-import * as helpers from '../../../base/helpers';
-import * as enums from '../../../base/enums/enums';
-import ButtonClasses from '../../../base/enums/buttonClasses';
+import { createNewElement, cutStringLine, getColors, minToHour } from '../../../base/helpers';
+import Days from '../../../base/enums/days';
 
 class ConfirmLayout extends Layout {
   public makeHeader() {
     const container = document.createElement('div');
     container.classList.add('confirm-header');
     container.innerHTML = `
-      <h1 class="${ClassList.title} confirm-header__greeting">Confirm day</h1>
+      <h1 class="${BaseClassList.title} confirm-header__greeting">Confirm day</h1>
       <p class="confirm-header__info">Drag the edge to change the time</p>`;
 
     return container;
-  }
-
-  private getDayOfWeekName(dayOfWeek: number) {
-    const daysOfWeek = [
-      enums.DaysOfWeek.monday,
-      enums.DaysOfWeek.tuesday,
-      enums.DaysOfWeek.wednesday,
-      enums.DaysOfWeek.thursday,
-      enums.DaysOfWeek.friday,
-      enums.DaysOfWeek.saturday,
-      enums.DaysOfWeek.sunday,
-    ];
-    return daysOfWeek[dayOfWeek];
   }
 
   public makeConfirmContent(dayPlans: Plan[], dayOfWeek: number) {
     const container = document.createElement('div');
     container.classList.add('confirm-content');
 
-    const title = helpers.createNewElement('h2', ClassList.subtitle);
-    title.innerHTML = this.getDayOfWeekName(dayOfWeek);
+    const title = createNewElement('h2', BaseClassList.subtitle);
+    title.innerHTML = Days[dayOfWeek];
 
     container.append(title, this.makeConfirmPlans(dayPlans), this.makeConfirmButton());
 
@@ -55,10 +41,10 @@ class ConfirmLayout extends Layout {
   private makeConfirmPlan(plan: Plan) {
     const container = document.createElement('div');
     container.classList.add('confirm-plan');
-    container.dataset.id = plan[enums.DBAttributes.id];
+    container.dataset.id = plan._id;
 
-    const title = helpers.cutStringLine(plan.title, 20);
-    const [bgColor] = helpers.getColors(plan.color);
+    const title = cutStringLine(plan.title, 20);
+    const [bgColor] = getColors(plan.color);
 
     container.innerHTML = `
       <span class="confirm-plan__label">${title}</span>
@@ -68,13 +54,13 @@ class ConfirmLayout extends Layout {
           <img class="confirm-plan__arrow confirm-plan__arrow_right" src="./assets/svg/arrow-right.svg" alt="Right">
         </div>
       </div>
-      <span class="confirm-plan__time">${helpers.minToHour(plan.duration)}</span>`;
+      <span class="confirm-plan__time">${minToHour(plan.duration)}</span>`;
 
     return container;
   }
 
   private makeConfirmButton() {
-    const container = helpers.createNewElement('button', ButtonClasses.button);
+    const container = createNewElement('button', ButtonClassList.button);
     container.classList.add('confirm__main-button');
     container.innerHTML = 'Confirm!';
 
@@ -83,7 +69,7 @@ class ConfirmLayout extends Layout {
 
   public makeConfirmationBanner(yes: () => void, cancel: () => void) {
     const uiBanner = document.createElement('div');
-    uiBanner.classList.add(ClassList.banner, 'banner_warning');
+    uiBanner.classList.add(BaseClassList.banner, 'banner_warning');
 
     const uiQuestion = document.createElement('h2');
     uiQuestion.classList.add('banner__title');

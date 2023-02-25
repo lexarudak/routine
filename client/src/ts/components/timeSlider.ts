@@ -1,13 +1,13 @@
-import { ClassList } from '../../../base/enums/classList';
-import EditorMode from '../../../base/enums/editorMode';
-import InnerText from '../../../base/enums/innerText';
-import Values from '../../../base/enums/values';
-import { createNewElement, getHours, getMinutes, minToHour } from '../../../base/helpers';
+import { TimeContainerClassList } from '../base/enums/classList';
+import EditorMode from '../base/enums/editorMode';
+import InnerText from '../base/enums/innerText';
+import Values from '../base/enums/values';
+import { createNewElement, getHours, getMinutes, minToHour } from '../base/helpers';
 
 class TimeSlider {
-  minTime;
+  minTime: number;
 
-  maxTime;
+  maxTime: number;
 
   currentTime: number;
 
@@ -24,9 +24,8 @@ class TimeSlider {
   }
 
   private makeSlider() {
-    const slider: HTMLInputElement = createNewElement('input', ClassList.timeContainerSlider);
+    const slider: HTMLInputElement = createNewElement('input', TimeContainerClassList.timeContainerSlider);
     slider.type = 'range';
-    slider.id = Values.timeSliderId;
     slider.min = this.minTime.toString();
     slider.max = this.maxTime.toString();
     slider.value = this.currentTime.toString();
@@ -34,7 +33,7 @@ class TimeSlider {
   }
 
   private makeHoursInput(id: string) {
-    const input: HTMLInputElement = createNewElement('input', ClassList.timeContainerTimeInput);
+    const input: HTMLInputElement = createNewElement('input', TimeContainerClassList.timeContainerTimeInput);
     input.id = id;
     input.type = 'number';
     return input;
@@ -89,9 +88,8 @@ class TimeSlider {
     return { hours, minutes, slider };
   }
 
-  private makeLabel(name: string, id: string) {
-    const label: HTMLLabelElement = createNewElement('label', ClassList.timeContainerTimeLabel);
-    label.htmlFor = id;
+  private makeLabel(name: string) {
+    const label: HTMLLabelElement = createNewElement('label', TimeContainerClassList.timeContainerTimeLabel);
     label.innerText = name;
     return label;
   }
@@ -106,10 +104,10 @@ class TimeSlider {
     slider: HTMLInputElement,
     mode?: EditorMode
   ) {
-    const perContainer = createNewElement('span', ClassList.timeContainerPer);
+    const perContainer = createNewElement('span', TimeContainerClassList.timeContainerPer);
 
-    if (mode === EditorMode.newPlan || mode === EditorMode.editPlan) {
-      const perVal = createNewElement('span', ClassList.timeContainerPerVal);
+    if (mode === EditorMode.newPlanFromWeek || mode === EditorMode.editWeekPlan) {
+      const perVal = createNewElement('span', TimeContainerClassList.timeContainerPerVal);
 
       minutes.addEventListener('blur', () => {
         perVal.innerHTML = this.weekHoursToDay();
@@ -129,7 +127,7 @@ class TimeSlider {
   }
 
   public draw(mode?: EditorMode) {
-    const container = createNewElement('div', ClassList.timeContainer);
+    const container = createNewElement('div', TimeContainerClassList.timeContainer);
     const { hours, minutes, slider } = this.addListeners(
       this.makeHoursInput(InnerText.hoursText),
       this.makeHoursInput(InnerText.minutesText),
@@ -138,9 +136,9 @@ class TimeSlider {
 
     container.append(
       hours,
-      this.makeLabel(InnerText.hoursText, Values.hoursInputId),
+      this.makeLabel(InnerText.hoursText),
       minutes,
-      this.makeLabel(InnerText.minutesText, Values.minutesInputId),
+      this.makeLabel(InnerText.minutesText),
       this.makePerSection(hours, minutes, slider, mode),
       slider
     );

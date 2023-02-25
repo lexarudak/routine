@@ -1,4 +1,4 @@
-import { ClassList } from '../../../base/enums/classList';
+import { LoginClassList } from '../../../base/enums/classList';
 import ErrorsList from '../../../base/enums/errorsList';
 import InputType from '../../../base/enums/inputTypes';
 
@@ -42,11 +42,11 @@ class TextInput {
   public showError(errorText?: ErrorsList) {
     this.errorBlock.innerHTML = this.errorText;
     if (errorText) this.errorBlock.innerHTML = errorText;
-    this.errorBlock.classList.add(ClassList.inputErrorActive);
+    this.errorBlock.classList.add(LoginClassList.inputErrorActive);
   }
 
   public hideError() {
-    this.errorBlock.classList.remove(ClassList.inputErrorActive);
+    this.errorBlock.classList.remove(LoginClassList.inputErrorActive);
   }
 
   private createInput() {
@@ -59,14 +59,14 @@ class TextInput {
 
   private createErrorBlock() {
     const block = document.createElement('span');
-    block.classList.add(ClassList.inputError);
+    block.classList.add(LoginClassList.inputError);
     return block;
   }
 
-  public draw(containerClass?: ClassList, ...inputClasses: ClassList[]): HTMLElement {
-    this.input.classList.add(ClassList.signInput);
+  public draw(containerClass?: string, ...inputClasses: string[]): HTMLElement {
+    this.input.classList.add(LoginClassList.signInput);
     const container = document.createElement('div');
-    container.classList.add(ClassList.signInputBox);
+    container.classList.add(LoginClassList.signInputBox);
     if (containerClass) container.classList.add(containerClass);
     if (inputClasses.length > 0) {
       inputClasses.forEach((className) => {

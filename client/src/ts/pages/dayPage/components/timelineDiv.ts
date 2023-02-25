@@ -1,6 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import { SetAttribute } from '../../../base/enums/attributes';
-import { ClassList } from '../../../base/enums/classList';
+import { MainClassList, TimelineClassList } from '../../../base/enums/classList';
 import Values from '../../../base/enums/values';
 import {
   createNewElement,
@@ -71,9 +71,9 @@ class TimelineDiv {
     this.getDistPlans = getDistPlans;
     this.updateDistPlans = updateDistPlans;
     this.plan = plan;
-    this.from = createNewElement('div', ClassList.timelineDivFrom);
-    this.to = createNewElement('div', ClassList.timelineDivTo);
-    this.name = createNewElement('div', ClassList.timelineDivName);
+    this.from = createNewElement('div', TimelineClassList.timelineDivFrom);
+    this.to = createNewElement('div', TimelineClassList.timelineDivTo);
+    this.name = createNewElement('div', TimelineClassList.timelineDivName);
     this.name.innerText = this.plan.title;
     this.div = this.makeDiv();
     this.pxToMin = pxToMin.bind(this, this.timelineWidthPx);
@@ -115,8 +115,8 @@ class TimelineDiv {
   }
 
   private addSizeListener(btn: HTMLElement, resizeFn: (e: MouseEvent) => void, setZoneFn: () => void) {
-    const sensor = getExistentElementByClass(ClassList.timelineSensor);
-    const main = getExistentElementByClass(ClassList.mainContainer);
+    const sensor = getExistentElementByClass(TimelineClassList.timelineSensor);
+    const main = getExistentElementByClass(MainClassList.mainContainer);
 
     btn.addEventListener('mousedown', (e) => {
       e.stopPropagation();
@@ -125,10 +125,10 @@ class TimelineDiv {
       this.newFromMin = this.fromMin;
       this.newToMin = this.toMin;
       this.div.setAttribute('draggable', 'false');
-      this.div.classList.add(ClassList.timelineDivActive);
-      sensor.classList.add(ClassList.timelineSensorActive);
-      main.classList.add(ClassList.mainContainerNoSelect);
-      this.div.classList.add(ClassList.timelineDivFake);
+      this.div.classList.add(TimelineClassList.timelineDivActive);
+      sensor.classList.add(TimelineClassList.timelineSensorActive);
+      main.classList.add(MainClassList.mainContainerNoSelect);
+      this.div.classList.add(TimelineClassList.timelineDivFake);
       setZoneFn();
 
       document.addEventListener('mousemove', resizeFn);
@@ -139,10 +139,10 @@ class TimelineDiv {
           mUEvent.stopPropagation();
           console.log('mouse up');
           this.div.setAttribute('draggable', 'true');
-          this.div.classList.remove(ClassList.timelineDivActive);
-          sensor.classList.remove(ClassList.timelineSensorActive);
-          main.classList.remove(ClassList.mainContainerNoSelect);
-          this.div.classList.remove(ClassList.timelineDivFake);
+          this.div.classList.remove(TimelineClassList.timelineDivActive);
+          sensor.classList.remove(TimelineClassList.timelineSensorActive);
+          main.classList.remove(MainClassList.mainContainerNoSelect);
+          this.div.classList.remove(TimelineClassList.timelineDivFake);
           document.removeEventListener('mousemove', resizeFn);
           this.updatePlan();
           this.paintRound(this.findRound(this.plan._id), this.plan);
@@ -185,19 +185,19 @@ class TimelineDiv {
 
   private makeDiv() {
     const [bgColor, fontColor] = getColors(this.plan.color);
-    const div: HTMLDivElement = createNewElement('div', ClassList.timelineDiv);
+    const div: HTMLDivElement = createNewElement('div', TimelineClassList.timelineDiv);
     div.setAttribute('draggable', 'true');
     div.setAttribute(SetAttribute.planTimelineId, this.plan._id);
-    const left = createNewElement('div', ClassList.timelineDivLeft);
+    const left = createNewElement('div', TimelineClassList.timelineDivLeft);
     left.innerText = '<';
-    const right = createNewElement('div', ClassList.timelineDivRight);
+    const right = createNewElement('div', TimelineClassList.timelineDivRight);
     right.innerText = '>';
 
     this.addSizeListener(left, this.leftButtonResize.bind(this), this.setZoneStart.bind(this));
     this.addSizeListener(right, this.rightButtonResize.bind(this), this.setZoneEnd.bind(this));
     div.style.color = fontColor;
 
-    const body = createNewElement('div', ClassList.timelineDivBody);
+    const body = createNewElement('div', TimelineClassList.timelineDivBody);
     body.style.backgroundColor = bgColor;
     body.append(left, this.name, right);
 
@@ -237,12 +237,12 @@ class TimelineDiv {
 
   private updateInfoView(durMin: number) {
     if (this.minToPx(durMin) > Values.minTimelineBlockWithText) {
-      this.div.classList.remove(ClassList.timelineDivHide);
+      this.div.classList.remove(TimelineClassList.timelineDivHide);
       // this.from.style.display = 'flex';
       // this.to.style.display = 'flex';
       // this.name.style.display = 'flex';
     } else {
-      this.div.classList.add(ClassList.timelineDivHide);
+      this.div.classList.add(TimelineClassList.timelineDivHide);
       // this.from.style.display = 'none';
       // this.to.style.display = 'none';
       // this.name.style.display = 'none';

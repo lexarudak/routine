@@ -1,10 +1,4 @@
 const enum Values {
-  emailPlaceholder = 'Email',
-  namePlaceholder = 'Name',
-  textPlaceholder = '| enter your text here',
-  passwordPlaceholder = 'Password',
-  secondPasswordPlaceholder = 'Repeat password',
-  rememberMeId = 'rememberMe',
   clockHours = 12,
   allWeekMinutes = 10080,
   allDayMinutes = 1440,
@@ -13,16 +7,8 @@ const enum Values {
   maxDayPlanWidth = 200,
   planListWidthK = 2,
   minTimelineBlockWithText = 55,
-  binImg = `url('./assets/svg/bin.svg')`,
-  returnImg = `url('./assets/svg/return.svg')`,
-  timeSliderId = 'time-slider-id',
-  hoursInputId = 'hours-input-id',
-  minutesInputId = 'minutes-input-id',
-  newPlanSave = 'new-plan-save',
+  locStorNewPlanName = 'new-plan-save',
   scaleNormal = 'scale(1)',
-  scaleMedium = 'scale(1.2)',
-  scaleBig = 'scale(1.45)',
-  svgLink = 'http://www.w3.org/2000/svg',
 }
 
 export default Values;

@@ -14,8 +14,6 @@ export const enum GetAttribute {
   pickerColor = 'pickerColor',
   from = 'from',
   thoughtId = 'thoughtId',
-}
-
-export const enum Attributes {
   stroke = 'stroke',
+  class = 'class',
 }

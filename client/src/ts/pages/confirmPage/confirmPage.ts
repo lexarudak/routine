@@ -3,19 +3,20 @@ import Api from '../../api';
 
 import Popup from '../../components/popup';
 import ConfirmLayout from './components/confirmLayout';
-import PlanEditor from '../planPage/components/planEditor';
 
 import { User, Plan, ConfirmationDay, ConfirmDay, ConfirmDayDistribution } from '../../base/interface';
 import { GoToFn } from '../../base/types';
-import { ClassList, ConfirmPageClassList } from '../../base/enums/classList';
+import { MainClassList, ConfirmPageClassList } from '../../base/enums/classList';
 
 import Values from '../../base/enums/values';
 import PagesList from '../../base/enums/pageList';
 
-import * as helpers from '../../base/helpers';
-import * as enums from '../../base/enums/enums';
 import Header from '../../components/header';
 import NavButtons from '../../base/enums/navButtons';
+import { getExistentElement, getExistentElementByClass, loginRedirect, minToHour } from '../../base/helpers';
+import ConfirmationDays from '../../base/enums/confirmationDays';
+import MessageType from '../../base/enums/messageType';
+import PlanEditor from '../../components/planEditor';
 
 class ConfirmPage extends Page {
   layout: ConfirmLayout;
@@ -45,11 +46,11 @@ class ConfirmPage extends Page {
     this.dayPlans = weekDistribution[this.dayOfWeek];
   }
 
-  private setEventLiseners() {
-    const uiConfirmButton = helpers.getExistentElement<HTMLButtonElement>('.confirm__main-button');
+  private setEventListeners() {
+    const uiConfirmButton = getExistentElement<HTMLButtonElement>('.confirm__main-button');
     uiConfirmButton.addEventListener('click', () => this.confirm());
 
-    const uiPlans = helpers.getExistentElementByClass('confirm-plans');
+    const uiPlans = getExistentElementByClass('confirm-plans');
     uiPlans.addEventListener('mousedown', (event) => this.startMove(event));
     uiPlans.addEventListener('click', (event) => this.changeTime(event));
   }
@@ -65,7 +66,7 @@ class ConfirmPage extends Page {
 
     function onMouseMove(eMouseMove: MouseEvent) {
       const uiConfirmPlan = target.closest('.confirm-plan') as HTMLElement;
-      const plan = context.dayPlans.find((item) => item[enums.DBAttributes.id] === uiConfirmPlan.dataset.id) as Plan;
+      const plan = context.dayPlans.find((item) => item._id === uiConfirmPlan.dataset.id) as Plan;
 
       const offsetCursor = 5;
       let width = eMouseMove.x - rect.x + offsetCursor;
@@ -77,7 +78,7 @@ class ConfirmPage extends Page {
       plan.duration = context.restrictPlanDuration(plan, plan.duration);
 
       const uiPlanLabel = target.nextElementSibling as HTMLElement;
-      uiPlanLabel.textContent = helpers.minToHour(plan.duration);
+      uiPlanLabel.textContent = minToHour(plan.duration);
     }
 
     function onMouseUp() {
@@ -150,7 +151,7 @@ class ConfirmPage extends Page {
 
   private changePlanTime(arrow: HTMLElement, increment: number) {
     const uiConfirmPlan = arrow.closest('.confirm-plan') as HTMLElement;
-    const plan = this.dayPlans.find((item) => item[enums.DBAttributes.id] === uiConfirmPlan.dataset.id) as Plan;
+    const plan = this.dayPlans.find((item) => item._id === uiConfirmPlan.dataset.id) as Plan;
 
     plan.duration += increment;
     plan.duration = this.restrictPlanDuration(plan, plan.duration);
@@ -162,18 +163,18 @@ class ConfirmPage extends Page {
     uiPlanLine.style.width = `${width}px`;
 
     const uiPlanTime = uiPlanLine.nextElementSibling as HTMLElement;
-    uiPlanTime.textContent = helpers.minToHour(plan.duration);
+    uiPlanTime.textContent = minToHour(plan.duration);
   }
 
   private setPageElementsParameters() {
     this.dayPlans.forEach((plan) => {
-      const classCSS = `.confirm-plan[data-id="${plan[enums.DBAttributes.id]}"]`;
-      const uiConfirmPlan = helpers.getExistentElement<HTMLElement>(classCSS);
+      const classCSS = `.confirm-plan[data-id="${plan._id}"]`;
+      const uiConfirmPlan = getExistentElement<HTMLElement>(classCSS);
 
       let width = this.getWidthByDuration(plan.duration);
       width = this.restrictPlanWidth(plan, width);
 
-      const uiPlanLine = helpers.getExistentElementByClass('confirm-plan__line', uiConfirmPlan);
+      const uiPlanLine = getExistentElementByClass('confirm-plan__line', uiConfirmPlan);
       uiPlanLine.style.width = `${width}px`;
     });
   }
@@ -194,12 +195,12 @@ class ConfirmPage extends Page {
 
   public async draw() {
     try {
-      const container = helpers.getExistentElementByClass(ClassList.mainContainer);
+      const container = getExistentElementByClass(MainClassList.mainContainer);
       await this.animatedFilledPageAppend(container);
       this.setPageElementsParameters();
-      this.setEventLiseners();
+      this.setEventListeners();
     } catch (error) {
-      helpers.loginRedirect(error, this.goTo);
+      loginRedirect(error, this.goTo);
     }
   }
 
@@ -208,19 +209,19 @@ class ConfirmPage extends Page {
 
     const ok = async () => {
       try {
-        banner = this.layout.makeBanner(enums.MessageType.warning, 'Waiting...');
+        banner = this.layout.makeBanner(MessageType.warning, 'Waiting...');
         this.popup.open(banner);
 
         await this.confirmDay();
 
-        banner = this.layout.makeBanner(enums.MessageType.success, 'Confirmed!');
+        banner = this.layout.makeBanner(MessageType.success, 'Confirmed!');
         this.popup.open(banner);
 
         setTimeout(() => {
           document.location.href = './';
         }, 1000);
       } catch (error) {
-        banner = this.layout.makeBanner(enums.MessageType.error, 'Ooops! Something went wrong...');
+        banner = this.layout.makeBanner(MessageType.error, 'Ooops! Something went wrong...');
         this.popup.editorMode();
         this.popup.open(banner);
       }
@@ -246,7 +247,7 @@ class ConfirmPage extends Page {
 
     this.dayPlans.forEach((plan) => {
       const item: ConfirmDayDistribution = {
-        planId: plan[enums.DBAttributes.id],
+        planId: plan._id,
         duration: plan.duration,
       };
       body.dayDistribution.push(item);
@@ -258,7 +259,7 @@ class ConfirmPage extends Page {
 
   private getDayOfWeekByConfirmationDay(confirmationDay: ConfirmationDay) {
     const dayOfWeek = this.getPreviousDayOfWeek(new Date().getDay());
-    return confirmationDay === enums.ConfirmationDays.today ? dayOfWeek : this.getPreviousDayOfWeek(dayOfWeek);
+    return confirmationDay === ConfirmationDays.today ? dayOfWeek : this.getPreviousDayOfWeek(dayOfWeek);
   }
 
   private getPreviousDayOfWeek(dayOfWeek: number) {

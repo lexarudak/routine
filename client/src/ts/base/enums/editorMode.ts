@@ -1,9 +1,9 @@
 const enum EditorMode {
-  newPlan,
-  editPlan,
-  planFromThought,
-  day,
-  newPlanDay,
+  editWeekPlan,
+  editDayPlan,
+
+  newPlanFromWeek,
+  newPlanFromDay,
   newPlanFromThought,
 }
 

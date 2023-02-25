@@ -1,9 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 /* eslint-disable no-underscore-dangle */
-import Layout from '../../layout';
-import ButtonClasses from '../../../base/enums/buttonClasses';
-import ButtonNames from '../../../base/enums/buttonNames';
-import { ClassList } from '../../../base/enums/classList';
+import Layout from '../../../components/layout';
+import {
+  BaseClassList,
+  ButtonClassList,
+  DayPageClassList,
+  MainClassList,
+  PlanRoundClassList,
+  WeekPageClassList,
+} from '../../../base/enums/classList';
 import { GetAttribute, SetAttribute } from '../../../base/enums/attributes';
 import Days from '../../../base/enums/days';
 import RoutsList from '../../../base/enums/routsList';
@@ -20,6 +25,8 @@ import Api from '../../../api';
 import { DistDayPlan, Plan } from '../../../base/interface';
 import ErrorsList from '../../../base/enums/errorsList';
 import PageList from '../../../base/enums/pageList';
+import InnerText from '../../../base/enums/innerText';
+import Url from '../../../base/enums/url';
 
 class PlanLayout extends Layout {
   goTo: GoToFn;
@@ -31,14 +38,14 @@ class PlanLayout extends Layout {
 
   public makeWeekLine() {
     const weekLine = document.createElement('div');
-    weekLine.classList.add(ClassList.weekLine);
+    weekLine.classList.add(WeekPageClassList.weekLine);
     return weekLine;
   }
 
   public makeInfoText(maxVal: string) {
-    const infoTextContainer = createNewElement('div', ClassList.infoTextContainer);
-    const infoTextValue = createNewElement('div', ClassList.infoTextValue);
-    const infoText = createNewElement('div', ClassList.infoTextValue);
+    const infoTextContainer = createNewElement('div', WeekPageClassList.infoTextContainer);
+    const infoTextValue = createNewElement('div', WeekPageClassList.infoTextValue);
+    const infoText = createNewElement('div', WeekPageClassList.infoTextValue);
     infoText.innerText = maxVal;
     infoTextContainer.append(infoTextValue, infoText);
     return infoTextContainer;
@@ -46,18 +53,18 @@ class PlanLayout extends Layout {
 
   private createDay(dayNum: number) {
     const planDay = document.createElement('div');
-    planDay.classList.add(ClassList.planDay);
+    planDay.classList.add(WeekPageClassList.planDay);
     planDay.setAttribute(SetAttribute.dayId, dayNum.toString());
 
     const planDayBody = document.createElement('div');
-    planDayBody.classList.add(ClassList.planDayLine);
+    planDayBody.classList.add(WeekPageClassList.planDayLine);
 
     const planDayName = document.createElement('div');
-    planDayName.classList.add(ClassList.planDayName);
+    planDayName.classList.add(WeekPageClassList.planDayName);
     planDayName.innerHTML = Days[dayNum].slice(0, 3);
 
     const planDayHours = document.createElement('div');
-    planDayHours.classList.add(ClassList.planDayHours);
+    planDayHours.classList.add(WeekPageClassList.planDayHours);
 
     planDay.append(planDayBody, planDayName, planDayHours);
     planDay.addEventListener('click', () => this.goTo(`/${Days[dayNum]}`));
@@ -74,23 +81,23 @@ class PlanLayout extends Layout {
 
   private makeAddButton() {
     const btn = document.createElement('button');
-    btn.classList.add(ButtonClasses.button, ClassList.planAddButton);
+    btn.classList.add(ButtonClassList.button, WeekPageClassList.planAddButton);
 
     const name = document.createElement('span');
-    name.innerText = ButtonNames.planAddButton;
-    name.classList.add(ClassList.planAddButtonName);
+    name.innerText = InnerText.planAddButton;
+    name.classList.add(WeekPageClassList.planAddButtonName);
 
     const value = document.createElement('span');
-    value.classList.add(ClassList.planAddButtonValue);
+    value.classList.add(WeekPageClassList.planAddButtonValue);
 
     btn.append(name, value);
     return btn;
   }
 
   private makeReturnToWeekZone(dayId: string, allDayPlans: Plan[], distPlans: DistDayPlan[]) {
-    const zone = createNewElement('div', ClassList.dayPageReturn);
+    const zone = createNewElement('div', DayPageClassList.dayPageReturn);
     const icon = document.createElement('div');
-    icon.style.backgroundImage = Values.returnImg;
+    icon.style.backgroundImage = Url.returnImg;
     zone.append(icon);
     this.addReturnListeners(zone, dayId, allDayPlans, distPlans);
     return zone;
@@ -100,29 +107,29 @@ class PlanLayout extends Layout {
     zone.addEventListener('dragover', function enter(e) {
       e.preventDefault();
       try {
-        getExistentElementByClass(ClassList.planRoundDrag);
-        this.classList.add(ClassList.dayPageReturnOver);
+        getExistentElementByClass(PlanRoundClassList.planRoundDrag);
+        this.classList.add(DayPageClassList.dayPageReturnOver);
       } catch {
         console.log();
       }
     });
 
     zone.addEventListener('dragleave', function leave() {
-      this.classList.remove(ClassList.dayPageReturnOver);
+      this.classList.remove(DayPageClassList.dayPageReturnOver);
     });
 
     zone.addEventListener('drop', async (e) => {
       e.stopPropagation();
       e.preventDefault();
       const { currentTarget } = e;
-      if (currentTarget instanceof HTMLElement) currentTarget.classList.remove(ClassList.dayPageReturnOver);
+      if (currentTarget instanceof HTMLElement) currentTarget.classList.remove(DayPageClassList.dayPageReturnOver);
       try {
-        getExistentElementByClass(ClassList.planRoundDrag);
+        getExistentElementByClass(PlanRoundClassList.planRoundDrag);
       } catch {
         console.log('this element is from timeline');
         return;
       }
-      const roundDiv = getExistentElementByClass(ClassList.planRoundDrag);
+      const roundDiv = getExistentElementByClass(PlanRoundClassList.planRoundDrag);
       const id = roundDiv.dataset[GetAttribute.planId];
       if (!id) throw new Error(ErrorsList.noId);
 
@@ -140,7 +147,7 @@ class PlanLayout extends Layout {
       if (id) {
         try {
           roundDiv.style.visibility = 'hidden';
-          getExistentElementByClass(ClassList.mainContainer).classList.add(ClassList.mainContainerHide);
+          getExistentElementByClass(MainClassList.mainContainer).classList.add(MainClassList.mainContainerHide);
           await Promise.all([Api.pushPlanToDay(opt), Api.pushDayDistribution(body)]);
           this.goTo(`/${Days[Number(dayId)]}`);
         } catch (error) {
@@ -151,29 +158,29 @@ class PlanLayout extends Layout {
   }
 
   private makeRemoveZone() {
-    const remove = createNewElement('div', ClassList.planRemoveZone);
+    const remove = createNewElement('div', WeekPageClassList.planRemoveZone);
     const bin = document.createElement('div');
-    bin.style.backgroundImage = Values.binImg;
+    bin.style.backgroundImage = Url.binImg;
     remove.append(bin);
 
     remove.addEventListener('dragover', function enter(e) {
       e.preventDefault();
-      this.classList.add(ClassList.planRemoveZoneOver);
+      this.classList.add(WeekPageClassList.planRemoveZoneOver);
     });
     remove.addEventListener('dragleave', function leave() {
-      this.classList.remove(ClassList.planRemoveZoneOver);
+      this.classList.remove(WeekPageClassList.planRemoveZoneOver);
     });
     remove.addEventListener('drop', async (e) => {
       e.stopPropagation();
       e.preventDefault();
       const { currentTarget } = e;
-      if (currentTarget instanceof HTMLElement) currentTarget.classList.remove(ClassList.planRemoveZoneOver);
-      const roundDiv = getExistentElementByClass(ClassList.planRoundDrag);
+      if (currentTarget instanceof HTMLElement) currentTarget.classList.remove(WeekPageClassList.planRemoveZoneOver);
+      const roundDiv = getExistentElementByClass(PlanRoundClassList.planRoundDrag);
       const id = roundDiv.dataset[GetAttribute.planId];
       if (id) {
         try {
           roundDiv.style.display = 'none';
-          getExistentElementByClass(ClassList.mainContainer).classList.add(ClassList.mainContainerHide);
+          getExistentElementByClass(MainClassList.mainContainer).classList.add(MainClassList.mainContainerHide);
           await Api.deletePlan(id);
           this.goTo(RoutsList.planPage);
         } catch (error) {
@@ -185,20 +192,20 @@ class PlanLayout extends Layout {
   }
 
   public makePlanBody() {
-    const planBody = createNewElement('div', ClassList.planBody);
-    const planField = createNewElement('div', ClassList.planField);
-    const buttons = createNewElement('div', ClassList.planButtons);
-    const weekendFields = createNewElement('div', ClassList.weekendFields);
-    const weekendFieldsBig = createNewElement('div', ClassList.weekendFieldsBig);
-    const weekendFieldsSmall = createNewElement('div', ClassList.weekendFieldsSmall);
+    const planBody = createNewElement('div', WeekPageClassList.planBody);
+    const planField = createNewElement('div', WeekPageClassList.planField);
+    const buttons = createNewElement('div', WeekPageClassList.planButtons);
+    const weekendFields = createNewElement('div', WeekPageClassList.weekFields);
+    const weekendFieldsBig = createNewElement('div', WeekPageClassList.weekFieldsBig);
+    const weekendFieldsSmall = createNewElement('div', WeekPageClassList.weekFieldsSmall);
     const emptyDayContainer = document.createElement('div');
-    const leftColumn = createNewElement('div', ClassList.planLeftColumn);
-    const planName = createNewElement('div', ClassList.planName);
+    const leftColumn = createNewElement('div', WeekPageClassList.planLeftColumn);
+    const planName = createNewElement('div', WeekPageClassList.planName);
     planName.innerText = PageList.planPage;
-    planName.classList.add(ClassList.title);
+    planName.classList.add(BaseClassList.title);
 
     const planDaysContainer = this.fillPlanDaysContainer(emptyDayContainer);
-    planDaysContainer.classList.add(ClassList.planDaysContainer);
+    planDaysContainer.classList.add(WeekPageClassList.planDaysContainer);
 
     leftColumn.append(planName, planDaysContainer);
 
@@ -211,14 +218,14 @@ class PlanLayout extends Layout {
 
   private createPlanListItem(plan: Plan) {
     const [bgColor] = getColors(plan.color);
-    const li: HTMLLIElement = createNewElement('li', ClassList.planListItem);
-    const color = createNewElement('div', ClassList.planListColor);
+    const li: HTMLLIElement = createNewElement('li', DayPageClassList.planListItem);
+    const color = createNewElement('div', DayPageClassList.planListColor);
     color.style.backgroundColor = bgColor;
     const width = ((Values.maxDayPlanWidth * plan.duration) / Values.allDayMinutes) * Values.planListWidthK;
     color.style.width = `${width}px`;
-    const name = createNewElement('span', ClassList.planListName);
+    const name = createNewElement('span', DayPageClassList.planListName);
     name.innerText = plan.title;
-    const dur = createNewElement('span', ClassList.planListDur);
+    const dur = createNewElement('span', DayPageClassList.planListDur);
     dur.innerText = `( ${minToHour(plan.duration)} )`;
 
     li.append(color, name, dur);
@@ -234,15 +241,15 @@ class PlanLayout extends Layout {
   }
 
   public makeDayBody(dayId: string, allDayPlans: Plan[], distPlans: DistDayPlan[]) {
-    const container = createNewElement('div', ClassList.dayPageBody);
-    const info = createNewElement('div', ClassList.dayPageInfo);
-    const field = createNewElement('div', ClassList.dayPageField);
-    const tools = createNewElement('div', ClassList.dayPageTools);
-    const plansZone = createNewElement('div', ClassList.dayPagePlansZone);
-    const name = createNewElement('h1', ClassList.dayPageName);
-    name.classList.add(ClassList.title);
+    const container = createNewElement('div', DayPageClassList.dayPageBody);
+    const info = createNewElement('div', DayPageClassList.dayPageInfo);
+    const field = createNewElement('div', DayPageClassList.dayPageField);
+    const tools = createNewElement('div', DayPageClassList.dayPageTools);
+    const plansZone = createNewElement('div', DayPageClassList.dayPagePlansZone);
+    const name = createNewElement('h1', DayPageClassList.dayPageName);
+    name.classList.add(BaseClassList.title);
     name.innerText = Days[Number(dayId)];
-    const planList: HTMLUListElement = createNewElement('ul', ClassList.planList);
+    const planList: HTMLUListElement = createNewElement('ul', DayPageClassList.planList);
     this.fillPlanList(planList, allDayPlans);
 
     tools.append(this.makeReturnToWeekZone(dayId, allDayPlans, distPlans), this.makeAddButton());

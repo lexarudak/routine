@@ -5,10 +5,10 @@ import DayPage from './pages/dayPage/dayPage';
 import HomePage from './pages/homePage/homePage';
 import LoginPage from './pages/loginPage/loginPage';
 import NotFoundPage from './pages/notFoundPage/notFoundPage';
-import PlanEditor from './pages/planPage/components/planEditor';
 import PlanPage from './pages/planPage/planPage';
 import ProfilePage from './pages/profilePage/profilePage';
 import ConfirmPage from './pages/confirmPage/confirmPage';
+import PlanEditor from './components/planEditor';
 
 class Router {
   private editor: PlanEditor;
