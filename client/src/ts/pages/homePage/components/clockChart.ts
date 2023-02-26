@@ -172,7 +172,7 @@ class ClockChart extends Clock {
 
   setCurrTime() {
     const date = new Date();
-    const day = date.getDay() - 1;
+    const day = date.getDay() - 1 < 0 ? 6 : date.getDay() - 1;
     const hours = date.getHours();
     const minutes = hours * 60 + date.getMinutes();
     this.seconds = minutes * 60 + date.getSeconds();
@@ -188,7 +188,7 @@ class ClockChart extends Clock {
       this.setCurrTime();
       this.setHalfOfDayData();
       this.setChartSector();
-      this.updateDaayInfo();
+      this.updateDayInfo();
     }, 1000);
   }
 
@@ -286,9 +286,14 @@ class ClockChart extends Clock {
     getExistentElement(`.${HomePageClassList.clock}`).append(chart);
   }
 
-  updateDaayInfo() {
-    if (this.hours === 6 * 3600 || this.hours === 12 * 3600 || this.hours === 18 * 3600 || this.hours === 24 * 3600) {
+  updateDayInfo() {
+    if (this.seconds === 6 * 3600 || this.seconds === 12 * 3600 || this.seconds === 18 * 3600 || this.seconds === 0) {
       getExistentElement(`.${HomePageClassList.dayInfo}`).innerHTML = this.showDayInfo(this.currFontColor);
+    }
+    if (this.seconds === 12 * 3600) {
+      getExistentElement(`.${HomePageClassList.timeOfDay}`).textContent = this.halfOfDay;
+      this.setHalfOfDayData();
+      this.updateChart();
     }
   }
 
@@ -297,6 +302,7 @@ class ClockChart extends Clock {
     this.setValidChartData();
     this.updateToDo();
     this.updateChart();
+    getExistentElement(`.${HomePageClassList.timeOfDay}`).innerHTML = this.halfOfDay;
   }
 
   setValidChartData() {

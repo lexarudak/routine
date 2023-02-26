@@ -129,7 +129,7 @@ class HomePage extends Page {
 
   private async getNewDayData() {
     const currentDayNum = getCurrentDayNum();
-    const dayPlans = await Api.getDayDistribution((currentDayNum + 2).toString());
+    const dayPlans = await Api.getDayDistribution(currentDayNum.toString());
     this.clockChartInst.showNewDay(dayPlans.distributedPlans, currentDayNum);
   }
 
