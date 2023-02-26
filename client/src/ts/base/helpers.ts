@@ -162,7 +162,7 @@ function makeBanner(bannerText: string) {
 
 function getCurrentDayNum() {
   const date = new Date();
-  return date.getDay() - 1;
+  return date.getDay() === 0 ? 6 : date.getDay() - 1;
 }
 
 function getColors(colorId: string): string[] {
