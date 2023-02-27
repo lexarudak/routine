@@ -75,7 +75,11 @@ class HomePage extends Page {
       popup.classList.add(BaseClassList.none);
       document.body.append(popup);
       thoughtTitle.addEventListener('click', () => thoughtAddInst.openCloseThoughtList(thoughtAdd, popup));
-      popup.addEventListener('click', () => thoughtAddInst.openCloseThoughtList(thoughtAdd, popup));
+      popup.addEventListener('click', () => {
+        thoughtAddInst.openCloseThoughtList(thoughtAdd, popup);
+        if (popup.classList.contains(BaseClassList.none))
+          getExistentElementByClass(ThoughtsClassList.thoughtAdd).classList.remove(BaseClassList.none);
+      });
     }
 
     return thought;
