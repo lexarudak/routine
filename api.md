@@ -503,6 +503,16 @@ Schema:
     "__v": 0
   }
   ```
+  
+  Respose `400` `Bad Request`
+  ```
+  "The user has no plan with ID 63e158255010e434534cfae5"
+  ```
+  
+  Respose `400` `Bad Request`
+  ```
+  "The plan duration is less than distributed"
+  ```
 
 </details>
 
