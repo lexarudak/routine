@@ -1,7 +1,7 @@
 ## Setup and Running
 
 - Use `node 16.x` or higher.
-- Clone this repo: `$ git clone https://github.com/mikalai-kazlou/routine.git`.
+- Clone this repo: `$ git clone https://github.com/lexarudak/routine.git`.
 - Go to downloaded folder: `$ cd server`.
 - Install dependencies: `$ npm install`.
 - Start server: `$ npm run start`.
