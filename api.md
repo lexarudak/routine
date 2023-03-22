@@ -1,14 +1,12 @@
-## API
+## Setup and Running
 
-- Internal: http://localhost:5100
-- External: https://warm-bayou-30321.herokuapp.com
+- Use `node 16.x` or higher.
+- Clone this repo: `$ git clone https://github.com/mikalai-kazlou/routine.git`.
+- Go to downloaded folder: `$ cd server`.
+- Install dependencies: `$ npm install`.
+- Start server: `$ npm run start`.
+- Now you can send requests to the address: `http://127.0.0.1:5100` or `http://localhost:5100`.
 
-### Start local server
-
-```
-> cd server
-> npm run start
-```
 ![Screenshot_1](https://user-images.githubusercontent.com/108581309/216828887-f2d547bc-c046-40e6-bc71-dc8b7742cbd5.jpg)
 
 ### User
