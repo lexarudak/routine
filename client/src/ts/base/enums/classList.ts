@@ -243,6 +243,7 @@ const enum BannerClassList {
 
 const enum ButtonClassList {
   button = 'button',
+  testButton = 'button_test-button',
   main = 'button_main',
   signIn = 'button_signIn',
   navButton = 'nav-button',

@@ -27,6 +27,21 @@
     }
   }
 
+  &_test-button {
+    border-color: $sign-in-active;
+    color: $sign-in-active;
+    background-color: transparent;
+    width: 276px;
+    margin-top: 15px;
+    height: 50px;
+    border-radius: 30px;
+
+    &:disabled {
+        border-color: $font-light-trans;
+        color: $font-light-trans;
+    }
+  }
+
   &_signIn {
     border-color: $font-light;
     color: $font-light;

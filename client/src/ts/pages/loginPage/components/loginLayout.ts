@@ -28,6 +28,13 @@ class LoginLayout {
     return signInBtn;
   }
 
+  public makeTestButton() {
+    const testBtn = document.createElement('button');
+    testBtn.classList.add(ButtonClassList.button, ButtonClassList.testButton);
+    testBtn.innerText = 'Enter with test account';
+    return testBtn;
+  }
+
   public makeCheckbox() {
     const checkBox = document.createElement('input');
     checkBox.type = 'checkbox';

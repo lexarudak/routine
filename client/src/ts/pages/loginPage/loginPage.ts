@@ -31,6 +31,8 @@ class LoginPage extends Page {
 
   signButton: HTMLButtonElement;
 
+  testButton: HTMLButtonElement;
+
   constructor(goTo: GoToFn, editor: PlanEditor) {
     super(PageList.loginPage, goTo, editor);
     this.layout = new LoginLayout();
@@ -40,6 +42,7 @@ class LoginPage extends Page {
     this.secondPasswordInput = new SecondPasswordInput(InnerText.secondPasswordPlaceholder, this.firstPasswordInput);
     this.emailInput = new EmailInput(InnerText.emailPlaceholder);
     this.signButton = this.setLoginButton(this.layout.makeButton());
+    this.testButton = this.setTestButton(this.layout.makeTestButton());
     this.checkbox = this.layout.makeCheckbox();
   }
 
@@ -108,19 +111,40 @@ class LoginPage extends Page {
     signInBtn.addEventListener('click', async () => {
       if (this.isFormValid()) {
         try {
-          buttonOff(this.signButton);
+          buttonOff(this.signButton, this.testButton);
           await this.sendForm();
           this.cleanForm();
           this.status = InnerText.signIn;
-          buttonOn(this.signButton);
+          buttonOn(this.signButton, this.testButton);
           this.goTo(RoutsList.homePage);
         } catch (error) {
-          buttonOn(this.signButton);
+          buttonOn(this.signButton, this.testButton);
           if (error instanceof Error) {
             this.errorHandle(error);
           } else {
             throw error;
           }
+        }
+      }
+    });
+    return signInBtn;
+  }
+
+  private setTestButton(signInBtn: HTMLButtonElement) {
+    signInBtn.addEventListener('click', async () => {
+      try {
+        buttonOff(this.signButton, this.testButton);
+        await Api.login({ email: 'student1@school.rs', password: 'student1', remember: true });
+        this.cleanForm();
+        this.status = InnerText.signIn;
+        buttonOn(this.signButton, this.testButton);
+        this.goTo(RoutsList.homePage);
+      } catch (error) {
+        buttonOn(this.signButton, this.testButton);
+        if (error instanceof Error) {
+          this.errorHandle(error);
+        } else {
+          throw error;
         }
       }
     });
@@ -140,7 +164,8 @@ class LoginPage extends Page {
       this.layout.makeLabel(),
       this.makeLink(InnerText.newAccount, LoginClassList.signInView),
       this.makeLink(InnerText.iHaveAccount, LoginClassList.signUpView),
-      this.signButton
+      this.signButton,
+      this.testButton
     );
     return form;
   }
