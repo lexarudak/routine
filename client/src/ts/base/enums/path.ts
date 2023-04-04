@@ -1,5 +1,5 @@
 const enum Path {
-  origin = 'https://warm-bayou-30321.herokuapp.com/api',
+  origin = 'https://radiant-shelf-12164.herokuapp.com/api',
   registration = '/registration',
   login = '/login',
   logout = '/logout',
